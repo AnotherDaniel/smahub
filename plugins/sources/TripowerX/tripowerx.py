@@ -35,7 +35,7 @@ def execute(config, add_data, dostop):
     headers = { "Authorization" : "Bearer " + token }
 
     # Request Device Info
-    url="http://" + config.get('server', 'address') + "/api/v1/plants/Plant:1/devices/IGULD:SELF"
+    url = "http://" + config.get('server', 'address') + "/api/v1/plants/Plant:1/devices/IGULD:SELF"
     x = requests.get(url, headers = headers)
     dev = x.json()
 
@@ -50,6 +50,11 @@ def execute(config, add_data, dostop):
     time.sleep(1)
 
     while not dostop():
+        for key, value in device_info.items(): 
+            dname = config.get('server', 'sensorPrefix') + 'device_info.' + key
+            logging.debug(dname+': ' + value)
+            add_data(dname, value)
+
         try:
             url = 'http://' + config.get('server', 'address') + '/api/v1/measurements/live'
             x = requests.post(url, headers = headers, data='[{"componentId":"IGULD:SELF"}]')
@@ -72,7 +77,7 @@ def execute(config, add_data, dostop):
                     unit = unit_of_measurement(dname)
 
                     logging.debug(dname+': '+str(v)+' '+unit)
-                    add_data(dname, (v, unit))
+                    add_data(dname, v)
                 
                 elif "values" in d["values"][0]:
                     for idx in range(0, len(d["values"][0]["values"])):
@@ -83,7 +88,7 @@ def execute(config, add_data, dostop):
                         unit = unit_of_measurement(dname)
 
                         logging.debug(idxname+': '+str(v)+' '+unit)
-                        add_data(idxname, (v, unit))
+                        add_data(idxname, v)
                 
                 else:
                     logging.debug("value currently not availably (nighttime?)")

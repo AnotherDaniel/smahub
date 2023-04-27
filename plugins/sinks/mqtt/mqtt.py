@@ -34,5 +34,5 @@ def execute(config, get_items, register_callback, do_stop):
 def my_callback(key, value):
     global client
     topic = str(key).replace(".", "/")
-    message = str(value[0])
+    message = str(value)
     client.publish(topic, message)

@@ -40,6 +40,11 @@ def execute(config, add_data, dostop):
         device_info['manufacturer'] = "SMA"
         device_info['sw_version'] = emdata['speedwire-version']
 
+        for key, value in device_info.items(): 
+            dname = config.get('server', 'sensorPrefix') + 'device_info.' + key
+            logging.debug(dname+': ' + value)
+            add_data(dname, value)
+
         for key, value in emdata.items():
             if (key.endswith("unit") or key in ["serial", "protocol", "speedwire-version"]):
                 continue
