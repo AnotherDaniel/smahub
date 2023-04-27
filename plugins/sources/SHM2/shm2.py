@@ -5,7 +5,8 @@ Thank you littleyoda!
 import logging
 import socket
 import struct
-from speedwiredecoder import decode_speedwire
+from utils.smahelpers import unit_of_measurement
+from utils.speedwiredecoder import decode_speedwire
 
 def execute(config, add_data, dostop):
     if config.get('plugin', 'enabled').lower() != 'true':
@@ -49,38 +50,3 @@ def execute(config, add_data, dostop):
 
             else:
                 logging.debug(key)
-
-def unit_of_measurement(name):
-    if (name.endswith("TmpVal")):
-        return "°C"
-    if (".W." in name):
-        return "W"
-    if (".TotWh" in name):
-        return "Wh"
-    if (".PvWh" in name):
-        return "Wh"
-    if (name.endswith(".TotW")):
-        return "W"
-    if (name.endswith(".TotW.Pv")):
-        return "W"
-    if (name.endswith(".Watt")):
-        return "W"
-    if (".A." in name):
-        return "A"
-    if (name.endswith(".Amp")):
-        return "A"
-    if (name.endswith(".Vol")):
-        return "V"
-    if (name.endswith(".VA.")):
-        return "VA"
-    if ("Tms" in name):
-        return "ms"
-    return ""
-
-
-def isfloat(num):
-    try:
-        float(num)
-        return True
-    except ValueError:
-        return False

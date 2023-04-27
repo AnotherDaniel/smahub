@@ -13,7 +13,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/AnotherDaniel/smahub",
     packages=find_packages(where="smahub"),
-    package_dir={"": "smahub"},
+    package_dir={"": "smahub", "utils": "smahub/utils"},
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License 2.0 (Apache-2.0)",

@@ -49,7 +49,7 @@ def load_plugins(plugin_dir, plugins):
                 logging.debug(f"Found .py file for {feature} plugin")
 
             # If the file has a .conf extension, store the config for later
-            if filename.endswith('.conf'):
+            elif filename.endswith('.conf'):
                 config = configparser.ConfigParser()        
                 config.read(os.path.join(plugin_dir, feature, filename))
                 configs[feature] = config
