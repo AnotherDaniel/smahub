@@ -1,7 +1,14 @@
+import os
 import time
 import logging
 
+def env_vars(config):
+    if os.environ.get('DEMOSINK_ENABLED'):
+        config['plugin']['enabled'] = os.environ.get('DEMOSINK_ENABLED')
+
 def execute(config, get_items, register_callback, do_stop):
+    env_vars(config)
+    
     if config.get('plugin', 'enabled').lower() != 'true':
         logging.info("demo sink plugin disabled")
         return

@@ -3,12 +3,29 @@ This code is adapted from https://github.com/littleyoda/Home-Assistant-Tripower-
 Thank you littleyoda!
 '''
 import logging
+import os
 import time
 import sys
 import requests
 from utils.smahelpers import unit_of_measurement, isfloat
 
+def env_vars(config):
+    if os.environ.get('TRIPOWERX_ENABLED'):
+        config['plugin']['enabled'] = os.environ.get('TRIPOWERX_ENABLED')
+    if os.environ.get('TRIPOWERX_ADDRESS'):
+        config['server']['address'] = os.environ.get('TRIPOWERX_ADDRESS')
+    if os.environ.get('TRIPOWERX_USER'):
+        config['server']['username'] = os.environ.get('TRIPOWERX_USER')
+    if os.environ.get('TRIPOWERX_PASSWORD'):
+        config['server']['password'] = os.environ.get('TRIPOWERX_PASSWORD')
+    if os.environ.get('TRIPOWERX_UPDATEFREQ'):
+        config['server']['updatefreq'] = os.environ.get('TRIPOWERX_UPDATEFREQ')
+    if os.environ.get('TRIPOWERX_PREFIX'):
+        config['server']['sensorPrefix'] = os.environ.get('TRIPOWERX_PREFIX')
+
 def execute(config, add_data, dostop):
+    env_vars(config)
+
     if config.get('plugin', 'enabled').lower() != 'true':
         logging.info("Tripower X plugin disabled")
         return
@@ -39,18 +56,18 @@ def execute(config, add_data, dostop):
     x = requests.get(url, headers = headers)
     dev = x.json()
 
-    device_info = {}
-    device_info['name'] = dev["product"]
-    device_info['configuration_url'] = 'http://' + config.get('server', 'address')
-    device_info['identifiers'] = dev["serial"]
-    device_info['model'] = dev["vendor"]+"-" + dev["product"]
-    device_info['manufacturer'] = dev["vendor"]
-    device_info['sw_version'] = dev['firmwareVersion']
+    DeviceInfo = {}
+    DeviceInfo['name'] = dev["product"]
+    DeviceInfo['configuration_url'] = 'http://' + config.get('server', 'address')
+    DeviceInfo['identifiers'] = dev["serial"]
+    DeviceInfo['model'] = dev["vendor"]+"-" + dev["product"]
+    DeviceInfo['manufacturer'] = dev["vendor"]
+    DeviceInfo['sw_version'] = dev['firmwareVersion']
 
     time.sleep(1)
 
     while not dostop():
-        for key, value in device_info.items(): 
+        for key, value in DeviceInfo.items(): 
             dname = config.get('server', 'sensorPrefix') + 'device_info.' + key
             logging.debug(dname+': ' + value)
             add_data(dname, value)

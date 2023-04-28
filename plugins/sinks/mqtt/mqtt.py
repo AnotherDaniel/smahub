@@ -1,10 +1,23 @@
+import os
 import time
 import logging
 import paho.mqtt.client as mqtt
 
 client = mqtt.Client()
 
+def env_vars(config):
+    if os.environ.get('MQTT_ENABLED'):
+        config['plugin']['enabled'] = os.environ.get('MQTT_ENABLED')
+    if os.environ.get('MQTT_ADDRESS'):
+        config['server']['address'] = os.environ.get('MQTT_ADDRESS')
+    if os.environ.get('MQTT_PORT'):
+        config['server']['port'] = os.environ.get('MQTT_PORT')
+    if os.environ.get('MQTT_UPDATEFREQ'):
+        config['server']['updatefreq'] = os.environ.get('MQTT_UPDATEFREQ')
+
 def execute(config, get_items, register_callback, do_stop):
+    env_vars(config)
+
     if config.get('plugin', 'enabled').lower() != 'true':
         logging.info("MQTT sink plugin disabled")
         return

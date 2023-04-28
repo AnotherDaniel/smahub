@@ -3,12 +3,21 @@ This code is adapted from https://github.com/littleyoda/Home-Assistant-Tripower-
 Thank you littleyoda!
 '''
 import logging
+import os
 import socket
 import struct
 from utils.smahelpers import unit_of_measurement
 from utils.speedwiredecoder import decode_speedwire
 
+def env_vars(config):
+    if os.environ.get('SHM2_ENABLED'):
+        config['plugin']['enabled'] = os.environ.get('SHM2_ENABLED')
+    if os.environ.get('SHM2_PREFIX'):
+        config['server']['sensorPrefix'] = os.environ.get('SHM2_PREFIX')
+
 def execute(config, add_data, dostop):
+    env_vars(config)
+
     if config.get('plugin', 'enabled').lower() != 'true':
         logging.info("SHM2 plugin disabled")
         return
@@ -28,19 +37,19 @@ def execute(config, add_data, dostop):
         logging.ERROR("Could not connect to SHM2 multicast socket")
         return
 
-    device_info = {}
+    DeviceInfo = {}
     while not dostop():
         emdata = decode_speedwire(sock.recv(608))
         if (emdata.get("protocol",0) not in [0x6069] or emdata.get("serial") is None):
             continue
 
-        device_info['name'] = "SMA Sunny Home Manager 2"
-        device_info['identifiers'] = emdata["serial"]
-        device_info['model'] = "EM/SHM/SHM2"
-        device_info['manufacturer'] = "SMA"
-        device_info['sw_version'] = emdata['speedwire-version']
+        DeviceInfo['name'] = "SMA Sunny Home Manager 2"
+        DeviceInfo['identifiers'] = emdata["serial"]
+        DeviceInfo['model'] = "EM/SHM/SHM2"
+        DeviceInfo['manufacturer'] = "SMA"
+        DeviceInfo['sw_version'] = emdata['speedwire-version']
 
-        for key, value in device_info.items(): 
+        for key, value in DeviceInfo.items(): 
             dname = config.get('server', 'sensorPrefix') + 'device_info.' + key
             logging.debug(dname+': ' + value)
             add_data(dname, value)

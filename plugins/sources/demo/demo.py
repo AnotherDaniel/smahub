@@ -1,7 +1,14 @@
+import os
 import time
 import logging
 
+def env_vars(config):
+    if os.environ.get('DEMOSOURCE_ENABLED'):
+        config['plugin']['enabled'] = os.environ.get('DEMOSOURCE_ENABLED')
+
 def execute(config, add_data, dostop): 
+    env_vars(config)
+    
     if config.get('plugin', 'enabled').lower() != 'true':
         logging.info("demo source plugin disabled")
         return
