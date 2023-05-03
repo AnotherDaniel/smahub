@@ -1,3 +1,7 @@
+'''
+This code is adapted from https://github.com/littleyoda/Home-Assistant-Tripower-X-MQTT
+Thank you littleyoda!
+'''
 import os
 import time
 import logging
@@ -26,7 +30,11 @@ def execute(config, get_items, register_callback, do_stop):
 
     # Create a MQTT client instance and connect to broker
     global client
-    client.connect(config.get('server', 'address'), int(config.get('server', 'port')))
+    try:
+        client.connect(config.get('server', 'address'), int(config.get('server', 'port')))
+    except ConnectionError:
+        logging.fatal("MQTT broker not reachable at address: " + config.get('server', 'address') + ":" + str(config.get('server', 'port')))
+        return
 
     # Either us the callback, or have regular publication in below loop... 
     register_callback(my_callback)

@@ -5,7 +5,6 @@ Thank you littleyoda!
 import logging
 import os
 import time
-import sys
 import requests
 from utils.smahelpers import unit_of_measurement, isfloat
 
@@ -41,13 +40,20 @@ def execute(config, add_data, dostop):
     try:
         x = requests.post(loginurl, data = postdata, timeout = 5)
     except requests.exceptions.ConnectTimeout:
-        print("Inverter not reachable via HTTP.")
-        print("Please test the following URL in a browser: " + 'http://' + config.get('server', 'address'))
-        sys.exit(1)
+        logging.fatal("Inverter not reachable via HTTP")
+        logging.fatal("Please test the following URL in a browser: " + 'http://' + config.get('server', 'address'))
+        return
+
     if ("Content-Length" in x.headers and x.headers["Content-Length"] == '0'):
-        print("Username or Password wrong.")
-        print("Please test the following URL in a browser: " + 'http://' + config.get('server', 'address'))
-        sys.exit(1)
+        logging.fatal("Username or Password wrong")
+        logging.fatal("Please test the following URL in a browser: " + 'http://' + config.get('server', 'address'))
+        return
+
+    if (404 == x.status_code):
+        logging.fatal("HTTP connection refused (status 404)")
+        logging.fatal("Please test the following URL in a browser: " + 'http://' + config.get('server', 'address'))
+        return
+
     token = x.json()["access_token"] 
     headers = { "Authorization" : "Bearer " + token }
 
