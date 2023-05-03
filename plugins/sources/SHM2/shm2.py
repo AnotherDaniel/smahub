@@ -40,7 +40,7 @@ def execute(config, add_data, dostop):
     DeviceInfo = {}
     while not dostop():
         emdata = decode_speedwire(sock.recv(608))
-        if (emdata.get("protocol",0) not in [0x6069] or emdata.get("serial") is None):
+        if (emdata.get("protocol", 0) not in [0x6069] or emdata.get("serial") is None):
             continue
 
         DeviceInfo['name'] = "SMA Sunny Home Manager 2"
@@ -51,7 +51,7 @@ def execute(config, add_data, dostop):
 
         for key, value in DeviceInfo.items(): 
             dname = config.get('server', 'sensorPrefix') + 'device_info.' + key
-            logging.debug(dname+': ' + value)
+            logging.debug(dname+': ' + str(value))
             add_data(dname, value)
 
         for key, value in emdata.items():

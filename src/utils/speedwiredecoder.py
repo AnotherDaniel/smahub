@@ -18,6 +18,7 @@
 """
 
 import binascii
+import logging
 
 # unit definitions with scaling
 sma_units = {
@@ -91,7 +92,7 @@ def decode_OBIS(obis):
         datatype = "version"
     else:
         datatype = "unknown"
-        print(
+        logging.debug(
             "unknown datatype: measurement {} datatype {} raw_type {}".format(
                 measurement, datatype, raw_type
             )

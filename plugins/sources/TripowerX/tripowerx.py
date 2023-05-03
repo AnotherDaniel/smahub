@@ -40,18 +40,15 @@ def execute(config, add_data, dostop):
     try:
         x = requests.post(loginurl, data = postdata, timeout = 5)
     except requests.exceptions.ConnectTimeout:
-        logging.fatal("Inverter not reachable via HTTP")
-        logging.fatal("Please test the following URL in a browser: " + 'http://' + config.get('server', 'address'))
+        logging.fatal("Inverter not reachable via HTTP: " + config.get('server', 'address'))
         return
 
     if ("Content-Length" in x.headers and x.headers["Content-Length"] == '0'):
         logging.fatal("Username or Password wrong")
-        logging.fatal("Please test the following URL in a browser: " + 'http://' + config.get('server', 'address'))
         return
 
     if (404 == x.status_code):
-        logging.fatal("HTTP connection refused (status 404)")
-        logging.fatal("Please test the following URL in a browser: " + 'http://' + config.get('server', 'address'))
+        logging.fatal("HTTP connection to " + config.get('server', 'address') + " refused (status 404)")
         return
 
     token = x.json()["access_token"] 
