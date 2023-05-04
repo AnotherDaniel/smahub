@@ -9,10 +9,9 @@ RUN mkdir -p /opt/smahub
 WORKDIR /opt/smahub
 
 RUN git clone --depth=1 --branch=main https://github.com/AnotherDaniel/smahub . && rm -fr .git*
-#COPY * .
+#COPY . /opt/smahub
 RUN pip3 install .
 
 ADD run_smahub.sh /root/
 RUN chmod +x /root/*
-#CMD ["/root/run_smahub.sh"]
 ENTRYPOINT ["/root/run_smahub.sh"]
