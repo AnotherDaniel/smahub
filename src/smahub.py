@@ -147,6 +147,7 @@ def do_stop():
     Returns:
         bool: True if the source threads should stop, False otherwise.
     '''
+    global _do_stop
     return _do_stop
 
 async def main(args):

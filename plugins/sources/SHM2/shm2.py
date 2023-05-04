@@ -34,7 +34,7 @@ def execute(config, add_data, dostop):
         mreq = struct.pack("4s4s", socket.inet_aton(MCAST_GRP), socket.inet_aton(IPBIND))
         sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
     except BaseException:
-        logging.ERROR("Could not connect to SHM2 multicast socket")
+        logging.critical("Could not connect to SHM2 multicast socket")
         return
 
     DeviceInfo = {}
