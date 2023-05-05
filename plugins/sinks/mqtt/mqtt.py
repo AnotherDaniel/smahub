@@ -15,9 +15,9 @@ def env_vars(config):
     if os.environ.get('MQTT_ADDRESS'):
         config['server']['address'] = os.environ.get('MQTT_ADDRESS')
     if os.environ.get('MQTT_PORT'):
-        config['server']['port'] = os.environ.get('MQTT_PORT')
+        config['server']['port'] = int(os.environ.get('MQTT_PORT'))
     if os.environ.get('MQTT_UPDATEFREQ'):
-        config['server']['updatefreq'] = os.environ.get('MQTT_UPDATEFREQ')
+        config['server']['updatefreq'] = int(os.environ.get('MQTT_UPDATEFREQ'))
 
 def execute(config, get_items, register_callback, do_stop):
     env_vars(config)
@@ -33,7 +33,7 @@ def execute(config, get_items, register_callback, do_stop):
     try:
         client.connect(config.get('server', 'address'), int(config.get('server', 'port')))
     except ConnectionError:
-        logging.fatal("MQTT broker not reachable at address: " + config.get('server', 'address') + ":" + str(config.get('server', 'port')))
+        logging.fatal(f"MQTT broker not reachable at address: {config.get('server', 'address')}: {str(config.get('server', 'port'))}")
         return
 
     # Either us the callback, or have regular publication in below loop... 

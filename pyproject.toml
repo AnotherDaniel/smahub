@@ -4,7 +4,7 @@ requires = ["flit_core >=3.8.0,<4"]
 
 [project]
 name = "smahub"
-version = "0.5.0"
+version = "0.8.0"
 authors = [
     {name = "Daniel Krippner", email = "dk.mailbox@gmx.net"},
 ]

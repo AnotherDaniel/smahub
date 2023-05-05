@@ -1,8 +1,8 @@
+import importlib
 import importlib.metadata
 import argparse
 import configparser
 import asyncio
-import importlib
 import os
 import signal
 import logging
@@ -69,8 +69,10 @@ def load_plugins(plugin_dir, plugins):
                 plugins.append((getattr(module, "execute"), configs[module_name]))
             else:
                 plugins.append((getattr(module, "execute"), {}))
+
         except ImportError as e:
             logging.error(f"Could not import module {module_name}: {e}")
+            
         except AttributeError:
             logging.warn(f"Script {module_path} does not have the method execute()")
 
@@ -197,7 +199,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog=package_name, description=summary)
     parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose output')
     parser.add_argument('-V', '--verboser', action='store_true', help='Enable even more verbose output')
-    parser.add_argument('--version', action='version', version='%(prog)s '+version)
+    parser.add_argument('--version', action='version', version=f'%(prog)s {version}')
     parser.add_argument('--source-dir', type=str, default='plugins/sources', help='Path to the directory containing source plugins')
     parser.add_argument('--sink-dir', type=str, default='plugins/sinks', help='Path to the directory containing sink plugins')
 

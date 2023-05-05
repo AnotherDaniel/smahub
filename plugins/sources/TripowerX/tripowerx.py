@@ -18,7 +18,7 @@ def env_vars(config):
     if os.environ.get('TRIPOWERX_PASSWORD'):
         config['server']['password'] = os.environ.get('TRIPOWERX_PASSWORD')
     if os.environ.get('TRIPOWERX_UPDATEFREQ'):
-        config['server']['updatefreq'] = os.environ.get('TRIPOWERX_UPDATEFREQ')
+        config['server']['updatefreq'] = int(os.environ.get('TRIPOWERX_UPDATEFREQ'))
     if os.environ.get('TRIPOWERX_PREFIX'):
         config['server']['sensorPrefix'] = os.environ.get('TRIPOWERX_PREFIX')
 
@@ -30,7 +30,7 @@ def execute(config, add_data, dostop):
         return
 
     logging.info("Starting Tripower X source")
-    loginurl = 'http://' + config.get('server', 'address') + '/api/v1/token'
+    loginurl = f"http://{config.get('server','address')}/api/v1/token"
     postdata = {'grant_type': 'password',
             'username': config.get('server', 'username'),
             'password': config.get('server', 'password'),
@@ -38,33 +38,34 @@ def execute(config, add_data, dostop):
 
     # Login & Extract Access-Token
     try:
-        x = requests.post(loginurl, data = postdata, timeout = 5)
+        response = requests.post(loginurl, data = postdata, timeout = 5)
+        
     except requests.exceptions.ConnectTimeout:
-        logging.fatal("Inverter not reachable via HTTP: " + config.get('server', 'address'))
+        logging.fatal(f"Inverter not reachable via HTTP: {config.get('server', 'address')}")
         return
 
-    if ("Content-Length" in x.headers and x.headers["Content-Length"] == '0'):
+    if ("Content-Length" in response.headers and response.headers["Content-Length"] == '0'):
         logging.fatal("Username or Password wrong")
         return
 
-    if (404 == x.status_code):
-        logging.fatal("HTTP connection to " + config.get('server', 'address') + " refused (status 404)")
+    if (404 == response.status_code):
+        logging.fatal(f"HTTP connection to {config.get('server', 'address')} refused (status 404)")
         return
 
-    token = x.json()["access_token"] 
+    token = response.json()["access_token"] 
     headers = { "Authorization" : "Bearer " + token }
 
     # Request Device Info
-    url = "http://" + config.get('server', 'address') + "/api/v1/plants/Plant:1/devices/IGULD:SELF"
-    x = requests.get(url, headers = headers)
-    dev = x.json()
+    url = f"http://{config.get('server','address')}/api/v1/plants/Plant:1/devices/IGULD:SELF"
+    response = requests.get(url, headers = headers)
+    dev = response.json()
 
     DeviceInfo = {}
-    DeviceInfo['name'] = dev["product"]
-    DeviceInfo['configuration_url'] = 'http://' + config.get('server', 'address')
-    DeviceInfo['identifiers'] = dev["serial"]
-    DeviceInfo['model'] = dev["vendor"]+"-" + dev["product"]
-    DeviceInfo['manufacturer'] = dev["vendor"]
+    DeviceInfo['name'] = dev['product']
+    DeviceInfo['configuration_url'] = f"http://{config.get('server', 'address')}"
+    DeviceInfo['identifiers'] = dev['serial']
+    DeviceInfo['model'] = f"{dev['vendor']}-{dev['product']}"
+    DeviceInfo['manufacturer'] = dev['vendor']
     DeviceInfo['sw_version'] = dev['firmwareVersion']
 
     time.sleep(1)
@@ -76,38 +77,38 @@ def execute(config, add_data, dostop):
             add_data(dname, value)
 
         try:
-            url = 'http://' + config.get('server', 'address') + '/api/v1/measurements/live'
-            x = requests.post(url, headers = headers, data='[{"componentId":"IGULD:SELF"}]')
+            url = f"http://'{config.get('server', 'address')}/api/v1/measurements/live"
+            response = requests.post(url, headers = headers, data='[{"componentId":"IGULD:SELF"}]')
 
             # Check if a new acccess token is neccesary (TODO use refresh token)
-            if (x.status_code == 401):
-                x = requests.post(loginurl, data = postdata)
-                token = x.json()["access_token"] 
+            if (response.status_code == 401):
+                response = requests.post(loginurl, data = postdata)
+                token = response.json()['access_token']
                 headers = { "Authorization" : "Bearer " + token }
                 continue
             
-            data = x.json()
+            data = response.json()
 
             for d in data:
                 dname = config.get('server', 'sensorPrefix') + d["channelId"].replace("Measurement.","").replace("[]", "")
-                if "value" in d["values"][0]:
-                    v = d["values"][0]["value"]
+                if "value" in d['values'][0]:
+                    v = d['values'][0]['value']
                     if isfloat(v):
                         v = round(v,2)
                     unit = unit_of_measurement(dname)
 
-                    logging.debug(dname+': '+str(v)+' '+unit)
+                    logging.debug(f"{dname}: {str(v)} {unit}")
                     add_data(dname, v)
                 
-                elif "values" in d["values"][0]:
-                    for idx in range(0, len(d["values"][0]["values"])):
-                        v = d["values"][0]["values"][idx]
+                elif "values" in d['values'][0]:
+                    for idx in range(0, len(d['values'][0]['values'])):
+                        v = d['values'][0]['values'][idx]
                         if isfloat(v):
                             v = round(v, 2)
                         idxname = dname + "." + str(idx + 1)
                         unit = unit_of_measurement(dname)
 
-                        logging.debug(idxname+': '+str(v)+' '+unit)
+                        logging.debug(f"{idxname}: {str(v)} {unit}")
                         add_data(idxname, v)
                 
                 else:
