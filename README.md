@@ -10,6 +10,23 @@ SMAHub is a Python-based daemon that runs plugins to collect data from SMA PV pr
 
 SMAHub works by periodically polling data from SMA PV products using various protocols and interfaces. The data is then processed and published to one or more output channels, such as an MQTT broker. The plugin-based architecture allows SMAHub to be easily extended with new data sources and sinks, making it a versatile solution for monitoring and managing SMA PV systems.
 
+```ascii
+            +-------------+
+            |    SMAHub   |
+            +------+------+
+                  |
+      +-------------+--------------+
+      |                            |
+      v                            v
+   +--------+                +--------+
+   | Source |                |  Sink  |
+   +--------+                +--------+
+   | Plugin |                | Plugin |
+   +--------+                +--------+
+````
+
+This diagram shows the main SMAHub component at the top, which manages data collection and publishing. Below that, you can see the two plugin categories: source plugins on the left and sink plugins on the right. The arrows indicate the flow of data from the source plugins to the main SMAHub component, and then to the sink plugins for publishing.
+
 ## Plugins
 
 SMAHub uses a plugin-based architecture, which allows it to support different data sources and sinks. Plugins are organized into two categories: sources and sinks.
