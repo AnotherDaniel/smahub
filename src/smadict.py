@@ -133,6 +133,7 @@ class SMA_Dict(MutableMapping):
         Return a shallow copy of the SMA_Dict object.
 
         Returns:
+        --------
             SMA_Dict: A new SMA_Dict object with the same key-value pairs as the original object.
         """ 
         new_dict = SMA_Dict()

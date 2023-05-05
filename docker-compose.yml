@@ -13,3 +13,4 @@ services:
       -  MQTT_ENABLED=true
       -  MQTT_ADDRESS=192.168.0.2
       -  MQTT_PORT=1883
+      -  SHM2_ENABLED=true
