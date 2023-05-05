@@ -64,3 +64,5 @@ def execute(config, add_data, dostop):
 
             else:
                 logging.debug(key)
+
+    logging.info("Stopping SHM2 source")

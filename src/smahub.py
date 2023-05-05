@@ -21,11 +21,11 @@ _do_stop = False
 sma_dict = SMA_Dict()
 
 # Define the directory containing the data-source plugins
-SOURCES_DIR = "plugins/sources"
+SOURCES_DIR = os.environ.get("SMAHUB_SOURCES_DIR", "plugins/sources")
 sources = []
 
 # Define the directory containing the data-sink plugins
-SINKS_DIR = "plugins/sinks"
+SINKS_DIR = os.environ.get("SMAHUB_SINKS_DIR", "plugins/sinks")
 sinks = []
 
 def load_plugins(plugin_dir, plugins):
@@ -153,8 +153,10 @@ def do_stop():
 async def main(args):
     '''
     Main function that loads plugins, starts source and sink threads and waits for them to complete.
-    '''
-   
+    '''   
+    SOURCES_DIR = args.source_dir
+    SINKS_DIR = args.sink_dir
+
     if args.verbose:
         logging.getLogger().setLevel(logging.INFO)
         logging.debug('Verbose output enabled')
@@ -196,6 +198,8 @@ if __name__ == '__main__':
     parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose output')
     parser.add_argument('-V', '--verboser', action='store_true', help='Enable even more verbose output')
     parser.add_argument('--version', action='version', version='%(prog)s '+version)
+    parser.add_argument('--source-dir', type=str, default='plugins/sources', help='Path to the directory containing source plugins')
+    parser.add_argument('--sink-dir', type=str, default='plugins/sinks', help='Path to the directory containing sink plugins')
 
     # Parse command-line arguments
     args = parser.parse_args()
