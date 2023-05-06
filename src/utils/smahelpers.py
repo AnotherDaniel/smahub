@@ -6,6 +6,8 @@ Thank you littleyoda!
 def unit_of_measurement(name):
     if (name.endswith("TmpVal")):
         return "°C"
+    if (name.endswith("W")):
+        return "W"
     if (".W." in name):
         return "W"
     if (".TotWh" in name):

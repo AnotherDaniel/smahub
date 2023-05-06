@@ -96,9 +96,8 @@ def execute(config, add_data, dostop):
                     if isfloat(v):
                         v = round(v,2)
                     unit = unit_of_measurement(dname)
-
+                    add_data(dname, (v, unit))
                     logging.debug(f"{dname}: {str(v)} {unit}")
-                    add_data(dname, v)
                 
                 elif "values" in d['values'][0]:
                     for idx in range(0, len(d['values'][0]['values'])):
@@ -107,9 +106,8 @@ def execute(config, add_data, dostop):
                             v = round(v, 2)
                         idxname = dname + "." + str(idx + 1)
                         unit = unit_of_measurement(dname)
-
+                        add_data(idxname, (v, unit))
                         logging.debug(f"{idxname}: {str(v)} {unit}")
-                        add_data(idxname, v)
                 
                 else:
                     logging.debug("value currently not availably (nighttime?)")
