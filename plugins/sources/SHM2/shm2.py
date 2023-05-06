@@ -62,67 +62,67 @@ def execute(config, add_data, dostop):
                 # a bit elaborate, but stupid is easy to follow in this case - sort things into topic hierarchies
                 if "p1" in key:
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.p.1.{str(key)}"
-                    add_data(ename, (value, unit_of_measurement(key)))
+                    add_data(ename, (value, emdata[f"{key}unit"]))
 
                 elif "q1" in key:
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.q.1.{str(key)}"
-                    add_data(ename, (value, unit_of_measurement(key)))
+                    add_data(ename, (value, emdata[f"{key}unit"]))
                 
                 elif "s1" in key:
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.s.1.{str(key)}"
-                    add_data(ename, (value, unit_of_measurement(key)))
+                    add_data(ename, (value, emdata[f"{key}unit"]))
 
                 elif "p2" in key:
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.p.2.{str(key)}"
-                    add_data(ename, (value, unit_of_measurement(key)))
+                    add_data(ename, (value, emdata[f"{key}unit"]))
 
                 elif "q2" in key:
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.q.2.{str(key)}"
-                    add_data(ename, (value, unit_of_measurement(key)))
+                    add_data(ename, (value, emdata[f"{key}unit"]))
                 
                 elif "s2" in key:
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.s.2.{str(key)}"
-                    add_data(ename, (value, unit_of_measurement(key)))
+                    add_data(ename, (value, emdata[f"{key}unit"]))
 
                 elif "p3" in key:
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.p.3.{str(key)}"
-                    add_data(ename, (value, unit_of_measurement(key)))
+                    add_data(ename, (value, emdata[f"{key}unit"]))
 
                 elif "q3" in key:
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.q.3.{str(key)}"
-                    add_data(ename, (value, unit_of_measurement(key)))
+                    add_data(ename, (value, emdata[f"{key}unit"]))
                 
                 elif "s3" in key:
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.s.4.{str(key)}"
-                    add_data(ename, (value, unit_of_measurement(key)))
+                    add_data(ename, (value, emdata[f"{key}unit"]))
 
                 elif key.startswith('p'): 
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.p.{str(key)}"
-                    add_data(ename, (value, unit_of_measurement(key)))
+                    add_data(ename, (value, emdata[f"{key}unit"]))
 
                 elif key.startswith('q'): 
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.q.{str(key)}"
-                    add_data(ename, (value, unit_of_measurement(key)))
+                    add_data(ename, (value, emdata[f"{key}unit"]))
 
                 elif key.startswith('s'): 
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.s.{str(key)}"
-                    add_data(ename, (value, unit_of_measurement(key)))
+                    add_data(ename, (value, emdata[f"{key}unit"]))
 
                 elif "1" in key: 
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.1.{str(key)}"
-                    add_data(ename, (value, unit_of_measurement(key)))
+                    add_data(ename, (value, emdata[f"{key}unit"]))
 
                 elif "2" in key: 
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.2.{str(key)}"
-                    add_data(ename, (value, unit_of_measurement(key)))
+                    add_data(ename, (value, emdata[f"{key}unit"]))
 
                 elif "3" in key: 
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.3.{str(key)}"
-                    add_data(ename, (value, unit_of_measurement(key)))
+                    add_data(ename, (value, emdata[f"{key}unit"]))
 
                 elif "cosphi" in key or "frequency" in key:
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.{str(key)}"
-                    add_data(ename, (value, unit_of_measurement(key)))
+                    add_data(ename, (value, emdata[f"{key}unit"]))                
 
                 else:
                     logging.debug(key)
