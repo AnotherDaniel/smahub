@@ -72,7 +72,7 @@ def execute(config, add_data, dostop):
 
     while not dostop():
         for key, value in DeviceInfo.items(): 
-            dname = config.get('server', 'sensorPrefix') + 'device_info.' + key
+            dname = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.device_info.{key}"
             logging.debug(dname+': ' + value)
             add_data(dname, value)
 
@@ -90,7 +90,7 @@ def execute(config, add_data, dostop):
             data = response.json()
 
             for d in data:
-                dname = config.get('server', 'sensorPrefix') + d["channelId"].replace("Measurement.","").replace("[]", "")
+                dname = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.{d['channelId'].replace('Measurement.','').replace('[]', '')}"
                 if "value" in d['values'][0]:
                     v = d['values'][0]['value']
                     if isfloat(v):
