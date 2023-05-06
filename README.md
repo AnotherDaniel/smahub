@@ -36,13 +36,57 @@ SMAHub uses a plugin-based architecture, which allows it to support different da
 Source plugins are responsible for collecting data from SMA PV products. These plugins can use various protocols and interfaces to connect to the devices, extract the required information, and pass it to the main SMAHub instance. Some examples of source plugins include:
 
 - SHM2: A plugin for the SMA Sunny Home Manager 2, which collects data over the Speedwire protocol.
-- Tripower X: A plugin for SMA Tripower X inverters, which collects data using the inverter's built-in REST API.
+- Tripower X: A plugin for SMA Tripower X inverters, which collects data using the inverter's built-in HTTP API.
 
 ### Sinks
 
 Sink plugins are responsible for publishing the collected data to various output channels. These plugins receive data from the main SMAHub instance and send it to the desired output. Some examples of sink plugins include:
 
 - MQTT: A plugin that publishes data to an MQTT broker, making it easily accessible for home automation systems like Home Assistant.
+
+## Python
+
+To run smahub directly from the command line, you need git, a python interpreter version 3.8 or above, the pip package manager and (suggested) python venv. To install these requirements on an Ubuntu machine, run the following command:
+
+```shell
+sudo apt install git python3 python3-pip python3-venv
+````
+
+Then, get the code from github:
+
+```shell
+git clone git@github.com:AnotherDaniel/smahub.git
+```
+
+This will create a directory `smahub` an download the sources from github. Next, enter the project directory and install the project requirements using pip:
+
+At this point it is recommended to set up a little virtual environment for this python project, to avoid conflicts and overlaps between smahub python dependencies with the rest of the system. To this end, change into the program directory and create and activate a "venv":
+
+```shell
+cd smahub
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+Having this prepared, we tell pip to install the project dependencies:
+
+```shell
+pip3 install .
+```
+
+It should now be possible to run smahub from the command line like this (from the project root directory):
+
+```shell
+python3 src/smahub.py --version
+```
+
+This should print program name and version, and exit. For more command line options, run smahub with the `--help` argument.
+
+The program test cases can be run with:
+
+```shell
+pytest tests
+```
 
 ## Docker
 
@@ -70,8 +114,10 @@ The SMAHub container will start and begin collecting data from your SMA PV devic
 
 There are several areas where SMAHub can be improved:
 
+- Create a dedicated home assistant mqtt plug-in, which uses HA's mqtt integration library to auto-create sensor definitions for all published data in home assistant.
 - Option for different/separate plugin config file directory: Allow users to specify a separate directory for plugin configuration files, making it easier to manage and organize plugin configurations.
 - More robust plugin loading: Improve the plugin loading process to handle errors and edge cases more gracefully.
+- Extend test cases.
 
 ## Contributors/code sources
 

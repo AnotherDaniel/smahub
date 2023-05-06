@@ -119,12 +119,15 @@ def signal_handler(sig, frame):
 
 def add_item(key, value):
     '''
-    Add item to the shared dictionary.
+    Add item to the shared dictionary, only if not already set.
 
     Args:
         key (str): The key to use for the data.
         value (any): The data to add to the dictionary.
     '''
+    if key in sma_dict and sma_dict[key] == value:
+        return
+        
     sma_dict[key] = value
 
 def get_items():

@@ -15,7 +15,7 @@ def env_vars(config):
     if os.environ.get('MQTT_ADDRESS'):
         config['server']['address'] = os.environ.get('MQTT_ADDRESS')
     if os.environ.get('MQTT_PORT'):
-        config['server']['port'] = int(os.environ.get('MQTT_PORT'))
+        config['server']['port'] = os.environ.get('MQTT_PORT')
     if os.environ.get('MQTT_UPDATEFREQ'):
         config['server']['updatefreq'] = int(os.environ.get('MQTT_UPDATEFREQ'))
 
