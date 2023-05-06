@@ -77,7 +77,7 @@ def execute(config, add_data, dostop):
             add_data(dname, value)
 
         try:
-            url = f"http://'{config.get('server', 'address')}/api/v1/measurements/live"
+            url = f"http://{config.get('server', 'address')}/api/v1/measurements/live"
             response = requests.post(url, headers = headers, data='[{"componentId":"IGULD:SELF"}]')
 
             # Check if a new acccess token is neccesary (TODO use refresh token)
