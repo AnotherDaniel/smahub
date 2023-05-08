@@ -36,16 +36,20 @@ def execute(config, get_items, register_callback, do_stop):
         logging.fatal(f"MQTT broker not reachable at address: {config.get('server', 'address')}: {str(config.get('server', 'port'))}")
         return
 
-    # Either us the callback, or have regular publication in below loop... 
+    # We only publish data on change
     register_callback(my_callback)
 
+    i = 0
     while not do_stop():
-        # for _, value in get_items().items():
-        #     topic = str(value[0]).replace(".", "/")
-        #     message = str(value[1])
-        #     client.publish(topic, message)
-        # time.sleep(int(config.get('server', 'updatefreq')))
+        # while we're normally only publishing on change (see callback below), once a minute push out everything
+        if i%60 == 0:
+            for _, value in get_items().items():
+                topic = str(value[0]).replace(".", "/")
+                message = str(value[1])
+                client.publish(topic, message)
+        i = i+1
         time.sleep(1)
+
 
     # Disconnect from the broker
     client.disconnect()
