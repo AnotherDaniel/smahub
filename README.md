@@ -114,10 +114,11 @@ The SMAHub container will start and begin collecting data from your SMA PV devic
 
 There are several areas where SMAHub can be improved:
 
-- Create a dedicated home assistant mqtt plug-in, which uses HA's mqtt integration library to auto-create sensor definitions for all published data in home assistant.
-- Option for different/separate plugin config file directory: Allow users to specify a separate directory for plugin configuration files, making it easier to manage and organize plugin configurations.
-- More robust plugin loading: Improve the plugin loading process to handle errors and edge cases more gracefully.
-- Extend test cases.
+- Create a dedicated home assistant mqtt plug-in, which uses HA's mqtt integration library to auto-create sensor definitions for all published data in home assistant
+- Option for different/separate plugin config file directory: Allow users to specify a separate directory for plugin configuration files, making it easier to manage and organize plugin configurations
+- More robust plugin loading: Improve the plugin loading process to handle errors and edge cases more gracefully
+- Extend test cases
+- Auto-run tests and generate container image via GH actions
 
 ## Contributors/code sources
 

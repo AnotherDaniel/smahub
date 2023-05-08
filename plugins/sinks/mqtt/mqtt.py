@@ -43,9 +43,9 @@ def execute(config, get_items, register_callback, do_stop):
     while not do_stop():
         # while we're normally only publishing on change (see callback below), once a minute push out everything
         if i%60 == 0:
-            for _, value in get_items().items():
-                topic = str(value[0]).replace(".", "/")
-                message = str(value[1])
+            for key, value in get_items().items():
+                topic = str(key).replace(".", "/")
+                message = str(value)
                 client.publish(topic, message)
         i = i+1
         time.sleep(1)
