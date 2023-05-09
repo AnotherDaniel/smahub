@@ -1,13 +1,10 @@
-'''
-This code is adapted from https://github.com/littleyoda/Home-Assistant-Tripower-X-MQTT
-Thank you littleyoda!
-'''
 import os
 import time
 import logging
 import paho.mqtt.client as mqtt
 
 client = mqtt.Client()
+pubunits = False
 
 def env_vars(config):
     if os.environ.get('MQTT_ENABLED'):
@@ -23,6 +20,8 @@ def env_vars(config):
 
 def execute(config, get_items, register_callback, do_stop):
     env_vars(config)
+    global pubunits
+    pubunits = str(config['behavior']['publish_units']).lower() == "true"
 
     if config.get('plugin', 'enabled').lower() != 'true':
         logging.info("MQTT sink plugin disabled")
@@ -43,13 +42,11 @@ def execute(config, get_items, register_callback, do_stop):
 
     i = 0
     while not do_stop():
-        # while we're normally only publishing on change (see callback below), once a minute push out everything
+        # while we're normally only publishing on change (see callback below), once a minute (default) push out everything
         if i%int(config['behavior']['updatefreq']) == 0:
             for key, value in get_items().items():
                 topic = str(key).replace(".", "/")
-                # only publish units if they are there and we really want to
-                publish_value = value if not isinstance(value, tuple) or config['behavior']['publish_units'] == 'true' else value[0]
-                client.publish(topic, publish_value)
+                publish(topic, value)
 
         i = i+1
         time.sleep(1)
@@ -58,11 +55,15 @@ def execute(config, get_items, register_callback, do_stop):
     client.disconnect()
     logging.info("Stopping MQTT sink")
 
+def publish(topic, value):
+    global client, pubunits
+    # only publish units if they are there and we really want to    
+    publish_value = value 
+    if isinstance(value, tuple):
+        if not pubunits:
+            publish_value = value[0]
+    client.publish(topic, str(publish_value))
 
 def my_callback(key, value):
-    global client
     topic = str(key).replace(".", "/")
-    if isinstance(value, tuple):
-        client.publish(topic, value[0])
-    else:
-        client.publish(topic, value)
+    publish(topic, value)
