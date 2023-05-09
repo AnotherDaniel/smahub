@@ -46,12 +46,36 @@ def execute(config, get_items, register_callback, do_stop):
                         for key, value in filtered_items.items():
                             file.write(f"- name: {str(key).replace('.', '_')}\n")
                             file.write(f"  state_topic: \"{str(key).replace('.', '/')}\"\n")
+                            
                             if config['icons'].get(part):
                                 icon = config['icons'][part]
                                 file.write(f"  icon: \"{icon}\"\n")
+
                             # if value is a tuple, first entry should be measurement and second unit
                             if isinstance(value, tuple):
                                 file.write(f"  unit_of_measurement: \"{value[1]}\"\n")
+
+                                device_class = ""
+                                if value[1] == "Wh":
+                                    device_class = "energy"
+                                elif value[1] == "VA":
+                                    device_class = "apparent_power"
+                                elif value[1] == "VAr":
+                                    device_class = "reactive_power"
+                                elif value[1] == "V":
+                                    device_class = "voltage"
+                                elif value[1] == "A":
+                                    device_class = "current"
+                                elif value[1] == "Hz":
+                                    device_class = "frequency"
+                                elif value[1] == "W":
+                                    device_class = "power"
+                                elif value[1] == "°C":
+                                    device_class = "temperature"
+
+                                if device_class:
+                                    file.write(f"  device_class: \"{device_class}\"\n")
+                                    file.write(f"  state_class: \"measurement\"\n")
                 
                 except OSError as e:
                     logging.error(f"Error writing to file {file_name}: {e}")
