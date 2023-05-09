@@ -13,7 +13,6 @@ def env_vars(config):
     for icon in config['icons'].items():
         if os.environ.get(f"GENHASENSORS_{icon[0].upper()}"):
             config['icons'][icon[0]] = os.environ.get(f"GENHASENSORS_{icon[0].upper()}")
-            print(f"{config['icons'][icon[0]]}")
 
 def execute(config, get_items, register_callback, do_stop):
     env_vars(config)
@@ -45,7 +44,7 @@ def execute(config, get_items, register_callback, do_stop):
                 try:
                     with open(file_name, 'w') as file:        
                         for key, value in filtered_items.items():
-                            file.write(f"-name: {str(key).replace('.', '_')}\n")
+                            file.write(f"- name: {str(key).replace('.', '_')}\n")
                             file.write(f"  state_topic: \"{str(key).replace('.', '/')}\"\n")
                             if config['icons'].get(part):
                                 icon = config['icons'][part]

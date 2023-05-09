@@ -4,31 +4,31 @@ Thank you littleyoda!
 '''
 
 def unit_of_measurement(name):
-    if (name.endswith("TmpVal")):
+    if name.endswith("TmpVal"):
         return "°C"
-    if (name.endswith("W")):
+    if ".W." in name or name.endswith("W"):
         return "W"
-    if (".W." in name):
-        return "W"
-    if (".TotWh" in name):
+    if ".TotWh" in name:
         return "Wh"
-    if (".PvWh" in name):
+    if ".PvWh" in name:
         return "Wh"
-    if (name.endswith(".TotW")):
+    if name.endswith(".TotW"):
         return "W"
-    if (name.endswith(".TotW.Pv")):
+    if name.endswith(".TotW.Pv"):
         return "W"
-    if (name.endswith(".Watt")):
+    if name.endswith(".Watt"):
         return "W"
-    if (".A." in name):
+    if ".A." in name:
         return "A"
-    if (name.endswith(".Amp")):
+    if name.endswith(".Amp"):
         return "A"
-    if (name.endswith(".Vol")):
+    if name.endswith(".Vol"):
         return "V"
-    if (name.endswith(".VA.")):
+    if ".VA." in name or name.endswith(".VA"):
         return "VA"
-    if ("Tms" in name):
+    if ".VAr." in name or name.endswith(".VAr"):
+        return "VAr"
+    if "Tms" in name:
         return "ms"
     return ""
 
