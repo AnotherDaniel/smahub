@@ -17,7 +17,9 @@ def env_vars(config):
     if os.environ.get('MQTT_PORT'):
         config['server']['port'] = os.environ.get('MQTT_PORT')
     if os.environ.get('MQTT_UPDATEFREQ'):
-        config['server']['updatefreq'] = int(os.environ.get('MQTT_UPDATEFREQ'))
+        config['behavior']['updatefreq'] = int(os.environ.get('MQTT_UPDATEFREQ'))
+    if os.environ.get('MQTT_PUBLISHUNITS'):
+        config['behavior']['publish_units'] = os.environ.get('MQTT_PUBLISHUNITS')
 
 def execute(config, get_items, register_callback, do_stop):
     env_vars(config)
@@ -42,14 +44,15 @@ def execute(config, get_items, register_callback, do_stop):
     i = 0
     while not do_stop():
         # while we're normally only publishing on change (see callback below), once a minute push out everything
-        if i%60 == 0:
+        if i%int(config['behavior']['updatefreq']) == 0:
             for key, value in get_items().items():
                 topic = str(key).replace(".", "/")
-                message = str(value)
-                client.publish(topic, message)
+                # only publish units if they are there and we really want to
+                publish_value = value if not isinstance(value, tuple) or config['behavior']['publish_units'] == 'true' else value[0]
+                client.publish(topic, publish_value)
+
         i = i+1
         time.sleep(1)
-
 
     # Disconnect from the broker
     client.disconnect()
@@ -59,5 +62,7 @@ def execute(config, get_items, register_callback, do_stop):
 def my_callback(key, value):
     global client
     topic = str(key).replace(".", "/")
-    message = str(value)
-    client.publish(topic, message)
+    if isinstance(value, tuple):
+        client.publish(topic, value[0])
+    else:
+        client.publish(topic, value)
