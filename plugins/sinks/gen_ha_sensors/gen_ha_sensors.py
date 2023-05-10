@@ -54,28 +54,9 @@ def execute(config, get_items, register_callback, do_stop):
                             # if value is a tuple, first entry should be measurement and second unit
                             if isinstance(value, tuple):
                                 file.write(f"  unit_of_measurement: \"{value[1]}\"\n")
-
-                                device_class = ""
-                                if value[1] == "Wh":
-                                    device_class = "energy"
-                                elif value[1] == "VA":
-                                    device_class = "apparent_power"
-                                elif value[1] == "VAr":
-                                    device_class = "reactive_power"
-                                elif value[1] == "V":
-                                    device_class = "voltage"
-                                elif value[1] == "A":
-                                    device_class = "current"
-                                elif value[1] == "Hz":
-                                    device_class = "frequency"
-                                elif value[1] == "W":
-                                    device_class = "power"
-                                elif value[1] == "°C":
-                                    device_class = "temperature"
-
                                 if device_class:
-                                    file.write(f"  device_class: \"{device_class}\"\n")
-                                    file.write(f"  state_class: \"measurement\"\n")
+                                    file.write(f"  device_class: \"{device_class(value[1])}\"\n")
+                                    file.write(f"  state_class: \"{state_class(key, value[1])}\"\n")
                 
                 except OSError as e:
                     logging.error(f"Error writing to file {file_name}: {e}")
@@ -84,3 +65,40 @@ def execute(config, get_items, register_callback, do_stop):
         time.sleep(1)
 
     logging.info("Stopping gen_ha_sensors sink")
+
+# Home Assistant device class mapping, from physical unit
+def device_class(unit):
+    device_class = ""
+    if unit == "Wh" or unit == "kWh":
+        device_class = "energy"
+    elif unit == "VA" or unit == "kVA":
+        device_class = "apparent_power"
+    elif unit == "var":
+        device_class = "reactive_power"
+    elif unit == "V":
+        device_class = "voltage"
+    elif unit == "A":
+        device_class = "current"
+    elif unit == "Hz":
+        device_class = "frequency"
+    elif unit == "W" or unit == "kW":
+        device_class = "power"
+    elif unit == "°C":
+        device_class = "temperature"
+    elif unit == "s":
+        device_class = "duration"
+
+    return device_class
+
+# Home Assistant state class mapping, from name or unit
+def state_class(name, unit):
+    if name.contains('WCtlComCfg'):
+        return "total"
+   
+    if unit == "V" or unit == "VA" or unit == "var" or unit == "W":
+        return "measurement"
+    if unit == "Wh":
+        return "total"
+    if unit == "kWh" or unit == "s":
+        return "total_increasing"
+   

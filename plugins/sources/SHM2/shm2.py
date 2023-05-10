@@ -6,7 +6,6 @@ import logging
 import os
 import socket
 import struct
-from utils.smahelpers import unit_of_measurement
 from utils.speedwiredecoder import decode_speedwire
 
 def env_vars(config):

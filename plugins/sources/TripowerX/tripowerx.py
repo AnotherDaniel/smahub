@@ -6,7 +6,7 @@ import logging
 import os
 import time
 import requests
-from utils.smahelpers import unit_of_measurement, isfloat
+from utils.smahelpers import parameter_unit, isfloat
 
 def env_vars(config):
     if os.environ.get('TRIPOWERX_ENABLED'):
@@ -90,12 +90,15 @@ def execute(config, add_data, dostop):
             data = response.json()
 
             for d in data:
-                dname = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.{d['channelId'].replace('Measurement.','').replace('[]', '')}"
+                # name is the generic parameter/measurement name
+                name = f"{d['channelId'].replace('Measurement.','').replace('[]', '')}"
+                # dname is name, prefixed with device prefix and serial number
+                dname = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.{name}"
                 if "value" in d['values'][0]:
                     v = d['values'][0]['value']
                     if isfloat(v):
                         v = round(v,2)
-                    unit = unit_of_measurement(dname)
+                    unit = parameter_unit(name)
                     if unit:
                         add_data(dname, (v, unit))
                     else:
@@ -107,7 +110,7 @@ def execute(config, add_data, dostop):
                         if isfloat(v):
                             v = round(v, 2)
                         idxname = dname + "." + str(idx + 1)
-                        unit = unit_of_measurement(dname)
+                        unit = parameter_unit(name)
                         if unit:
                             add_data(idxname, (v, unit))
                         else:
