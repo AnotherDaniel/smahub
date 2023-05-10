@@ -53,7 +53,9 @@ def execute(config, get_items, register_callback, do_stop):
                                 dev_class = device_class(value[1])
                                 if dev_class:
                                     file.write(f"  device_class: \"{dev_class}\"\n")
-                                    file.write(f"  state_class: \"{state_class(key, value[1])}\"\n")
+                                    stat_class = state_class(key, value[1])
+                                    if stat_class:
+                                        file.write(f"  state_class: \"{stat_class}\"\n")
                             # if no unit, we set our own icon
                             elif config['icons'].get(part):
                                 icon = config['icons'][part]
@@ -97,10 +99,12 @@ def state_class(name, unit):
         return "total"
     if 'TotWh'in name or 'PvWh' in name:
         return "total_increasing"
+    if 'HealthStt' in name: 
+        return
    
-    if unit == "V" or unit == "VA" or unit == "var" or unit == "W":
+    if unit in ["V", "A", "VA", "var", "W", "Hz"]:
         return "measurement"
-    if unit == "Wh" or unit == "kWh" or unit == "kVAh" or unit == "kvarh":
+    if unit in ["Wh", "kWh", "kVAh", "kvarh"]:
         return "total"
     if unit == "s":
         return "total_increasing"
