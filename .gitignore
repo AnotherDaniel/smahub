@@ -160,3 +160,5 @@ cython_debug/
 #.idea/
 .vscode/launch.json
 .vscode/settings.json
+hasensors_SHM2.yaml
+hasensors_TriPowerX.yaml
