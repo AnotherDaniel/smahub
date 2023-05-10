@@ -54,8 +54,9 @@ def execute(config, get_items, register_callback, do_stop):
                             # if value is a tuple, first entry should be measurement and second unit
                             if isinstance(value, tuple):
                                 file.write(f"  unit_of_measurement: \"{value[1]}\"\n")
-                                if device_class:
-                                    file.write(f"  device_class: \"{device_class(value[1])}\"\n")
+                                dev_class = device_class(value[1])
+                                if dev_class:
+                                    file.write(f"  device_class: \"{dev_class}\"\n")
                                     file.write(f"  state_class: \"{state_class(key, value[1])}\"\n")
                 
                 except OSError as e:
@@ -92,13 +93,16 @@ def device_class(unit):
 
 # Home Assistant state class mapping, from name or unit
 def state_class(name, unit):
-    if name.contains('WCtlComCfg'):
+    if 'WCtlComCfg' in name:
         return "total"
+    if 'TotWh'in name or 'PvWh' in name:
+        return "total_increasing"
    
     if unit == "V" or unit == "VA" or unit == "var" or unit == "W":
         return "measurement"
-    if unit == "Wh":
+    if unit == "Wh" or unit == "kWh" or unit == "kVAh" or unit == "kvarh":
         return "total"
-    if unit == "kWh" or unit == "s":
+    if unit == "s":
         return "total_increasing"
+
    

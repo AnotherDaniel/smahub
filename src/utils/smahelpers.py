@@ -82,25 +82,25 @@ TRIPOWER_PARAM_DICT = {
     'WebConn.Stt': ('External Communication', 'Status of the Webconnect functionality', ''),
     'Wl.ConnStt': ('System communication', 'Wi-Fi connection status', ''),
     'Wl.SigPwr': ('System communication', 'Signal strength of the selected network', '%'),
-    'PlantControl.InOut.DigOut': ('Device', 'Digital output', ''),
-    'PlantControl.Inverter.WModCfg.WCtlComCfg.W': ('System and device control', 'Active power limitation by PV system control', 'kW')
+    'Setpoint.PlantControl.InOut.DigOut': ('Device', 'Digital output', ''),
+    'Setpoint.PlantControl.Inverter.WModCfg.WCtlComCfg.W': ('System and device control', 'Active power limitation by PV system control', 'kW')
 }
 
 def parameter_unit(name):
-    if TRIPOWER_PARAM_DICT[name]:
+    if name in TRIPOWER_PARAM_DICT:
         return TRIPOWER_PARAM_DICT[name][2]
     else:
         return ""
 
 def parameter_description(name):
-    if TRIPOWER_PARAM_DICT[name]:
+    if name in TRIPOWER_PARAM_DICT:
         return TRIPOWER_PARAM_DICT[name][1]
     else:
         return ""
 
 
 def parameter_group(name):
-    if TRIPOWER_PARAM_DICT[name]:
+    if name in TRIPOWER_PARAM_DICT:
         return TRIPOWER_PARAM_DICT[name][0]
     else:
         return ""

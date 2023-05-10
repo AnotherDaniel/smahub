@@ -40,8 +40,8 @@ sma_channels = {
     # totals
     1: ("pconsume", "W", "kWh"),
     2: ("psupply", "W", "kWh"),
-    3: ("qconsume", "VAr", "kVArh"),
-    4: ("qsupply", "VAr", "kVArh"),
+    3: ("qconsume", "var", "kvarh"),
+    4: ("qsupply", "var", "kvarh"),
     9: ("sconsume", "VA", "kVAh"),
     10: ("ssupply", "VA", "kVAh"),
     13: ("cosphi", "°"),
@@ -49,8 +49,8 @@ sma_channels = {
     # phase 1
     21: ("p1consume", "W", "kWh"),
     22: ("p1supply", "W", "kWh"),
-    23: ("q1consume", "VAr", "kVArh"),
-    24: ("q1supply", "VAr", "kVArh"),
+    23: ("q1consume", "var", "kvarh"),
+    24: ("q1supply", "var", "kvarh"),
     29: ("s1consume", "VA", "kVAh"),
     30: ("s1supply", "VA", "kVAh"),
     31: ("i1", "A"),
@@ -59,8 +59,8 @@ sma_channels = {
     # phase 2
     41: ("p2consume", "W", "kWh"),
     42: ("p2supply", "W", "kWh"),
-    43: ("q2consume", "VAr", "kVArh"),
-    44: ("q2supply", "VAr", "kVArh"),
+    43: ("q2consume", "var", "kvarh"),
+    44: ("q2supply", "var", "kvarh"),
     49: ("s2consume", "VA", "kVAh"),
     50: ("s2supply", "VA", "kVAh"),
     51: ("i2", "A"),
@@ -69,8 +69,8 @@ sma_channels = {
     # phase 3
     61: ("p3consume", "W", "kWh"),
     62: ("p3supply", "W", "kWh"),
-    63: ("q3consume", "VAr", "kVArh"),
-    64: ("q3supply", "VAr", "kVArh"),
+    63: ("q3consume", "var", "kvarh"),
+    64: ("q3supply", "var", "kvarh"),
     69: ("s3consume", "VA", "kVAh"),
     70: ("s3supply", "VA", "kVAh"),
     71: ("i3", "A"),
