@@ -46,10 +46,6 @@ def execute(config, get_items, register_callback, do_stop):
                         for key, value in filtered_items.items():
                             file.write(f"- name: {str(key).replace('.', '_')}\n")
                             file.write(f"  state_topic: \"{str(key).replace('.', '/')}\"\n")
-                            
-                            if config['icons'].get(part):
-                                icon = config['icons'][part]
-                                file.write(f"  icon: \"{icon}\"\n")
 
                             # if value is a tuple, first entry should be measurement and second unit
                             if isinstance(value, tuple):
@@ -58,6 +54,10 @@ def execute(config, get_items, register_callback, do_stop):
                                 if dev_class:
                                     file.write(f"  device_class: \"{dev_class}\"\n")
                                     file.write(f"  state_class: \"{state_class(key, value[1])}\"\n")
+                            # if no unit, we set our own icon
+                            elif config['icons'].get(part):
+                                icon = config['icons'][part]
+                                file.write(f"  icon: \"{icon}\"\n")
                 
                 except OSError as e:
                     logging.error(f"Error writing to file {file_name}: {e}")
