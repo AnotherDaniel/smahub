@@ -43,6 +43,7 @@ Source plugins are responsible for collecting data from SMA PV products. These p
 Sink plugins are responsible for publishing the collected data to various output channels. These plugins receive data from the main SMAHub instance and send it to the desired output. Some examples of sink plugins include:
 
 - MQTT: A plugin that publishes data to an MQTT broker, making it easily accessible for home automation systems like Home Assistant.
+- gen_ha_sensors: A plugin that generates MQTT sensor definitions of all collected data, for use in Home Assistant configuration.
 
 ## Python
 
