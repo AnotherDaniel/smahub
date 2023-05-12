@@ -66,12 +66,188 @@ This is a list of Home Assistant MQTT sensor definitions to add to `configuratio
 - name: TriPowerX_3015842895_device_info_sw_version
   state_topic: "TriPowerX/3015842895/device_info/sw_version"
   icon: "mdi:border-all"
+- name: TriPowerX_3015842895_Coolsys_Inverter_TmpVal_1
+  state_topic: "TriPowerX/3015842895/Coolsys/Inverter/TmpVal/1"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_Coolsys_Inverter_TmpVal_2
+  state_topic: "TriPowerX/3015842895/Coolsys/Inverter/TmpVal/2"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_Coolsys_Inverter_TmpVal_3
+  state_topic: "TriPowerX/3015842895/Coolsys/Inverter/TmpVal/3"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_DcMs_Amp_1
+  state_topic: "TriPowerX/3015842895/DcMs/Amp/1"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_DcMs_Amp_2
+  state_topic: "TriPowerX/3015842895/DcMs/Amp/2"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_DcMs_Amp_3
+  state_topic: "TriPowerX/3015842895/DcMs/Amp/3"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_DcMs_Vol_1
+  state_topic: "TriPowerX/3015842895/DcMs/Vol/1"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_DcMs_Vol_2
+  state_topic: "TriPowerX/3015842895/DcMs/Vol/2"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_DcMs_Vol_3
+  state_topic: "TriPowerX/3015842895/DcMs/Vol/3"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_DcMs_Watt_1
+  state_topic: "TriPowerX/3015842895/DcMs/Watt/1"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_DcMs_Watt_2
+  state_topic: "TriPowerX/3015842895/DcMs/Watt/2"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_DcMs_Watt_3
+  state_topic: "TriPowerX/3015842895/DcMs/Watt/3"
+  icon: "mdi:border-all"
 - name: TriPowerX_3015842895_GridGuard_Cntry
   state_topic: "TriPowerX/3015842895/GridGuard/Cntry"
   icon: "mdi:border-all"
+- name: TriPowerX_3015842895_GridMs_A_phsA
+  state_topic: "TriPowerX/3015842895/GridMs/A/phsA"
+  unit_of_measurement: "A"
+  device_class: "current"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_A_phsB
+  state_topic: "TriPowerX/3015842895/GridMs/A/phsB"
+  unit_of_measurement: "A"
+  device_class: "current"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_A_phsC
+  state_topic: "TriPowerX/3015842895/GridMs/A/phsC"
+  unit_of_measurement: "A"
+  device_class: "current"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_Hz
+  state_topic: "TriPowerX/3015842895/GridMs/Hz"
+  unit_of_measurement: "Hz"
+  device_class: "frequency"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_PhV_phsA
+  state_topic: "TriPowerX/3015842895/GridMs/PhV/phsA"
+  unit_of_measurement: "V"
+  device_class: "voltage"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_PhV_phsA2B
+  state_topic: "TriPowerX/3015842895/GridMs/PhV/phsA2B"
+  unit_of_measurement: "V"
+  device_class: "voltage"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_PhV_phsB
+  state_topic: "TriPowerX/3015842895/GridMs/PhV/phsB"
+  unit_of_measurement: "V"
+  device_class: "voltage"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_PhV_phsB2C
+  state_topic: "TriPowerX/3015842895/GridMs/PhV/phsB2C"
+  unit_of_measurement: "V"
+  device_class: "voltage"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_PhV_phsC
+  state_topic: "TriPowerX/3015842895/GridMs/PhV/phsC"
+  unit_of_measurement: "V"
+  device_class: "voltage"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_PhV_phsC2A
+  state_topic: "TriPowerX/3015842895/GridMs/PhV/phsC2A"
+  unit_of_measurement: "V"
+  device_class: "voltage"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_TotA
+  state_topic: "TriPowerX/3015842895/GridMs/TotA"
+  unit_of_measurement: "A"
+  device_class: "current"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_TotPFEEI
+  state_topic: "TriPowerX/3015842895/GridMs/TotPFEEI"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_GridMs_TotPFExt
+  state_topic: "TriPowerX/3015842895/GridMs/TotPFExt"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_GridMs_TotPFPrc
+  state_topic: "TriPowerX/3015842895/GridMs/TotPFPrc"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_GridMs_TotVA
+  state_topic: "TriPowerX/3015842895/GridMs/TotVA"
+  unit_of_measurement: "VA"
+  device_class: "apparent_power"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_TotVAr
+  state_topic: "TriPowerX/3015842895/GridMs/TotVAr"
+  unit_of_measurement: "var"
+  device_class: "reactive_power"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_TotW
+  state_topic: "TriPowerX/3015842895/GridMs/TotW"
+  unit_of_measurement: "W"
+  device_class: "power"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_TotW_Pv
+  state_topic: "TriPowerX/3015842895/GridMs/TotW/Pv"
+  unit_of_measurement: "W"
+  device_class: "power"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_VA_phsA
+  state_topic: "TriPowerX/3015842895/GridMs/VA/phsA"
+  unit_of_measurement: "VA"
+  device_class: "apparent_power"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_VA_phsB
+  state_topic: "TriPowerX/3015842895/GridMs/VA/phsB"
+  unit_of_measurement: "VA"
+  device_class: "apparent_power"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_VA_phsC
+  state_topic: "TriPowerX/3015842895/GridMs/VA/phsC"
+  unit_of_measurement: "VA"
+  device_class: "apparent_power"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_VAr_phsA
+  state_topic: "TriPowerX/3015842895/GridMs/VAr/phsA"
+  unit_of_measurement: "var"
+  device_class: "reactive_power"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_VAr_phsB
+  state_topic: "TriPowerX/3015842895/GridMs/VAr/phsB"
+  unit_of_measurement: "var"
+  device_class: "reactive_power"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_VAr_phsC
+  state_topic: "TriPowerX/3015842895/GridMs/VAr/phsC"
+  unit_of_measurement: "var"
+  device_class: "reactive_power"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_W_phsA
+  state_topic: "TriPowerX/3015842895/GridMs/W/phsA"
+  unit_of_measurement: "W"
+  device_class: "power"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_W_phsB
+  state_topic: "TriPowerX/3015842895/GridMs/W/phsB"
+  unit_of_measurement: "W"
+  device_class: "power"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_GridMs_W_phsC
+  state_topic: "TriPowerX/3015842895/GridMs/W/phsC"
+  unit_of_measurement: "W"
+  device_class: "power"
+  state_class: "measurement"
 - name: TriPowerX_3015842895_InOut_GI1
   state_topic: "TriPowerX/3015842895/InOut/GI1"
   icon: "mdi:border-all"
+- name: TriPowerX_3015842895_Inverter_VArModCfg_PFCtlVolCfg_Stt
+  state_topic: "TriPowerX/3015842895/Inverter/VArModCfg/PFCtlVolCfg/Stt"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_Isolation_FltA
+  state_topic: "TriPowerX/3015842895/Isolation/FltA"
+  unit_of_measurement: "A"
+  device_class: "current"
+  state_class: "measurement"
+- name: TriPowerX_3015842895_Isolation_LeakRis
+  state_topic: "TriPowerX/3015842895/Isolation/LeakRis"
+  unit_of_measurement: "kOhm"
 - name: TriPowerX_3015842895_Metering_TotFeedTms
   state_topic: "TriPowerX/3015842895/Metering/TotFeedTms"
   unit_of_measurement: "s"
@@ -92,6 +268,12 @@ This is a list of Home Assistant MQTT sensor definitions to add to `configuratio
   unit_of_measurement: "kWh"
   device_class: "energy"
   state_class: "total_increasing"
+- name: TriPowerX_3015842895_Operation_BckStt
+  state_topic: "TriPowerX/3015842895/Operation/BckStt"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_Operation_DrtStt
+  state_topic: "TriPowerX/3015842895/Operation/DrtStt"
+  icon: "mdi:border-all"
 - name: TriPowerX_3015842895_Operation_Evt_Dsc
   state_topic: "TriPowerX/3015842895/Operation/Evt/Dsc"
   icon: "mdi:border-all"
@@ -106,6 +288,9 @@ This is a list of Home Assistant MQTT sensor definitions to add to `configuratio
   icon: "mdi:border-all"
 - name: TriPowerX_3015842895_Operation_GriSwCnt
   state_topic: "TriPowerX/3015842895/Operation/GriSwCnt"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_Operation_GriSwStt
+  state_topic: "TriPowerX/3015842895/Operation/GriSwStt"
   icon: "mdi:border-all"
 - name: TriPowerX_3015842895_Operation_Health
   state_topic: "TriPowerX/3015842895/Operation/Health"
@@ -122,11 +307,46 @@ This is a list of Home Assistant MQTT sensor definitions to add to `configuratio
   state_topic: "TriPowerX/3015842895/Operation/HealthStt/Wrn"
   unit_of_measurement: "W"
   device_class: "power"
+- name: TriPowerX_3015842895_Operation_OpStt
+  state_topic: "TriPowerX/3015842895/Operation/OpStt"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_Operation_PvGriConn
+  state_topic: "TriPowerX/3015842895/Operation/PvGriConn"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_Operation_RstrLokStt
+  state_topic: "TriPowerX/3015842895/Operation/RstrLokStt"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_Operation_RunStt
+  state_topic: "TriPowerX/3015842895/Operation/RunStt"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_Operation_StandbyStt
+  state_topic: "TriPowerX/3015842895/Operation/StandbyStt"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_Operation_VArCtl_VArModAct
+  state_topic: "TriPowerX/3015842895/Operation/VArCtl/VArModAct"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_Operation_VArCtl_VArModStt
+  state_topic: "TriPowerX/3015842895/Operation/VArCtl/VArModStt"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_Operation_WMaxLimSrc
+  state_topic: "TriPowerX/3015842895/Operation/WMaxLimSrc"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_Operation_WMinLimSrc
+  state_topic: "TriPowerX/3015842895/Operation/WMinLimSrc"
+  icon: "mdi:border-all"
+- name: TriPowerX_3015842895_PvGen_PvW
+  state_topic: "TriPowerX/3015842895/PvGen/PvW"
+  unit_of_measurement: "W"
+  device_class: "power"
+  state_class: "measurement"
 - name: TriPowerX_3015842895_PvGen_PvWh
   state_topic: "TriPowerX/3015842895/PvGen/PvWh"
   unit_of_measurement: "kWh"
   device_class: "energy"
   state_class: "total_increasing"
+- name: TriPowerX_3015842895_SunSpecSig_SunSpecTx
+  state_topic: "TriPowerX/3015842895/SunSpecSig/SunSpecTx"
+  icon: "mdi:border-all"
 - name: TriPowerX_3015842895_Upd_Stt
   state_topic: "TriPowerX/3015842895/Upd/Stt"
   icon: "mdi:border-all"
