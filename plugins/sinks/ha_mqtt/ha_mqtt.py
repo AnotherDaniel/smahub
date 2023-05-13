@@ -36,7 +36,7 @@ def execute(config, get_items, register_callback, do_stop):
     mqtt_settings = Settings.MQTT(host=config['server']['address'], 
                                 username=config['server']['username'], 
                                 password=config['server']['password'],
-                                discovery_prefix=config['server']['sensorprefix'])
+                                discovery_prefix=config['behavior']['sensorprefix'])
 
     # We only publish data on change
     register_callback(my_callback)
@@ -61,18 +61,19 @@ def execute(config, get_items, register_callback, do_stop):
                 if device_info is None:
                     # create device info if not already in dict
                     device_items = {k: v for k, v in filtered_items.items() if k.split('.')[2] == 'device_info'}
-                    device_info = DeviceInfo(name = device_items['name'], 
-                                            configuration_url = device_items['configuration_url'], 
-                                            identifiers = device_items['identifiers'], 
-                                            model = device_items['model'],
-                                            manufacturer = device_items['manufacturer'],
-                                            sw_version = device_items['sw_version'])
+                    # remove the leading parts of each key, just leave the last part
+                    di = {k.split(".")[-1]: v for k, v in device_items.items()}
+                    device_info = DeviceInfo(name = di['name'], 
+#                                            configuration_url = di['configuration_url'], 
+                                            identifiers = di['identifiers'], 
+                                            model = di['model'],
+                                            manufacturer = di['manufacturer'],
+                                            sw_version = di['sw_version'])
                     device_infos[part] = device_info
 
                 for key, value in filtered_items.items():
                     sensor = get_sensor(key, value, device_info)
                     publish(sensor, value)
-
         i = i+1
         time.sleep(1)
 
@@ -84,6 +85,7 @@ def get_sensor(name, value, device_info):
     sensor = sensors.get(name)
     if (sensor is None):
         # create sensor if not already in dict
+        unit = ""
         if isinstance(value, tuple):
             unit = value[1]
         sensor_info = SensorInfo(unit_of_measurement = unit, 
