@@ -119,7 +119,6 @@ There are several areas where SMAHub can be improved:
 - Option for different/separate plugin config file directory: Allow users to specify a separate directory for plugin configuration files, making it easier to manage and organize plugin configurations
 - More robust plugin loading: Improve the plugin loading process to handle errors and edge cases more gracefully
 - Extend test cases
-- Auto-run tests and generate container image via GH actions
 
 ## Contributors/code sources
 
