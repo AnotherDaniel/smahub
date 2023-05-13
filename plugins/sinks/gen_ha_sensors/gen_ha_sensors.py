@@ -2,6 +2,7 @@ import os
 import time
 import logging
 
+
 def env_vars(config):
     if os.environ.get('GENHASENSORS_ENABLED'):
         config['plugin']['enabled'] = os.environ.get('GENHASENSORS_ENABLED')
@@ -13,6 +14,7 @@ def env_vars(config):
     for icon in config['icons'].items():
         if os.environ.get(f"GENHASENSORS_{icon[0].upper()}"):
             config['icons'][icon[0]] = os.environ.get(f"GENHASENSORS_{icon[0].upper()}")
+
 
 def execute(config, get_items, register_callback, do_stop):
     env_vars(config)
@@ -26,9 +28,9 @@ def execute(config, get_items, register_callback, do_stop):
     # start counting at 1 so that publication will not happen immediately, so sma_dict can populate a bit
     i = 1
     often = int(config['generator']['generate_freq'])
-    while not do_stop():   
+    while not do_stop():
         # we only do this "occasionally"
-        if i%often == 0:
+        if i % often == 0:
             # first, retrieve all unique first name-sections from dictionary
             sma_items = get_items()
             unique_parts = set()
@@ -42,7 +44,7 @@ def execute(config, get_items, register_callback, do_stop):
                 filtered_items = {k: v for k, v in sma_items.items() if k.split('.')[0] == part}
 
                 try:
-                    with open(file_name, 'w') as file:        
+                    with open(file_name, 'w') as file:
                         for key, value in filtered_items.items():
                             file.write(f"- name: {str(key).replace('.', '_')}\n")
                             file.write(f"  state_topic: \"{str(key).replace('.', '/')}\"\n")
@@ -60,7 +62,7 @@ def execute(config, get_items, register_callback, do_stop):
                             elif config['icons'].get(part):
                                 icon = config['icons'][part]
                                 file.write(f"  icon: \"{icon}\"\n")
-                
+
                 except OSError as e:
                     logging.error(f"Error writing to file {file_name}: {e}")
 
@@ -68,6 +70,7 @@ def execute(config, get_items, register_callback, do_stop):
         time.sleep(1)
 
     logging.info("Stopping gen_ha_sensors sink")
+
 
 # Home Assistant device class mapping, from physical unit
 def device_class(unit):
@@ -93,20 +96,19 @@ def device_class(unit):
 
     return device_class
 
+
 # Home Assistant state class mapping, from name or unit
 def state_class(name, unit):
     if 'WCtlComCfg' in name:
         return "total"
-    if 'TotWh'in name or 'PvWh' in name:
+    if 'TotWh' in name or 'PvWh' in name:
         return "total_increasing"
-    if 'HealthStt' in name: 
+    if 'HealthStt' in name:
         return
-   
+
     if unit in ["V", "A", "VA", "var", "W", "Hz"]:
         return "measurement"
     if unit in ["Wh", "kWh", "kVAh", "kvarh"]:
         return "total"
     if unit == "s":
         return "total_increasing"
-
-   

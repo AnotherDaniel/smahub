@@ -1,6 +1,6 @@
-import time
 from collections.abc import MutableMapping
 from threading import Lock
+
 
 class SMA_Dict(MutableMapping):
     """
@@ -135,7 +135,7 @@ class SMA_Dict(MutableMapping):
         Returns:
         --------
             SMA_Dict: A new SMA_Dict object with the same key-value pairs as the original object.
-        """ 
+        """
         new_dict = SMA_Dict()
         new_dict.store = self.store.copy()
         return new_dict

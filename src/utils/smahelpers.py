@@ -86,11 +86,13 @@ TRIPOWER_PARAM_DICT = {
     'Setpoint.PlantControl.Inverter.WModCfg.WCtlComCfg.W': ('System and device control', 'Active power limitation by PV system control', 'W')
 }
 
+
 def parameter_unit(name):
     if name in TRIPOWER_PARAM_DICT:
         return TRIPOWER_PARAM_DICT[name][2]
     else:
         return ""
+
 
 def parameter_description(name):
     if name in TRIPOWER_PARAM_DICT:
@@ -104,6 +106,7 @@ def parameter_group(name):
         return TRIPOWER_PARAM_DICT[name][0]
     else:
         return ""
+
 
 def unit_of_measurement(name):
     if name.endswith("TmpVal"):
@@ -133,6 +136,7 @@ def unit_of_measurement(name):
     if "Tms" in name:
         return "ms"
     return ""
+
 
 def isfloat(num):
     try:

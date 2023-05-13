@@ -1,7 +1,7 @@
 import unittest
-from threading import Thread
 from time import sleep
 from smadict import SMA_Dict
+
 
 class TestSmaDict(unittest.TestCase):
     def test_basic_operations(self):
@@ -30,6 +30,7 @@ class TestSmaDict(unittest.TestCase):
 
     def test_callback(self):
         d = SMA_Dict()
+
         def callback(key, value):
             self.assertEqual(key, 'a')
             self.assertEqual(value, 1)
@@ -54,6 +55,7 @@ class TestSmaDict(unittest.TestCase):
         self.assertNotEqual(copied_dict['a'], original_dict['a'])
         self.assertEqual(copied_dict['b'], original_dict['b'])
         self.assertEqual(copied_dict['c'], original_dict['c'])
+
 
 if __name__ == '__main__':
     unittest.main()

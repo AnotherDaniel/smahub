@@ -1,6 +1,7 @@
 import unittest
 from smahub import add_item, get_items
 
+
 class TestSMAHub(unittest.TestCase):
 
     def setUp(self):

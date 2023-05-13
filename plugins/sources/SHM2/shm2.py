@@ -8,11 +8,13 @@ import socket
 import struct
 from utils.speedwiredecoder import decode_speedwire
 
+
 def env_vars(config):
     if os.environ.get('SHM2_ENABLED'):
         config['plugin']['enabled'] = os.environ.get('SHM2_ENABLED')
     if os.environ.get('SHM2_PREFIX'):
         config['server']['sensorPrefix'] = os.environ.get('SHM2_PREFIX')
+
 
 def execute(config, add_data, dostop):
     env_vars(config)
@@ -49,7 +51,7 @@ def execute(config, add_data, dostop):
             DeviceInfo['manufacturer'] = "SMA"
             DeviceInfo['sw_version'] = emdata['speedwire-version']
 
-            for key, value in DeviceInfo.items(): 
+            for key, value in DeviceInfo.items():
                 dname = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.device_info.{key}"
                 add_data(dname, value)
 
@@ -76,24 +78,24 @@ def execute(config, add_data, dostop):
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.q.3.{str(key)}"
                 elif "s3" in key:
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.s.4.{str(key)}"
-                elif key.startswith('p'): 
+                elif key.startswith('p'):
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.p.{str(key)}"
-                elif key.startswith('q'): 
+                elif key.startswith('q'):
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.q.{str(key)}"
-                elif key.startswith('s'): 
+                elif key.startswith('s'):
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.s.{str(key)}"
-                elif "1" in key: 
+                elif "1" in key:
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.1.{str(key)}"
-                elif "2" in key: 
+                elif "2" in key:
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.2.{str(key)}"
-                elif "3" in key: 
+                elif "3" in key:
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.3.{str(key)}"
                 elif "cosphi" in key or "frequency" in key:
-                    ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.{str(key)}"                    
+                    ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.{str(key)}"
                 else:
                     logging.debug(key)
                     continue
 
-                add_data(ename, (value, emdata[f"{key}unit"]))                
+                add_data(ename, (value, emdata[f"{key}unit"]))
 
     logging.info("Stopping SHM2 source")

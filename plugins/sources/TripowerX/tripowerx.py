@@ -8,6 +8,7 @@ import time
 import requests
 from utils.smahelpers import parameter_unit, isfloat
 
+
 def env_vars(config):
     if os.environ.get('TRIPOWERX_ENABLED'):
         config['plugin']['enabled'] = os.environ.get('TRIPOWERX_ENABLED')
@@ -22,6 +23,7 @@ def env_vars(config):
     if os.environ.get('TRIPOWERX_PREFIX'):
         config['server']['sensorPrefix'] = os.environ.get('TRIPOWERX_PREFIX')
 
+
 def execute(config, add_data, dostop):
     env_vars(config)
 
@@ -32,14 +34,14 @@ def execute(config, add_data, dostop):
     logging.info("Starting Tripower X source")
     loginurl = f"http://{config.get('server','address')}/api/v1/token"
     postdata = {'grant_type': 'password',
-            'username': config.get('server', 'username'),
-            'password': config.get('server', 'password'),
-            }
+                'username': config.get('server', 'username'),
+                'password': config.get('server', 'password'),
+                }
 
     # Login & Extract Access-Token
     try:
-        response = requests.post(loginurl, data = postdata, timeout = 5)
-        
+        response = requests.post(loginurl, data=postdata, timeout=5)
+
     except requests.exceptions.ConnectTimeout:
         logging.fatal(f"Inverter not reachable via HTTP: {config.get('server', 'address')}")
         return
@@ -52,12 +54,12 @@ def execute(config, add_data, dostop):
         logging.fatal(f"HTTP connection to {config.get('server', 'address')} refused (status 404)")
         return
 
-    token = response.json()["access_token"] 
-    headers = { "Authorization" : "Bearer " + token }
+    token = response.json()["access_token"]
+    headers = {"Authorization": "Bearer " + token}
 
     # Request Device Info
     url = f"http://{config.get('server','address')}/api/v1/plants/Plant:1/devices/IGULD:SELF"
-    response = requests.get(url, headers = headers)
+    response = requests.get(url, headers=headers)
     dev = response.json()
 
     DeviceInfo = {}
@@ -71,22 +73,21 @@ def execute(config, add_data, dostop):
     time.sleep(1)
 
     while not dostop():
-        for key, value in DeviceInfo.items(): 
+        for key, value in DeviceInfo.items():
             dname = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.device_info.{key}"
             logging.debug(dname+': ' + value)
             add_data(dname, value)
 
         try:
             url = f"http://{config.get('server', 'address')}/api/v1/measurements/live"
-            response = requests.post(url, headers = headers, data='[{"componentId":"IGULD:SELF"}]')
+            response = requests.post(url, headers=headers, data='[{"componentId":"IGULD:SELF"}]')
 
             # Check if a new acccess token is neccesary (TODO use refresh token)
             if (response.status_code == 401):
-                response = requests.post(loginurl, data = postdata)
+                response = requests.post(loginurl, data=postdata)
                 token = response.json()['access_token']
-                headers = { "Authorization" : "Bearer " + token }
+                headers = {"Authorization": "Bearer " + token}
                 continue
-            
             data = response.json()
 
             for d in data:
@@ -97,12 +98,12 @@ def execute(config, add_data, dostop):
                 if "value" in d['values'][0]:
                     v = d['values'][0]['value']
                     if isfloat(v):
-                        v = round(v,2)
+                        v = round(v, 2)
                     unit = parameter_unit(name)
                     if unit:
                         add_data(dname, (v, unit))
                     else:
-                        add_data(dname, v) 
+                        add_data(dname, v)
 
                 elif "values" in d['values'][0]:
                     for idx in range(0, len(d['values'][0]['values'])):
@@ -114,14 +115,13 @@ def execute(config, add_data, dostop):
                         if unit:
                             add_data(idxname, (v, unit))
                         else:
-                            add_data(idxname, v) 
-                
+                            add_data(idxname, v)
                 else:
                     logging.debug("value currently not availably (nighttime?)")
                     pass
 
             time.sleep(int(config.get('server', 'updatefreq')))
-            
+
         except TimeoutError:
             pass
 

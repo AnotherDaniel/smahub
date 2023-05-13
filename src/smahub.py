@@ -28,6 +28,7 @@ sources = []
 SINKS_DIR = os.environ.get("SMAHUB_SINKS_DIR", "plugins/sinks")
 sinks = []
 
+
 def load_plugins(plugin_dir, plugins):
     '''
     Load plugins from a given directory and append them to a list.
@@ -50,7 +51,7 @@ def load_plugins(plugin_dir, plugins):
 
             # If the file has a .conf extension, store the config for later
             elif filename.endswith('.conf'):
-                config = configparser.ConfigParser()        
+                config = configparser.ConfigParser()
                 config.read(os.path.join(plugin_dir, feature, filename))
                 configs[feature] = config
                 logging.debug(f"Found .conf file for {feature} plugin")
@@ -72,13 +73,14 @@ def load_plugins(plugin_dir, plugins):
 
         except ImportError as e:
             logging.error(f"Could not import module {module_name}: {e}")
-            
+
         except AttributeError:
             logging.warn(f"Script {module_path} does not have the method execute()")
 
         # If plugins array still contains the same number of entries as above, nothing was added (and so nothing can be executed)
         if len(plugins) == startlen:
             logging.error(f"Module {module_name} does not have any script with method execute()")
+
 
 def source_runner(function, config, add_data, dostop):
     '''
@@ -91,6 +93,7 @@ def source_runner(function, config, add_data, dostop):
     '''
     function(config, add_data, dostop)
 
+
 def sink_runner(function, config, get_items, register_callback, do_stop):
     '''
     Run a sink function in a separate thread.
@@ -101,6 +104,7 @@ def sink_runner(function, config, get_items, register_callback, do_stop):
         dostop (function): A function to determine when to stop the thread.
     '''
     function(config, get_items, register_callback, do_stop)
+
 
 def signal_handler(sig, frame):
     '''
@@ -114,8 +118,9 @@ def signal_handler(sig, frame):
         None
     '''
     logging.info('Exiting...')
-    global _do_stop 
+    global _do_stop
     _do_stop = True
+
 
 def add_item(key, value):
     '''
@@ -127,14 +132,15 @@ def add_item(key, value):
     '''
     if key in sma_dict and sma_dict[key] == value:
         return
-        
     sma_dict[key] = value
+
 
 def get_items():
     '''
     Get iterator for the shared dictionary.
     '''
     return dict(sma_dict)
+
 
 def register_callback(sink_callback):
     '''
@@ -144,6 +150,7 @@ def register_callback(sink_callback):
         sink_callback (function): The callback function.
     '''
     sma_dict.register_callback(sink_callback)
+
 
 def do_stop():
     '''
@@ -155,17 +162,18 @@ def do_stop():
     global _do_stop
     return _do_stop
 
+
 async def main(args):
     '''
     Main function that loads plugins, starts source and sink threads and waits for them to complete.
-    '''   
+    '''
     SOURCES_DIR = args.source_dir
     SINKS_DIR = args.sink_dir
 
     if args.verbose:
         logging.getLogger().setLevel(logging.INFO)
         logging.debug('Verbose output enabled')
- 
+
     if args.verboser:
         logging.getLogger().setLevel(logging.DEBUG)
         logging.debug('Verbose output enabled')

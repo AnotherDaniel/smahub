@@ -121,13 +121,13 @@ def decode_speedwire(datagram):
         while position < datalength:
             # decode header
             # print('pos: {}'.format(position))
-            (measurement, datatype) = decode_OBIS(datagram[position : position + 4])
+            (measurement, datatype) = decode_OBIS(datagram[position: position + 4])
             # print('measurement {} datatype: {}'.format(measurement,datatype))
             # decode values
             # actual values
             if datatype == "actual":
                 value = int.from_bytes(
-                    datagram[position + 4 : position + 8], byteorder="big"
+                    datagram[position + 4: position + 8], byteorder="big"
                 )
                 position += 8
                 if measurement in sma_channels.keys():
@@ -140,7 +140,7 @@ def decode_speedwire(datagram):
             # counter values
             elif datatype == "counter":
                 value = int.from_bytes(
-                    datagram[position + 4 : position + 12], byteorder="big"
+                    datagram[position + 4: position + 12], byteorder="big"
                 )
                 position += 12
                 if measurement in sma_channels.keys():
@@ -151,7 +151,7 @@ def decode_speedwire(datagram):
                         sma_channels[measurement][0] + "counterunit"
                     ] = sma_channels[measurement][2]
             elif datatype == "version":
-                value = datagram[position + 4 : position + 8]
+                value = datagram[position + 4: position + 8]
                 if measurement in sma_channels.keys():
                     bversion = binascii.b2a_hex(value).decode("utf-8")
                     version = (
