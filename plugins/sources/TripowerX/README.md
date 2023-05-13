@@ -364,7 +364,7 @@ This is a list of Home Assistant MQTT sensor definitions to add to `configuratio
   icon: "mdi:border-all"
 - name: TriPowerX_3015842895_Setpoint_PlantControl_Inverter_WModCfg_WCtlComCfg_W
   state_topic: "TriPowerX/3015842895/Setpoint/PlantControl/Inverter/WModCfg/WCtlComCfg/W"
-  unit_of_measurement: "kW"
+  unit_of_measurement: "W"
   device_class: "power"
   state_class: "total"
 ```
