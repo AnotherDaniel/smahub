@@ -68,40 +68,61 @@ This is a list of Home Assistant MQTT sensor definitions to add to `configuratio
   icon: "mdi:border-all"
 - name: TriPowerX_3015842895_Coolsys_Inverter_TmpVal_1
   state_topic: "TriPowerX/3015842895/Coolsys/Inverter/TmpVal/1"
-  icon: "mdi:border-all"
+  unit_of_measurement: "°C"
+  device_class: "temperature"
 - name: TriPowerX_3015842895_Coolsys_Inverter_TmpVal_2
   state_topic: "TriPowerX/3015842895/Coolsys/Inverter/TmpVal/2"
-  icon: "mdi:border-all"
+  unit_of_measurement: "°C"
+  device_class: "temperature"
 - name: TriPowerX_3015842895_Coolsys_Inverter_TmpVal_3
   state_topic: "TriPowerX/3015842895/Coolsys/Inverter/TmpVal/3"
-  icon: "mdi:border-all"
+  unit_of_measurement: "°C"
+  device_class: "temperature"
 - name: TriPowerX_3015842895_DcMs_Amp_1
   state_topic: "TriPowerX/3015842895/DcMs/Amp/1"
-  icon: "mdi:border-all"
+  unit_of_measurement: "A"
+  device_class: "current"
+  state_class: "measurement"
 - name: TriPowerX_3015842895_DcMs_Amp_2
   state_topic: "TriPowerX/3015842895/DcMs/Amp/2"
-  icon: "mdi:border-all"
+  unit_of_measurement: "A"
+  device_class: "current"
+  state_class: "measurement"
 - name: TriPowerX_3015842895_DcMs_Amp_3
   state_topic: "TriPowerX/3015842895/DcMs/Amp/3"
-  icon: "mdi:border-all"
+  unit_of_measurement: "A"
+  device_class: "current"
+  state_class: "measurement"
 - name: TriPowerX_3015842895_DcMs_Vol_1
   state_topic: "TriPowerX/3015842895/DcMs/Vol/1"
-  icon: "mdi:border-all"
+  unit_of_measurement: "V"
+  device_class: "voltage"
+  state_class: "measurement"
 - name: TriPowerX_3015842895_DcMs_Vol_2
   state_topic: "TriPowerX/3015842895/DcMs/Vol/2"
-  icon: "mdi:border-all"
+  unit_of_measurement: "V"
+  device_class: "voltage"
+  state_class: "measurement"
 - name: TriPowerX_3015842895_DcMs_Vol_3
   state_topic: "TriPowerX/3015842895/DcMs/Vol/3"
-  icon: "mdi:border-all"
+  unit_of_measurement: "V"
+  device_class: "voltage"
+  state_class: "measurement"
 - name: TriPowerX_3015842895_DcMs_Watt_1
   state_topic: "TriPowerX/3015842895/DcMs/Watt/1"
-  icon: "mdi:border-all"
+  unit_of_measurement: "W"
+  device_class: "power"
+  state_class: "measurement"
 - name: TriPowerX_3015842895_DcMs_Watt_2
   state_topic: "TriPowerX/3015842895/DcMs/Watt/2"
-  icon: "mdi:border-all"
+  unit_of_measurement: "W"
+  device_class: "power"
+  state_class: "measurement"
 - name: TriPowerX_3015842895_DcMs_Watt_3
   state_topic: "TriPowerX/3015842895/DcMs/Watt/3"
-  icon: "mdi:border-all"
+  unit_of_measurement: "W"
+  device_class: "power"
+  state_class: "measurement"
 - name: TriPowerX_3015842895_GridGuard_Cntry
   state_topic: "TriPowerX/3015842895/GridGuard/Cntry"
   icon: "mdi:border-all"

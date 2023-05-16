@@ -6,18 +6,10 @@ Thank you littleyoda!
 # Lookup table, gathered by downloading TriPower X current values as CSV file and then doing conversions to a python dict
 # Contents: Channel: Group, Name Unit
 TRIPOWER_PARAM_DICT = {
-    'Coolsys.Inverter.TmpVal[0]': ('Device', 'Inverter temperature [1]', '°C'),
-    'Coolsys.Inverter.TmpVal[1]': ('Device', 'Inverter temperature [2]', '°C'),
-    'Coolsys.Inverter.TmpVal[2]': ('Device', 'Inverter temperature [3]', '°C'),
-    'DcMs.Amp[0]': ('DC Side', 'DC current input [A]', 'A'),
-    'DcMs.Amp[1]': ('DC Side', 'DC current input [B]', 'A'),
-    'DcMs.Amp[2]': ('DC Side', 'DC current input [C]', 'A'),
-    'DcMs.Vol[0]': ('DC Side', 'DC voltage input [A]', 'V'),
-    'DcMs.Vol[1]': ('DC Side', 'DC voltage input [B]', 'V'),
-    'DcMs.Vol[2]': ('DC Side', 'DC voltage input [C]', 'V'),
-    'DcMs.Watt[0]': ('DC Side', 'DC power input [A]', 'W'),
-    'DcMs.Watt[1]': ('DC Side', 'DC power input [B]', 'W'),
-    'DcMs.Watt[2]': ('DC Side', 'DC power input [C]', 'W'),
+    'Coolsys.Inverter.TmpVal': ('Device', 'Inverter temperature [3]', '°C'),
+    'DcMs.Amp': ('DC Side', 'DC current input [C]', 'A'),
+    'DcMs.Vol': ('DC Side', 'DC voltage input [C]', 'V'),
+    'DcMs.Watt': ('DC Side', 'DC power input [C]', 'W'),
     'GridGuard.Cntry': ('Grid Monitoring', 'Country standard set', ''),
     'GridMs.A.phsA': ('AC Side', 'Grid current phase L1', 'A'),
     'GridMs.A.phsB': ('AC Side', 'Grid current phase L2', 'A'),
