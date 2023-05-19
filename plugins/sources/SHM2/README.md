@@ -37,278 +37,279 @@ Note: Ensure that your SHM2 device and the SMAHub server are on the same network
 
 ## Home Assistant MQTT sensor configuration
 
-This is a list of Home Assistant MQTT sensor definitions to add to `configuration.yaml` (mqtt: section). This makes all data collected by this plugin available in Home Assistant, published via the smahub MQTT sink plugin. This list can be (re)created using the smahub gen_ha_sensors plugin.
+This is a list of Home Assistant MQTT sensor definitions to add to `configuration.yaml` (mqtt: section). This makes all data collected by this plugin available in Home Assistant, published via the smahub MQTT sink plugin. This list can be (re)created using the smahub gen_ha_sensors plugin. 
+Important: You have to replace "<SERIAL>" with the serial number of the device you are monitoring!
 
 
 ```yaml
-- name: SHM2_3015975172_device_info_name
-  state_topic: "SHM2/3015975172/device_info/name"
+- name: SHM2_<SERIAL>_device_info_name
+  state_topic: "SHM2/<SERIAL>/device_info/name"
   icon: "mdi:camera-switch"
-- name: SHM2_3015975172_device_info_identifiers
-  state_topic: "SHM2/3015975172/device_info/identifiers"
+- name: SHM2_<SERIAL>_device_info_identifiers
+  state_topic: "SHM2/<SERIAL>/device_info/identifiers"
   icon: "mdi:camera-switch"
-- name: SHM2_3015975172_device_info_model
-  state_topic: "SHM2/3015975172/device_info/model"
+- name: SHM2_<SERIAL>_device_info_model
+  state_topic: "SHM2/<SERIAL>/device_info/model"
   icon: "mdi:camera-switch"
-- name: SHM2_3015975172_device_info_manufacturer
-  state_topic: "SHM2/3015975172/device_info/manufacturer"
+- name: SHM2_<SERIAL>_device_info_manufacturer
+  state_topic: "SHM2/<SERIAL>/device_info/manufacturer"
   icon: "mdi:camera-switch"
-- name: SHM2_3015975172_device_info_sw_version
-  state_topic: "SHM2/3015975172/device_info/sw_version"
+- name: SHM2_<SERIAL>_device_info_sw_version
+  state_topic: "SHM2/<SERIAL>/device_info/sw_version"
   icon: "mdi:camera-switch"
-- name: SHM2_3015975172_p_pconsume
-  state_topic: "SHM2/3015975172/p/pconsume"
+- name: SHM2_<SERIAL>_p_pconsume
+  state_topic: "SHM2/<SERIAL>/p/pconsume"
   unit_of_measurement: "W"
   device_class: "power"
   state_class: "measurement"
-- name: SHM2_3015975172_p_pconsumecounter
-  state_topic: "SHM2/3015975172/p/pconsumecounter"
+- name: SHM2_<SERIAL>_p_pconsumecounter
+  state_topic: "SHM2/<SERIAL>/p/pconsumecounter"
   unit_of_measurement: "kWh"
   device_class: "energy"
   state_class: "total"
-- name: SHM2_3015975172_p_psupply
-  state_topic: "SHM2/3015975172/p/psupply"
+- name: SHM2_<SERIAL>_p_psupply
+  state_topic: "SHM2/<SERIAL>/p/psupply"
   unit_of_measurement: "W"
   device_class: "power"
   state_class: "measurement"
-- name: SHM2_3015975172_p_psupplycounter
-  state_topic: "SHM2/3015975172/p/psupplycounter"
+- name: SHM2_<SERIAL>_p_psupplycounter
+  state_topic: "SHM2/<SERIAL>/p/psupplycounter"
   unit_of_measurement: "kWh"
   device_class: "energy"
   state_class: "total"
-- name: SHM2_3015975172_q_qconsume
-  state_topic: "SHM2/3015975172/q/qconsume"
+- name: SHM2_<SERIAL>_q_qconsume
+  state_topic: "SHM2/<SERIAL>/q/qconsume"
   unit_of_measurement: "var"
   device_class: "reactive_power"
   state_class: "measurement"
-- name: SHM2_3015975172_q_qconsumecounter
-  state_topic: "SHM2/3015975172/q/qconsumecounter"
+- name: SHM2_<SERIAL>_q_qconsumecounter
+  state_topic: "SHM2/<SERIAL>/q/qconsumecounter"
   unit_of_measurement: "kvarh"
-- name: SHM2_3015975172_q_qsupply
-  state_topic: "SHM2/3015975172/q/qsupply"
+- name: SHM2_<SERIAL>_q_qsupply
+  state_topic: "SHM2/<SERIAL>/q/qsupply"
   unit_of_measurement: "var"
   device_class: "reactive_power"
   state_class: "measurement"
-- name: SHM2_3015975172_q_qsupplycounter
-  state_topic: "SHM2/3015975172/q/qsupplycounter"
+- name: SHM2_<SERIAL>_q_qsupplycounter
+  state_topic: "SHM2/<SERIAL>/q/qsupplycounter"
   unit_of_measurement: "kvarh"
-- name: SHM2_3015975172_s_sconsume
-  state_topic: "SHM2/3015975172/s/sconsume"
+- name: SHM2_<SERIAL>_s_sconsume
+  state_topic: "SHM2/<SERIAL>/s/sconsume"
   unit_of_measurement: "VA"
   device_class: "apparent_power"
   state_class: "measurement"
-- name: SHM2_3015975172_s_sconsumecounter
-  state_topic: "SHM2/3015975172/s/sconsumecounter"
+- name: SHM2_<SERIAL>_s_sconsumecounter
+  state_topic: "SHM2/<SERIAL>/s/sconsumecounter"
   unit_of_measurement: "kVAh"
-- name: SHM2_3015975172_s_ssupply
-  state_topic: "SHM2/3015975172/s/ssupply"
+- name: SHM2_<SERIAL>_s_ssupply
+  state_topic: "SHM2/<SERIAL>/s/ssupply"
   unit_of_measurement: "VA"
   device_class: "apparent_power"
   state_class: "measurement"
-- name: SHM2_3015975172_s_ssupplycounter
-  state_topic: "SHM2/3015975172/s/ssupplycounter"
+- name: SHM2_<SERIAL>_s_ssupplycounter
+  state_topic: "SHM2/<SERIAL>/s/ssupplycounter"
   unit_of_measurement: "kVAh"
-- name: SHM2_3015975172_cosphi
-  state_topic: "SHM2/3015975172/cosphi"
+- name: SHM2_<SERIAL>_cosphi
+  state_topic: "SHM2/<SERIAL>/cosphi"
   unit_of_measurement: "°"
-- name: SHM2_3015975172_frequency
-  state_topic: "SHM2/3015975172/frequency"
+- name: SHM2_<SERIAL>_frequency
+  state_topic: "SHM2/<SERIAL>/frequency"
   unit_of_measurement: "Hz"
   device_class: "frequency"
   state_class: "measurement"
-- name: SHM2_3015975172_p_1_p1consume
-  state_topic: "SHM2/3015975172/p/1/p1consume"
+- name: SHM2_<SERIAL>_p_1_p1consume
+  state_topic: "SHM2/<SERIAL>/p/1/p1consume"
   unit_of_measurement: "W"
   device_class: "power"
   state_class: "measurement"
-- name: SHM2_3015975172_p_1_p1consumecounter
-  state_topic: "SHM2/3015975172/p/1/p1consumecounter"
+- name: SHM2_<SERIAL>_p_1_p1consumecounter
+  state_topic: "SHM2/<SERIAL>/p/1/p1consumecounter"
   unit_of_measurement: "kWh"
   device_class: "energy"
   state_class: "total"
-- name: SHM2_3015975172_p_1_p1supply
-  state_topic: "SHM2/3015975172/p/1/p1supply"
+- name: SHM2_<SERIAL>_p_1_p1supply
+  state_topic: "SHM2/<SERIAL>/p/1/p1supply"
   unit_of_measurement: "W"
   device_class: "power"
   state_class: "measurement"
-- name: SHM2_3015975172_p_1_p1supplycounter
-  state_topic: "SHM2/3015975172/p/1/p1supplycounter"
+- name: SHM2_<SERIAL>_p_1_p1supplycounter
+  state_topic: "SHM2/<SERIAL>/p/1/p1supplycounter"
   unit_of_measurement: "kWh"
   device_class: "energy"
   state_class: "total"
-- name: SHM2_3015975172_q_1_q1consume
-  state_topic: "SHM2/3015975172/q/1/q1consume"
+- name: SHM2_<SERIAL>_q_1_q1consume
+  state_topic: "SHM2/<SERIAL>/q/1/q1consume"
   unit_of_measurement: "var"
   device_class: "reactive_power"
   state_class: "measurement"
-- name: SHM2_3015975172_q_1_q1consumecounter
-  state_topic: "SHM2/3015975172/q/1/q1consumecounter"
+- name: SHM2_<SERIAL>_q_1_q1consumecounter
+  state_topic: "SHM2/<SERIAL>/q/1/q1consumecounter"
   unit_of_measurement: "kvarh"
-- name: SHM2_3015975172_q_1_q1supply
-  state_topic: "SHM2/3015975172/q/1/q1supply"
+- name: SHM2_<SERIAL>_q_1_q1supply
+  state_topic: "SHM2/<SERIAL>/q/1/q1supply"
   unit_of_measurement: "var"
   device_class: "reactive_power"
   state_class: "measurement"
-- name: SHM2_3015975172_q_1_q1supplycounter
-  state_topic: "SHM2/3015975172/q/1/q1supplycounter"
+- name: SHM2_<SERIAL>_q_1_q1supplycounter
+  state_topic: "SHM2/<SERIAL>/q/1/q1supplycounter"
   unit_of_measurement: "kvarh"
-- name: SHM2_3015975172_s_1_s1consume
-  state_topic: "SHM2/3015975172/s/1/s1consume"
+- name: SHM2_<SERIAL>_s_1_s1consume
+  state_topic: "SHM2/<SERIAL>/s/1/s1consume"
   unit_of_measurement: "VA"
   device_class: "apparent_power"
   state_class: "measurement"
-- name: SHM2_3015975172_s_1_s1consumecounter
-  state_topic: "SHM2/3015975172/s/1/s1consumecounter"
+- name: SHM2_<SERIAL>_s_1_s1consumecounter
+  state_topic: "SHM2/<SERIAL>/s/1/s1consumecounter"
   unit_of_measurement: "kVAh"
-- name: SHM2_3015975172_s_1_s1supply
-  state_topic: "SHM2/3015975172/s/1/s1supply"
+- name: SHM2_<SERIAL>_s_1_s1supply
+  state_topic: "SHM2/<SERIAL>/s/1/s1supply"
   unit_of_measurement: "VA"
   device_class: "apparent_power"
   state_class: "measurement"
-- name: SHM2_3015975172_s_1_s1supplycounter
-  state_topic: "SHM2/3015975172/s/1/s1supplycounter"
+- name: SHM2_<SERIAL>_s_1_s1supplycounter
+  state_topic: "SHM2/<SERIAL>/s/1/s1supplycounter"
   unit_of_measurement: "kVAh"
-- name: SHM2_3015975172_1_i1
-  state_topic: "SHM2/3015975172/1/i1"
+- name: SHM2_<SERIAL>_1_i1
+  state_topic: "SHM2/<SERIAL>/1/i1"
   unit_of_measurement: "A"
   device_class: "current"
   state_class: "measurement"
-- name: SHM2_3015975172_1_u1
-  state_topic: "SHM2/3015975172/1/u1"
+- name: SHM2_<SERIAL>_1_u1
+  state_topic: "SHM2/<SERIAL>/1/u1"
   unit_of_measurement: "V"
   device_class: "voltage"
   state_class: "measurement"
-- name: SHM2_3015975172_1_cosphi1
-  state_topic: "SHM2/3015975172/1/cosphi1"
+- name: SHM2_<SERIAL>_1_cosphi1
+  state_topic: "SHM2/<SERIAL>/1/cosphi1"
   unit_of_measurement: "°"
-- name: SHM2_3015975172_p_2_p2consume
-  state_topic: "SHM2/3015975172/p/2/p2consume"
+- name: SHM2_<SERIAL>_p_2_p2consume
+  state_topic: "SHM2/<SERIAL>/p/2/p2consume"
   unit_of_measurement: "W"
   device_class: "power"
   state_class: "measurement"
-- name: SHM2_3015975172_p_2_p2consumecounter
-  state_topic: "SHM2/3015975172/p/2/p2consumecounter"
+- name: SHM2_<SERIAL>_p_2_p2consumecounter
+  state_topic: "SHM2/<SERIAL>/p/2/p2consumecounter"
   unit_of_measurement: "kWh"
   device_class: "energy"
   state_class: "total"
-- name: SHM2_3015975172_p_2_p2supply
-  state_topic: "SHM2/3015975172/p/2/p2supply"
+- name: SHM2_<SERIAL>_p_2_p2supply
+  state_topic: "SHM2/<SERIAL>/p/2/p2supply"
   unit_of_measurement: "W"
   device_class: "power"
   state_class: "measurement"
-- name: SHM2_3015975172_p_2_p2supplycounter
-  state_topic: "SHM2/3015975172/p/2/p2supplycounter"
+- name: SHM2_<SERIAL>_p_2_p2supplycounter
+  state_topic: "SHM2/<SERIAL>/p/2/p2supplycounter"
   unit_of_measurement: "kWh"
   device_class: "energy"
   state_class: "total"
-- name: SHM2_3015975172_q_2_q2consume
-  state_topic: "SHM2/3015975172/q/2/q2consume"
+- name: SHM2_<SERIAL>_q_2_q2consume
+  state_topic: "SHM2/<SERIAL>/q/2/q2consume"
   unit_of_measurement: "var"
   device_class: "reactive_power"
   state_class: "measurement"
-- name: SHM2_3015975172_q_2_q2consumecounter
-  state_topic: "SHM2/3015975172/q/2/q2consumecounter"
+- name: SHM2_<SERIAL>_q_2_q2consumecounter
+  state_topic: "SHM2/<SERIAL>/q/2/q2consumecounter"
   unit_of_measurement: "kvarh"
-- name: SHM2_3015975172_q_2_q2supply
-  state_topic: "SHM2/3015975172/q/2/q2supply"
+- name: SHM2_<SERIAL>_q_2_q2supply
+  state_topic: "SHM2/<SERIAL>/q/2/q2supply"
   unit_of_measurement: "var"
   device_class: "reactive_power"
   state_class: "measurement"
-- name: SHM2_3015975172_q_2_q2supplycounter
-  state_topic: "SHM2/3015975172/q/2/q2supplycounter"
+- name: SHM2_<SERIAL>_q_2_q2supplycounter
+  state_topic: "SHM2/<SERIAL>/q/2/q2supplycounter"
   unit_of_measurement: "kvarh"
-- name: SHM2_3015975172_s_2_s2consume
-  state_topic: "SHM2/3015975172/s/2/s2consume"
+- name: SHM2_<SERIAL>_s_2_s2consume
+  state_topic: "SHM2/<SERIAL>/s/2/s2consume"
   unit_of_measurement: "VA"
   device_class: "apparent_power"
   state_class: "measurement"
-- name: SHM2_3015975172_s_2_s2consumecounter
-  state_topic: "SHM2/3015975172/s/2/s2consumecounter"
+- name: SHM2_<SERIAL>_s_2_s2consumecounter
+  state_topic: "SHM2/<SERIAL>/s/2/s2consumecounter"
   unit_of_measurement: "kVAh"
-- name: SHM2_3015975172_s_2_s2supply
-  state_topic: "SHM2/3015975172/s/2/s2supply"
+- name: SHM2_<SERIAL>_s_2_s2supply
+  state_topic: "SHM2/<SERIAL>/s/2/s2supply"
   unit_of_measurement: "VA"
   device_class: "apparent_power"
   state_class: "measurement"
-- name: SHM2_3015975172_s_2_s2supplycounter
-  state_topic: "SHM2/3015975172/s/2/s2supplycounter"
+- name: SHM2_<SERIAL>_s_2_s2supplycounter
+  state_topic: "SHM2/<SERIAL>/s/2/s2supplycounter"
   unit_of_measurement: "kVAh"
-- name: SHM2_3015975172_2_i2
-  state_topic: "SHM2/3015975172/2/i2"
+- name: SHM2_<SERIAL>_2_i2
+  state_topic: "SHM2/<SERIAL>/2/i2"
   unit_of_measurement: "A"
   device_class: "current"
   state_class: "measurement"
-- name: SHM2_3015975172_2_u2
-  state_topic: "SHM2/3015975172/2/u2"
+- name: SHM2_<SERIAL>_2_u2
+  state_topic: "SHM2/<SERIAL>/2/u2"
   unit_of_measurement: "V"
   device_class: "voltage"
   state_class: "measurement"
-- name: SHM2_3015975172_2_cosphi2
-  state_topic: "SHM2/3015975172/2/cosphi2"
+- name: SHM2_<SERIAL>_2_cosphi2
+  state_topic: "SHM2/<SERIAL>/2/cosphi2"
   unit_of_measurement: "°"
-- name: SHM2_3015975172_p_3_p3consume
-  state_topic: "SHM2/3015975172/p/3/p3consume"
+- name: SHM2_<SERIAL>_p_3_p3consume
+  state_topic: "SHM2/<SERIAL>/p/3/p3consume"
   unit_of_measurement: "W"
   device_class: "power"
   state_class: "measurement"
-- name: SHM2_3015975172_p_3_p3consumecounter
-  state_topic: "SHM2/3015975172/p/3/p3consumecounter"
+- name: SHM2_<SERIAL>_p_3_p3consumecounter
+  state_topic: "SHM2/<SERIAL>/p/3/p3consumecounter"
   unit_of_measurement: "kWh"
   device_class: "energy"
   state_class: "total"
-- name: SHM2_3015975172_p_3_p3supply
-  state_topic: "SHM2/3015975172/p/3/p3supply"
+- name: SHM2_<SERIAL>_p_3_p3supply
+  state_topic: "SHM2/<SERIAL>/p/3/p3supply"
   unit_of_measurement: "W"
   device_class: "power"
   state_class: "measurement"
-- name: SHM2_3015975172_p_3_p3supplycounter
-  state_topic: "SHM2/3015975172/p/3/p3supplycounter"
+- name: SHM2_<SERIAL>_p_3_p3supplycounter
+  state_topic: "SHM2/<SERIAL>/p/3/p3supplycounter"
   unit_of_measurement: "kWh"
   device_class: "energy"
   state_class: "total"
-- name: SHM2_3015975172_q_3_q3consume
-  state_topic: "SHM2/3015975172/q/3/q3consume"
+- name: SHM2_<SERIAL>_q_3_q3consume
+  state_topic: "SHM2/<SERIAL>/q/3/q3consume"
   unit_of_measurement: "var"
   device_class: "reactive_power"
   state_class: "measurement"
-- name: SHM2_3015975172_q_3_q3consumecounter
-  state_topic: "SHM2/3015975172/q/3/q3consumecounter"
+- name: SHM2_<SERIAL>_q_3_q3consumecounter
+  state_topic: "SHM2/<SERIAL>/q/3/q3consumecounter"
   unit_of_measurement: "kvarh"
-- name: SHM2_3015975172_q_3_q3supply
-  state_topic: "SHM2/3015975172/q/3/q3supply"
+- name: SHM2_<SERIAL>_q_3_q3supply
+  state_topic: "SHM2/<SERIAL>/q/3/q3supply"
   unit_of_measurement: "var"
   device_class: "reactive_power"
   state_class: "measurement"
-- name: SHM2_3015975172_q_3_q3supplycounter
-  state_topic: "SHM2/3015975172/q/3/q3supplycounter"
+- name: SHM2_<SERIAL>_q_3_q3supplycounter
+  state_topic: "SHM2/<SERIAL>/q/3/q3supplycounter"
   unit_of_measurement: "kvarh"
-- name: SHM2_3015975172_s_4_s3consume
-  state_topic: "SHM2/3015975172/s/4/s3consume"
+- name: SHM2_<SERIAL>_s_4_s3consume
+  state_topic: "SHM2/<SERIAL>/s/4/s3consume"
   unit_of_measurement: "VA"
   device_class: "apparent_power"
   state_class: "measurement"
-- name: SHM2_3015975172_s_4_s3consumecounter
-  state_topic: "SHM2/3015975172/s/4/s3consumecounter"
+- name: SHM2_<SERIAL>_s_4_s3consumecounter
+  state_topic: "SHM2/<SERIAL>/s/4/s3consumecounter"
   unit_of_measurement: "kVAh"
-- name: SHM2_3015975172_s_4_s3supply
-  state_topic: "SHM2/3015975172/s/4/s3supply"
+- name: SHM2_<SERIAL>_s_4_s3supply
+  state_topic: "SHM2/<SERIAL>/s/4/s3supply"
   unit_of_measurement: "VA"
   device_class: "apparent_power"
   state_class: "measurement"
-- name: SHM2_3015975172_s_4_s3supplycounter
-  state_topic: "SHM2/3015975172/s/4/s3supplycounter"
+- name: SHM2_<SERIAL>_s_4_s3supplycounter
+  state_topic: "SHM2/<SERIAL>/s/4/s3supplycounter"
   unit_of_measurement: "kVAh"
-- name: SHM2_3015975172_3_i3
-  state_topic: "SHM2/3015975172/3/i3"
+- name: SHM2_<SERIAL>_3_i3
+  state_topic: "SHM2/<SERIAL>/3/i3"
   unit_of_measurement: "A"
   device_class: "current"
   state_class: "measurement"
-- name: SHM2_3015975172_3_u3
-  state_topic: "SHM2/3015975172/3/u3"
+- name: SHM2_<SERIAL>_3_u3
+  state_topic: "SHM2/<SERIAL>/3/u3"
   unit_of_measurement: "V"
   device_class: "voltage"
   state_class: "measurement"
-- name: SHM2_3015975172_3_cosphi3
-  state_topic: "SHM2/3015975172/3/cosphi3"
+- name: SHM2_<SERIAL>_3_cosphi3
+  state_topic: "SHM2/<SERIAL>/3/cosphi3"
   unit_of_measurement: "°"
 ```
