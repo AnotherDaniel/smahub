@@ -111,6 +111,7 @@ SMAHub can be easily deployed using Docker. This ensures a consistent environmen
    ```
 
 The SMAHub container will start and begin collecting data from your SMA PV devices, publishing the data to the configured MQTT broker.
+If you are running SMAHub to publish data to Home Assistant, note that it makes sense to include the SMAHub docker-compose configuration in the docker-compose.yml you're using for Home Assistant, and make it `depend_on` the MQTT broker container so that the broker is available before SMAHub starts. This way, SMAHub will always be started/restarted in conjunction with your Home Assistant instance, making the overall system more robust against reboots etc.
 
 ## Improvements
 
