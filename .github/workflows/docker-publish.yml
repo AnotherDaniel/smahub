@@ -19,6 +19,7 @@ jobs:
         platform:
           - linux/amd64
           - linux/arm64
+
     permissions:
       contents: read
       packages: write
@@ -45,6 +46,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Prepare platform name
+        id: prep
+        run: echo "::set-output name=platform::${{ matrix.platform }}"
+
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
@@ -52,8 +57,8 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           flavor: |
             latest=${{ startsWith(github.ref, 'refs/heads/main') }}
-            suffix=-${{ matrix.platform }}
-      
+            suffix=${{ steps.prep.outputs.platform }}
+
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
