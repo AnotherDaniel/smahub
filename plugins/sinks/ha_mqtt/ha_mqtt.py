@@ -3,6 +3,8 @@ import time
 import logging
 from ha_mqtt_discoverable import Settings
 from ha_mqtt_discoverable.sensors import SensorInfo, Sensor, DeviceInfo
+from utils.smasensors import *
+
 
 # store for all the ha_mqtt sensor objects
 sensors = {}
@@ -72,8 +74,9 @@ def execute(config, get_items, register_callback, do_stop):
                                              sw_version=di['sw_version'])
                     device_infos[part] = device_info
 
-                for key, value in filtered_items.items():
-                    sensor = get_sensor(key, value, device_info)
+                sensor_items = {k: v for k, v in filtered_items.items() if k.split('.')[2] != 'device_info'}
+                for key, value in sensor_items.items():
+                    sensor = get_sensor(key, device_info)
                     publish(sensor, value)
         i = i+1
         time.sleep(1)
@@ -82,26 +85,51 @@ def execute(config, get_items, register_callback, do_stop):
     logging.info("Stopping HA-MQTT sink")
 
 
-def get_sensor(name, value, device_info):
+def get_item_by_key(list_of_dicts, target_key):
+    return next((item for item in list_of_dicts if item['key'] == target_key), None)
+
+
+def get_sensor(name, device_info):
     global sensors
     sensor = sensors.get(name)
     if (sensor is None):
         # create sensor if not already in dict
-        unit = ""
-        if isinstance(value, tuple):
-            unit = value[1]
-        sensor_info = SensorInfo(unit_of_measurement=unit,
-                                 name=".".join(name.split(".")[2:]),
-                                 device_class=None,
-                                 unique_id=name,
+
+        # We use the smasensors.py list-of-dict definitions to get metadata about device sensors
+        # that we need to create home assistant autodiscovery behavior:
+        #   - extract first part of name from name-path (should be device name like 'SHM2' or 'TRIPOWERX'
+        #   - check if there exists a list definition from the 'import *' above by name SENSORS_<name>
+        #   - if yes, this list is used below for accessing the metadata dicts for Sensor creation
+        # This might not be be most obvious or robust way to do this...
+        sensors_dict = f"SENSORS_{name.split('.')[0]}".upper()
+        if not sensors_dict in globals() or not isinstance(globals()[sensors_dict], list):
+            logging.error(f"HA-MQTT sensor definitions for {name.split('.')[0]} not found")
+            return None
+
+        key = ".".join(name.split(".")[2:])
+        result = get_item_by_key(globals()[sensors_dict], key)
+        sensor_info = SensorInfo(unique_id=name,
+                                 name=result.get('name'),
+                                 unit_of_measurement=result.get('unit_of_measurement'),
+                                 device_class=result.get('device_class'),
+                                 state_class=result.get('state_class'),
+                                 entity_category=result.get('entity_category'),
+                                 suggested_display_precision=result.get('suggested_display_precision'),
+                                 icon=result.get('icon'),
                                  device=device_info)
         sensor = Sensor(Settings(mqtt=mqtt_settings, entity=sensor_info))
         sensors[name] = sensor
+
+    assert sensor is not None
     return sensor
 
 
 def publish(sensor, value):
+    if sensor is None:
+        return
+    
     publish_value = value
+    # get rid of unit, in case our value is a value/unit tuple
     if isinstance(value, tuple):
         publish_value = value[0]
     sensor.set_state(publish_value)
