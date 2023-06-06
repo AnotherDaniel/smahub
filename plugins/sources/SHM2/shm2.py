@@ -77,7 +77,7 @@ def execute(config, add_data, dostop):
                 elif "q3" in key:
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.q.3.{str(key)}"
                 elif "s3" in key:
-                    ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.s.4.{str(key)}"
+                    ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.s.3.{str(key)}"
                 elif key.startswith('p'):
                     ename = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.p.{str(key)}"
                 elif key.startswith('q'):
