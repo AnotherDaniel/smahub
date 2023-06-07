@@ -136,6 +136,9 @@ def publish(sensor, value):
 
 
 def my_callback(key, value):
+    # device info data is not explicitly published in ha_mqtt
+    if 'device_info' in key:
+        return
     sensor = sensors.get(key)
     if sensor is not None:
         publish(sensor, value)
