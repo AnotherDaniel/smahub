@@ -1,13 +1,14 @@
 import os
 import time
 import logging
+from collections import defaultdict
 from ha_mqtt_discoverable import Settings
 from ha_mqtt_discoverable.sensors import SensorInfo, Sensor, DeviceInfo
 from utils.smasensors import *
 
 
 # store for all the ha_mqtt sensor objects
-sensors = {}
+sensors = defaultdict(Sensor)
 device_infos = {}
 mqtt_settings = {}
 
@@ -95,7 +96,7 @@ def get_sensor(name, device_info):
     if (sensor is None):
         # create sensor if not already in dict
 
-        # We use the smasensors.py list-of-dict definitions to get metadata about device sensors
+        # We use the list-of-dict definitions from smasensors.py to get metadata about device sensors
         # that we need to create home assistant autodiscovery behavior:
         #   - extract first part of name from name-path (should be device name like 'SHM2' or 'TRIPOWERX'
         #   - check if there exists a list definition from the 'import *' above by name SENSORS_<name>
@@ -108,6 +109,10 @@ def get_sensor(name, device_info):
 
         key = ".".join(name.split(".")[2:])
         result = get_item_by_key(globals()[sensors_dict], key)
+        if result is None:
+            logging.error(f"HA-MQTT sensor definition for {key} not found")
+            return None
+            
         sensor_info = SensorInfo(unique_id=name,
                                  name=result.get('name'),
                                  unit_of_measurement=result.get('unit_of_measurement'),
@@ -119,15 +124,10 @@ def get_sensor(name, device_info):
                                  device=device_info)
         sensor = Sensor(Settings(mqtt=mqtt_settings, entity=sensor_info))
         sensors[name] = sensor
-
-    assert sensor is not None
     return sensor
 
 
 def publish(sensor, value):
-    if sensor is None:
-        return
-    
     publish_value = value
     # get rid of unit, in case our value is a value/unit tuple
     if isinstance(value, tuple):
