@@ -8,31 +8,26 @@ SENSORS_TRIPOWERX = [
         'key': "device_info.name",
         'name': "Device name",
         'entity_category': "diagnostic",
-        'icon': "mdi:border-all",
     },
     {
         'key': "device_info.identifiers",
         'name': "Device serial",
         'entity_category': "diagnostic",
-        'icon': "mdi:border-all",
     },
     {
         'key': "device_info.model",
         'name': "Device model",
         'entity_category': "diagnostic",
-        'icon': "mdi:border-all",
     },
     {
         'key': "device_info.manufacturer",
         'name': "Device manufacturer",
         'entity_category': "diagnostic",
-        'icon': "mdi:border-all",
     },
     {
         'key': "device_info.sw_version",
         'name': "Device SW version",
         'entity_category': "diagnostic",
-        'icon': "mdi:border-all",
     },
 
     # configuration and status data
@@ -612,31 +607,26 @@ SENSORS_SHM2 = [
         'key': "device_info.name",
         'name': "Device name",
         'entity_category': "diagnostic",
-        'icon': "mdi:camera-switch",
     },
     {
         'key': "device_info.identifiers",
         'name': "Device serial",
         'entity_category': "diagnostic",
-        'icon': "mdi:camera-switch",
     },
     {
         'key': "device_info.model",
         'name': "Device model",
         'entity_category': "diagnostic",
-        'icon': "mdi:camera-switch",
     },
     {
         'key': "device_info.manufacturer",
         'name': "Device manufacturer",
         'entity_category': "diagnostic",
-        'icon': "mdi:camera-switch",
     },
     {
         'key': "device_info.sw_version",
         'name': "Device SW version",
         'entity_category': "diagnostic",
-        'icon': "mdi:camera-switch",
     },
     # global measurements
     {
