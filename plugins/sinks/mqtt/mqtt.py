@@ -3,7 +3,10 @@ import time
 import logging
 import paho.mqtt.client as mqtt
 
-client = mqtt.Client()
+client = mqtt.Client(client_id="smahub",
+                         transport='tcp',
+                         protocol=mqtt.MQTTv311,
+                         clean_session=True)
 pubunits = False
 
 
