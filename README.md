@@ -113,6 +113,39 @@ SMAHub can be easily deployed using Docker. This ensures a consistent environmen
 The SMAHub container will start and begin collecting data from your SMA PV devices, publishing the data to the configured MQTT broker.
 If you are running SMAHub to publish data to Home Assistant, note that it makes sense to include the SMAHub docker-compose configuration in the docker-compose.yml you're using for Home Assistant, and make it `depend_on` the MQTT broker container so that the broker is available before SMAHub starts. This way, SMAHub will always be started/restarted in conjunction with your Home Assistant instance, making the overall system more robust against reboots etc.
 
+Note: the `docker-compose.yml` file provided in this project is set up to build the smahub container from the repository. You can also directly pull a ready-made smahub container for amd64 or arm64 from github container registry, using something like the following configuration:
+
+```yaml
+version: '3'
+services:
+  smahub:
+    image: ghcr.io/anotherdaniel/smahub:latest
+    container_name: smahub
+    network_mode: "host"
+    restart: unless-stopped
+# useful if you manage the MQTT broker from this same docker-compose file
+#    depends_on:
+#      - mosquitto
+    environment:
+      -  TRIPOWERX_ENABLED=true
+      -  TRIPOWERX_ADDRESS=192.168.0.1
+      -  TRIPOWERX_USER=user
+      -  TRIPOWERX_PASSWORD=password
+      -  MQTT_ENABLED=true
+      -  MQTT_ADDRESS=192.168.0.2
+      -  MQTT_PORT=1883
+      -  MQTT_USER=user
+      -  MQTT_PASSWORD=password
+      -  SHM2_ENABLED=true
+      -  GENHASENSORS_ENABLED=false
+      -  GENHASENSORS_GENERATEFREQ=600
+      -  GENHASENSORS_FILEPREFIX=hasensors_
+      -  GENHASENSORS_SHM2=mdi:camera-switch
+      -  GENHASENSORS_TRIPOWERX=mdi:border-all
+      -  HA_MQTT_ENABLED=false
+      -  HA_MQTT_ADDRESS=192.168.0.3
+```
+
 ## Improvements
 
 There are several areas where SMAHub can be improved:
