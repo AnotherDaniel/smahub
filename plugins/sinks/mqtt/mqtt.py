@@ -6,7 +6,7 @@ import paho.mqtt.client as mqtt
 client = mqtt.Client(client_id="smahub",
                          transport='tcp',
                          protocol=mqtt.MQTTv311,
-                         clean_session=True)
+                         clean_session=False)
 pubunits = False
 
 
@@ -17,6 +17,10 @@ def env_vars(config):
         config['server']['address'] = os.environ.get('MQTT_ADDRESS')
     if os.environ.get('MQTT_PORT'):
         config['server']['port'] = os.environ.get('MQTT_PORT')
+    if os.environ.get('MQTT_USER'):
+        config['server']['username'] = os.environ.get('MQTT_USER')
+    if os.environ.get('MQTT_PASSWORD'):
+        config['server']['password'] = os.environ.get('MQTT_PASSWORD')
     if os.environ.get('MQTT_UPDATEFREQ'):
         config['behavior']['updatefreq'] = int(os.environ.get('MQTT_UPDATEFREQ'))
     if os.environ.get('MQTT_PUBLISHUNITS'):
@@ -36,6 +40,8 @@ def execute(config, get_items, register_callback, do_stop):
 
     # Create a MQTT client instance and connect to broker
     global client
+    if config['server']['username']:
+        client.username_pw_set(config['server']['username'], config['server']['password'])
     try:
         client.connect(config.get('server', 'address'), int(config.get('server', 'port')))
         logging.debug(f"MQTT sink connected to {config.get('server', 'address')}:{str(config.get('server', 'port'))}")
