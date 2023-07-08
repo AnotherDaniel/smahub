@@ -64,52 +64,46 @@ SENSORS_TRIPOWERX = [
         {
         'key': "Operation.BckStt",
         'name': "Backup mode status",
-        'suggested_display_precision': 2,
     },
     {
         'key': "Operation.DrtStt",
         'name': "Reason for derating",
-        'suggested_display_precision': 2,
     },
     {
         'key': "Operation.Evt.Dsc",
         'name': "Fault correction measure",
-        'suggested_display_precision': 2,
     },
     {
         'key': "Operation.Evt.Msg",
         'name': "Message",
-        'suggested_display_precision': 2,
     },
     {
         'key': "Operation.EvtCntIstl",
         'name': "Number of events for installer",
-        'suggested_display_precision': 2,
     },
     {
         'key': "Operation.EvtCntUsr",
         'name': "Number of events for user",
-        'suggested_display_precision': 2,
+    },
+    {
+        'key': "Operation.Evt.EvtNo",
+        'name': "Current event number for manufacturer",
     },
     {
         'key': "Operation.GriSwCnt",
         'name': "Number of grid connections",
-        'suggested_display_precision': 2,
     },
     {
         'key': "Operation.GriSwStt",
         'name': "Grid relay/contactor",
-        'suggested_display_precision': 2,
     },
     {
         'key': "Operation.Health",
         'name': "Condition",
-        'suggested_display_precision': 2,
     },
     {
         'key': "Operation.OpStt",
         'name': "General operating status",
-        'suggested_display_precision': 2,
     },
     {
         'key': "Operation.HealthStt.Ok",
@@ -119,22 +113,18 @@ SENSORS_TRIPOWERX = [
     {
         'key': "Operation.PvGriConn",
         'name': "Plant mains connection",
-        'suggested_display_precision': 2,
     },
     {
         'key': "Operation.RstrLokStt",
         'name': "Block status",
-        'suggested_display_precision': 2,
     },
     {
         'key': "Operation.RunStt",
         'name': "Operating status",
-        'suggested_display_precision': 2,
     },
     {
         'key': "Operation.StandbyStt",
         'name': "Standby status",
-        'suggested_display_precision': 2,
     },
     {
         'key': "Operation.VArCtl.VArModAct",
@@ -594,9 +584,27 @@ SENSORS_TRIPOWERX = [
         'name': "Active power limitation by PV system control",
         'suggested_display_precision': 2,
         'unit_of_measurement': "W",
-        'device_class': "power",
-        'state_class': "measurement",
-        'icon': "mdi:home-lightning-bolt-outline",
+    },
+    {
+        'key': "Setpoint.PlantControl.Inverter.VArModCfg.PFCtlComCfg.PF",
+        'name': "External cos φ setpoint specification, cos φ setpoint for active power output",
+        'suggested_display_precision': 4,
+    },
+    {
+        'key': "Setpoint.PlantControl.Inverter.VArModCfg.PFCtlComCfg.PFExt",
+        'name': "External cos φ setpoint specification, excitation type for active power output",
+    },
+    {
+        'key': "Setpoint.PlantControl.Inverter.VArModCfg.VArCtlComCfg.VArNom",
+        'name': "Standardized reactive power setpoint by system control",
+        'suggested_display_precision': 2,
+        'unit_of_measurement': "%",
+    },
+        {
+        'key': "Setpoint.PlantControl.Inverter.WModCfg.WCtlComCfg.WNom",
+        'name': "Normalized active power limitation by PV system control",
+        'suggested_display_precision': 2,
+        'unit_of_measurement': "%",
     },
 ]
 
