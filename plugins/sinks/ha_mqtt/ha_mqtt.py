@@ -2,6 +2,7 @@ import os
 import time
 import logging
 from collections import defaultdict
+import ha_mqtt_discoverable
 from ha_mqtt_discoverable import Settings
 from ha_mqtt_discoverable.sensors import SensorInfo, Sensor, DeviceInfo
 from utils.smasensors import *
@@ -36,6 +37,10 @@ def execute(config, get_items, register_callback, do_stop):
         return
 
     logging.info("Starting HA-MQTT sink")
+
+    # ha_mqtt_discoverable logs stuff at level INFO that really doesn't belong there - turn it off
+    module_logger = logging.getLogger(ha_mqtt_discoverable.__name__)
+    module_logger.setLevel(logging.WARNING)
 
     global mqtt_settings
     mqtt_settings = Settings.MQTT(host=config['server']['address'],
@@ -128,6 +133,9 @@ def get_sensor(name, device_info):
 
 
 def publish(sensor, value):
+    if sensor is None:
+        return
+    
     publish_value = value
     # get rid of unit, in case our value is a value/unit tuple
     if isinstance(value, tuple):
