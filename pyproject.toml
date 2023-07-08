@@ -21,7 +21,7 @@ classifiers = [
 dependencies = [
     "requests ~=2.29.0",
     "paho-mqtt ~=1.6.1",
-    "ha_mqtt_discoverable >=0.8",
+    "ha_mqtt_discoverable ~=0.9",
 ]
 
 [tool.pytest.ini_options]
