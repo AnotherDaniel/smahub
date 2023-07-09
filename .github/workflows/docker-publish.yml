@@ -56,8 +56,10 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           flavor: |
-            latest=${{ github.ref == 'refs/heads/main' }}
             suffix=${{ steps.prep.outputs.platform }}
+          type: |
+            ref=event
+            sha
 
       - name: Build and push Docker image
         id: build-and-push
