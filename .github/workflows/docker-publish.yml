@@ -54,18 +54,17 @@ jobs:
         run: |
           echo "names: ${{ steps.prep.outputs.platform }}"
 
-      - name: Extract Docker metadata
+      - name: Docker meta
         id: meta
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          flavor: |
-            latest=${{ github.ref == 'refs/heads/main' }}
           tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
             value=${{ steps.prep.outputs.platform }}
-#          type: |
-#            ref=event
-#            sha
 
       - name: Print Docker metadata
         run: |
