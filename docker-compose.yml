@@ -5,6 +5,8 @@ services:
     container_name: smahub
     network_mode: "host"
     restart: unless-stopped
+    ports:
+      - 5678:5678
     environment:
       -  TRIPOWERX_ENABLED=true
       -  TRIPOWERX_ADDRESS=192.168.0.1
