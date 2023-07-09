@@ -56,10 +56,15 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           flavor: |
+            latest=${{ github.ref == 'refs/heads/main' }}
             suffix=${{ steps.prep.outputs.platform }}
-          type: |
-            ref=event
-            sha
+#          type: |
+#            ref=event
+#            sha
+      - name: Print Docker metadata
+        run: |
+          echo "tags: ${{ steps.meta.outputs.tags }}"
+          echo "labels: ${{ steps.meta.outputs.labels }}"
 
       - name: Build and push Docker image
         id: build-and-push
