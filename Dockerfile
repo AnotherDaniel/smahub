@@ -12,6 +12,9 @@ RUN git clone --depth=1 --branch=main https://github.com/AnotherDaniel/smahub . 
 #COPY . /opt/smahub
 RUN pip3 install .
 
+# Debug server port
+EXPOSE 5678
+
 ADD run_smahub.sh /root/
 RUN chmod +x /root/*
 ENTRYPOINT ["/root/run_smahub.sh"]

@@ -6,6 +6,7 @@ import asyncio
 import os
 import signal
 import logging
+import debugpy
 from smadict import SMA_Dict
 
 # Configure logging to print warn-level messages to the console
@@ -27,6 +28,21 @@ sources = []
 # Define the directory containing the data-sink plugins
 SINKS_DIR = os.environ.get("SMAHUB_SINKS_DIR", "plugins/sinks")
 sinks = []
+
+
+def env_vars(args):
+    if os.environ.get('SMAHUB_VERBOSE'):
+        args.verbose = bool(os.environ.get('SMAHUB_VERBOSE'))
+    if os.environ.get('SMAHUB_VERBOSER'):
+        args.verboser = bool(os.environ.get('SMAHUB_VERBOSER'))
+    if os.environ.get('SMAHUB_DEBUG'):
+        args.debug = bool(os.environ.get('SMAHUB_DEBUG'))
+    if os.environ.get('SMAHUB_DEBUG_PORT'):
+        args.debug_port = int(os.environ.get('SMAHUB_DEBUG_PORT', 5678))
+    if os.environ.get('SMAHUB_SOURCES_DIR'):
+        args.source_dir = os.environ.get("SMAHUB_SOURCES_DIR", "plugins/sources")
+    if os.environ.get('SMAHUB_SINKS_DIR'):
+        args.sink_dir = os.environ.get("SMAHUB_SINKS_DIR", "plugins/sinks")
 
 
 def load_plugins(plugin_dir, plugins):
@@ -167,8 +183,9 @@ async def main(args):
     '''
     Main function that loads plugins, starts source and sink threads and waits for them to complete.
     '''
-    SOURCES_DIR = args.source_dir
-    SINKS_DIR = args.sink_dir
+    env_vars(args)
+    # SOURCES_DIR = args.source_dir
+    # SINKS_DIR = args.sink_dir
 
     if args.verbose:
         logging.getLogger().setLevel(logging.INFO)
@@ -178,9 +195,16 @@ async def main(args):
         logging.getLogger().setLevel(logging.DEBUG)
         logging.debug('Verbose output enabled')
 
+    if args.debug:
+        # Allow other computers to attach to debugpy at this IP address and port.
+        debugpy.listen(('0.0.0.0', args.debug_port))
+        logging.info(f"Listening on debug port: {args.debug_port}")
+        # Pause the program until a remote debugger is attached
+        # debugpy.wait_for_client()  # Comment out or remove this line
+
     # Main business logic
-    load_plugins(SOURCES_DIR, sources)
-    load_plugins(SINKS_DIR, sinks)
+    load_plugins(args.source_dir, sources)
+    load_plugins(args.sink_dir, sinks)
 
     tasks = []
     for function, config in sources:
@@ -191,6 +215,7 @@ async def main(args):
 
     await asyncio.gather(*tasks)
     logging.info('Done')
+
 
 if __name__ == '__main__':
     # We want to react gracefully to SIGINT
@@ -210,6 +235,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog=package_name, description=summary)
     parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose output')
     parser.add_argument('-V', '--verboser', action='store_true', help='Enable even more verbose output')
+    parser.add_argument('-d', '--debug', action='store_true', help='Enable debug server', default=5678)
+    parser.add_argument('-p', '--debug-port', action='store', help='Debug server port', default=5678)
     parser.add_argument('--version', action='version', version=f'%(prog)s {version}')
     parser.add_argument('--source-dir', type=str, default='plugins/sources', help='Path to the directory containing source plugins')
     parser.add_argument('--sink-dir', type=str, default='plugins/sinks', help='Path to the directory containing sink plugins')
