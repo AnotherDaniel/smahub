@@ -27,32 +27,40 @@ jobs:
       contents: read
       packages: write
       id-token: write
-      
+
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v3
-      -
-        name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v4
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3.1.1
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      -
-        name: Set up QEMU
+          cosign-release: 'v2.1.1'
+      
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
-      -
-        name: Set up Docker Buildx
+      
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      -
-        name: Login to Docker Hub
+      
+      - name: Log into registry ${{ env.REGISTRY }}
         uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      -
-        name: Build and push by digest
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          # flavor: |
+          #   latest=${{ github.ref == 'refs/heads/main' }}
+          # tags: |
+          #   value=${{ steps.prep.outputs.platform }}
+      
+      - name: Build and push by digest
         id: build
         uses: docker/build-push-action@v4
         with:
@@ -61,6 +69,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,name=${{ env.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
+
       -
         name: Export digest
         run: |
@@ -97,7 +106,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       -
-        name: Login to Docker Hub
+        name: Log into registry ${{ env.REGISTRY }}
         uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
