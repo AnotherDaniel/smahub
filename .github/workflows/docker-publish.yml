@@ -50,6 +50,10 @@ jobs:
         id: prep
         run: echo "::set-output name=platform::$(echo ${{ matrix.platform }} | cut -d'/' -f2)"
 
+      - name: Print platform name
+        run: |
+          echo "names: ${{ steps.prep.outputs.platform }}"
+
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
