@@ -23,6 +23,11 @@ jobs:
           - linux/arm/v8
           - linux/arm64
  
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      
     steps:
       -
         name: Checkout
