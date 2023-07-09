@@ -61,11 +61,12 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           flavor: |
             latest=${{ github.ref == 'refs/heads/main' }}
-          labels: |
+          tags: |
             value=${{ steps.prep.outputs.platform }}
 #          type: |
 #            ref=event
 #            sha
+
       - name: Print Docker metadata
         run: |
           echo "tags: ${{ steps.meta.outputs.tags }}"
