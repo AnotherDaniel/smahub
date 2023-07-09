@@ -48,7 +48,7 @@ jobs:
 
       - name: Prepare platform name
         id: prep
-        run: echo "::set-output name=platform::$(echo ${MATRIX_CONTEXT:platform} | cut -d'/' -f2)"
+        run: echo "::set-output name=platform::$(echo ${{ matrix.platform }} | cut -d'/' -f2)"
 
       - name: Extract Docker metadata
         id: meta
