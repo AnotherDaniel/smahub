@@ -120,6 +120,10 @@ jobs:
           echo "tags: ${{ steps.meta.outputs.tags }}"
           echo "labels: ${{ steps.meta.outputs.labels }}"
 
+      - name: Print Docker metadata raw output
+        run: |
+          echo "json: ${{ steps.meta.outputs.json }}"
+  
       - name: Log into registry ${{ env.REGISTRY }}
         uses: docker/login-action@v2
         with:
