@@ -41,7 +41,8 @@ jobs:
 
       - name: Prepare platform name
         id: prep
-        run: echo "::set-output name=platform::$(echo ${{ matrix.platform }} | cut -d'/' -f2)"
+        # run: echo "::set-output name=platform::$(echo ${{ matrix.platform }} | cut -d'/' -f2)"
+        run: echo "{ platform }={ $(echo ${{ matrix.platform }} | cut -d'/' -f2) }" >> $GITHUB_OUTPUT
 
       - name: Print platform name
         run: |
@@ -121,7 +122,7 @@ jobs:
       - name: Create manifest list and push
         working-directory: /tmp/digests
         run: |
-          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+          docker buildx imagetools create -t test $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
             $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *)
       
       - name: Inspect image
