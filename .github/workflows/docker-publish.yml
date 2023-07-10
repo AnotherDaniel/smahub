@@ -52,8 +52,8 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          flavor: |
-            latest=${{ github.ref == 'refs/heads/main' }}
+#          flavor: |
+#            latest=${{ github.ref == 'refs/heads/main' }}
           tags: |
             value=${{ steps.prep.outputs.platform }}
 
@@ -106,18 +106,6 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          # flavor: |
-          #   latest=${{ github.ref == 'refs/heads/main' }}
-          # tags: |
-          #   value=${{ steps.prep.outputs.platform }}
-            
-      - name: Print manifest list output
-        working-directory: /tmp/digests
-        run: |
-          registry=${{ env.REGISTRY }}
-          image_name=${{ env.IMAGE_NAME }}
-          echo $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-          $(for f in ./*; do printf "${registry,,}/${image_name,,}@sha256:%s " "${f#./}"; done)
 
       - name: Log into registry ${{ env.REGISTRY }}
         uses: docker/login-action@v2
