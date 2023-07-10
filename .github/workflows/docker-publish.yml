@@ -122,8 +122,17 @@ jobs:
 
       - name: Print Docker metadata raw output
         run: |
-          echo '${{ steps.meta.outputs.json }}' | jq    
+          echo "$DOCKER_METADATA_OUTPUT_JSON" | jq 
+#          echo '${{ steps.meta.outputs.json }}' | jq    
   
+      - name: Print manifest list output
+        working-directory: /tmp/digests
+        run: |
+          registry=${{ env.REGISTRY }}
+          image_name=${{ env.IMAGE_NAME }}
+          echo $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< ${{ steps.meta.outputs.json }}) \
+            $(for f in ./*; do printf '%q' "${registry,,}/${image_name,,}@sha256:${f#./} "; done)
+
       - name: Log into registry ${{ env.REGISTRY }}
         uses: docker/login-action@v2
         with:
