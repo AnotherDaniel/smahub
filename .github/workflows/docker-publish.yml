@@ -130,7 +130,7 @@ jobs:
         run: |
           registry=${{ env.REGISTRY }}
           image_name=${{ env.IMAGE_NAME }}
-          echo $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< ${{ steps.meta.outputs.json }}) \
+          echo $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
             $(for f in ./*; do printf '%q' "${registry,,}/${image_name,,}@sha256:${f#./} "; done)
 
       - name: Log into registry ${{ env.REGISTRY }}
