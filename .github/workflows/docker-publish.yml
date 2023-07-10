@@ -136,4 +136,6 @@ jobs:
 
       - name: Inspect image
         run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
+          registry=${{ env.REGISTRY }}
+          image_name=${{ env.IMAGE_NAME }}
+          docker buildx imagetools inspect ${registry,,}/${image_name,,}:${{ steps.meta.outputs.version }}
