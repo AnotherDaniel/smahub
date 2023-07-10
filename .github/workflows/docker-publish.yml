@@ -119,6 +119,8 @@ jobs:
         run: |
           echo "tags: ${{ steps.meta.outputs.tags }}"
           echo "labels: ${{ steps.meta.outputs.labels }}"
+          echo "labels: ${{ steps.meta.outputs.json }}"
+          echo "json: $DOCKER_METADATA_OUTPUT_JSON"
 
       - name: Log into registry ${{ env.REGISTRY }}
         uses: docker/login-action@v2
@@ -133,8 +135,7 @@ jobs:
           registry=${{ env.REGISTRY }}
           image_name=${{ env.IMAGE_NAME }}
           docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-          $(for f in ./*; do printf '%q' "${registry,,}/${image_name,,}@sha256:${f#./} "; done)
-                        
+          $(for f in ./*; do printf '%q' "${registry,,}/${image_name,,}@sha256:${f#./} "; done)                      
       
 #          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
 #            $(printf '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
