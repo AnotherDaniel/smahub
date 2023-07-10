@@ -57,11 +57,6 @@ jobs:
           tags: |
             value=${{ steps.prep.outputs.platform }}
 
-      - name: Print Docker metadata
-        run: |
-          echo "tags: ${{ steps.meta.outputs.tags }}"
-          echo "labels: ${{ steps.meta.outputs.labels }}"
-
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@v4
@@ -77,10 +72,6 @@ jobs:
           mkdir -p /tmp/digests
           digest="${{ steps.build-and-push.outputs.digest }}"
           touch "/tmp/digests/${digest#sha256:}"
-      
-      - name: Print digests
-        run: |
-          echo "tags: ${{ steps.build-and-push.outputs.digest }}"
 
       - name: Upload digest
         uses: actions/upload-artifact@v3
@@ -94,6 +85,11 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build
+
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
 
     steps:
       - name: Download digests
@@ -114,24 +110,14 @@ jobs:
           #   latest=${{ github.ref == 'refs/heads/main' }}
           # tags: |
           #   value=${{ steps.prep.outputs.platform }}
-          
-      - name: Print Docker metadata
-        run: |
-          echo "tags: ${{ steps.meta.outputs.tags }}"
-          echo "labels: ${{ steps.meta.outputs.labels }}"
-
-      - name: Print Docker metadata raw output
-        run: |
-          echo "$DOCKER_METADATA_OUTPUT_JSON" | jq 
-#          echo '${{ steps.meta.outputs.json }}' | jq    
-  
+            
       - name: Print manifest list output
         working-directory: /tmp/digests
         run: |
           registry=${{ env.REGISTRY }}
           image_name=${{ env.IMAGE_NAME }}
           echo $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            $(for f in ./*; do printf '%q' "${registry,,}/${image_name,,}@sha256:${f#./} "; done)
+          $(for f in ./*; do printf "${registry,,}/${image_name,,}@sha256:%s " "${f#./}"; done)
 
       - name: Log into registry ${{ env.REGISTRY }}
         uses: docker/login-action@v2
@@ -146,11 +132,7 @@ jobs:
           registry=${{ env.REGISTRY }}
           image_name=${{ env.IMAGE_NAME }}
           docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-          $(for f in ./*; do printf "${registry,,}/${image_name,,}@sha256:%s " "${f#./}"; done)
-                                        
-#          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-#            $(printf '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
- 
+          $(for f in ./*; do printf "${registry,,}/${image_name,,}@sha256:%s " "${f#./}"; done) 
 
       - name: Inspect image
         run: |
