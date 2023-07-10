@@ -146,7 +146,8 @@ jobs:
           registry=${{ env.REGISTRY }}
           image_name=${{ env.IMAGE_NAME }}
           docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-          $(for f in ./*; do printf '%q' "${registry,,}/${image_name,,}@sha256:${f#./} "; done)                            
+          $(for f in ./*; do printf "${registry,,}/${image_name,,}@sha256:%s " "${f#./}"; done)
+                                        
 #          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
 #            $(printf '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
  
