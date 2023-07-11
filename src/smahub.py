@@ -235,7 +235,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog=package_name, description=summary)
     parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose output')
     parser.add_argument('-V', '--verboser', action='store_true', help='Enable even more verbose output')
-    parser.add_argument('-d', '--debug', action='store_true', help='Enable debug server', default=5678)
+    parser.add_argument('-d', '--debug', action='store_true', help='Enable debug server')
     parser.add_argument('-p', '--debug-port', action='store', help='Debug server port', default=5678)
     parser.add_argument('--version', action='version', version=f'%(prog)s {version}')
     parser.add_argument('--source-dir', type=str, default='plugins/sources', help='Path to the directory containing source plugins')
