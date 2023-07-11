@@ -6,6 +6,8 @@ import logging
 import os
 import time
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from utils.smahelpers import parameter_unit, isfloat
 
 
@@ -32,6 +34,14 @@ def execute(config, add_data, dostop):
         return
 
     logging.info("Starting Tripower X source")
+
+    # set up retry and backoff for connection
+    session = requests.Session()
+    retry = Retry(connect=3, backoff_factor=0.5)
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount('http://', adapter)
+    session.mount('https://', adapter)
+
     loginurl = f"http://{config.get('server','address')}/api/v1/token"
     postdata = {'grant_type': 'password',
                 'username': config.get('server', 'username'),
@@ -40,16 +50,18 @@ def execute(config, add_data, dostop):
 
     # Login & Extract Access-Token
     try:
-        response = requests.post(loginurl, data=postdata, timeout=5)
-
-    except requests.exceptions.ConnectTimeout:
+        response = session.post(loginurl, data=postdata, timeout=5)
+#        response = requests.post(loginurl, data=postdata, timeout=5)
+    except requests.exceptions.ConnectTimeout as e:
         logging.fatal(f"Inverter not reachable via HTTP: {config.get('server', 'address')}")
+        return
+    except requests.exceptions.ConnectionError as e:
+        logging.fatal(f"Inverter connection error: {e.args[0]}")
         return
 
     if ("Content-Length" in response.headers and response.headers["Content-Length"] == '0'):
         logging.fatal("Username or Password wrong")
         return
-
     if (404 == response.status_code):
         logging.fatal(f"HTTP connection to {config.get('server', 'address')} refused (status 404)")
         return
@@ -59,7 +71,7 @@ def execute(config, add_data, dostop):
 
     # Request Device Info
     url = f"http://{config.get('server','address')}/api/v1/plants/Plant:1/devices/IGULD:SELF"
-    response = requests.get(url, headers=headers)
+    response = session.get(url, headers=headers)
     dev = response.json()
 
     DeviceInfo = {}
@@ -80,7 +92,7 @@ def execute(config, add_data, dostop):
 
         try:
             url = f"http://{config.get('server', 'address')}/api/v1/measurements/live"
-            response = requests.post(url, headers=headers, data='[{"componentId":"IGULD:SELF"}]')
+            response = session.post(url, headers=headers, data='[{"componentId":"IGULD:SELF"}]')
 
             # Check if a new acccess token is neccesary (TODO use refresh token)
             if (response.status_code == 401):

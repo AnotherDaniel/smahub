@@ -19,7 +19,8 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
 ]
 dependencies = [
-    "requests ~=2.29.0",
+    "requests ~=2.31.0",
+    "urllib3 ~=2.0.3",
     "paho-mqtt ~=1.6.1",
     "ha_mqtt_discoverable ~=0.9",
     "debugpy ~=1.6",
