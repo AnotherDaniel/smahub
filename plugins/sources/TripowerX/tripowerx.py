@@ -103,10 +103,12 @@ def execute(config, add_data, dostop):
 
             # Check if a new acccess token is neccesary (TODO use refresh token)
             if (response.status_code == 401):
-                response = requests.post(loginurl, data=postdata)
+                logging.info(f"Got {response.status_code} - trying reauth")
+                response = requests.post(loginurl, data=postdata, verify=verifyTLS)
                 token = response.json()['access_token']
                 headers = {"Authorization": "Bearer " + token}
                 continue
+
             data = response.json()
 
             for d in data:
@@ -142,6 +144,11 @@ def execute(config, add_data, dostop):
             time.sleep(int(config.get('server', 'updatefreq')))
 
         except TimeoutError:
+            logging.warning(f"Got TimeoutError - retrying")
+            pass
+
+        except Exception as e:
+            logging.error(f"Got error {e} - retrying")
             pass
 
     logging.info("Stopping Tripower X source")
