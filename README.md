@@ -131,6 +131,8 @@ services:
       -  TRIPOWERX_ADDRESS=192.168.0.1
       -  TRIPOWERX_USER=user
       -  TRIPOWERX_PASSWORD=password
+      -  TRIPOWERX_PROTOCOL=http
+      -  TRIPOWERX_VERIFYTLS=true
       -  MQTT_ENABLED=true
       -  MQTT_ADDRESS=192.168.0.2
       -  MQTT_PORT=1883

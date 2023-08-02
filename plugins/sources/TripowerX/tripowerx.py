@@ -24,7 +24,10 @@ def env_vars(config):
         config['server']['updatefreq'] = int(os.environ.get('TRIPOWERX_UPDATEFREQ'))
     if os.environ.get('TRIPOWERX_PREFIX'):
         config['server']['sensorPrefix'] = os.environ.get('TRIPOWERX_PREFIX')
-
+    if os.environ.get('TRIPOWERX_PROTOCOL'):
+        config['server']['protocol'] = os.environ.get('TRIPOWERX_PROTOCOL')
+    if os.environ.get('TRIPOWERX_VERIFYTLS'):
+        config['server']['verifyTLS'] = os.environ.get('TRIPOWERX_VERIFYTLS')
 
 def execute(config, add_data, dostop):
     env_vars(config)
@@ -42,15 +45,19 @@ def execute(config, add_data, dostop):
     session.mount('http://', adapter)
     session.mount('https://', adapter)
 
-    loginurl = f"http://{config.get('server','address')}/api/v1/token"
+    loginurl = f"{config.get('server','protocol')}://{config.get('server','address')}/api/v1/token"
     postdata = {'grant_type': 'password',
                 'username': config.get('server', 'username'),
                 'password': config.get('server', 'password'),
                 }
+    verifyTLS = config.get('server', 'verifyTLS').lower() == 'true'
+
+    if not verifyTLS:
+        requests.packages.urllib3.disable_warnings()
 
     # Login & Extract Access-Token
     try:
-        response = session.post(loginurl, data=postdata, timeout=5)
+        response = session.post(loginurl, data=postdata, timeout=5, verify=verifyTLS)
 #        response = requests.post(loginurl, data=postdata, timeout=5)
     except requests.exceptions.ConnectTimeout as e:
         logging.fatal(f"Inverter not reachable via HTTP: {config.get('server', 'address')}")
@@ -70,13 +77,13 @@ def execute(config, add_data, dostop):
     headers = {"Authorization": "Bearer " + token}
 
     # Request Device Info
-    url = f"http://{config.get('server','address')}/api/v1/plants/Plant:1/devices/IGULD:SELF"
-    response = session.get(url, headers=headers)
+    url = f"{config.get('server','protocol')}://{config.get('server','address')}/api/v1/plants/Plant:1/devices/IGULD:SELF"
+    response = session.get(url, headers=headers, verify=verifyTLS)
     dev = response.json()
 
     DeviceInfo = {}
     DeviceInfo['name'] = dev['product']
-    DeviceInfo['configuration_url'] = f"http://{config.get('server', 'address')}"
+    DeviceInfo['configuration_url'] = f"{config.get('server','protocol')}://{config.get('server', 'address')}"
     DeviceInfo['identifiers'] = dev['serial']
     DeviceInfo['model'] = f"{dev['vendor']}-{dev['product']}"
     DeviceInfo['manufacturer'] = dev['vendor']
@@ -91,8 +98,8 @@ def execute(config, add_data, dostop):
             add_data(dname, value)
 
         try:
-            url = f"http://{config.get('server', 'address')}/api/v1/measurements/live"
-            response = session.post(url, headers=headers, data='[{"componentId":"IGULD:SELF"}]')
+            url = f"{config.get('server','protocol')}://{config.get('server', 'address')}/api/v1/measurements/live"
+            response = session.post(url, headers=headers, data='[{"componentId":"IGULD:SELF"}]', verify=verifyTLS)
 
             # Check if a new acccess token is neccesary (TODO use refresh token)
             if (response.status_code == 401):
@@ -129,7 +136,7 @@ def execute(config, add_data, dostop):
                         else:
                             add_data(idxname, v)
                 else:
-                    logging.debug("value currently not availably (nighttime?)")
+                    logging.debug(f"value of {name} is currently not availably (nighttime?)")
                     pass
 
             time.sleep(int(config.get('server', 'updatefreq')))
