@@ -16,18 +16,18 @@ def env_vars(config):
         config['plugin']['enabled'] = os.environ.get('TRIPOWERX_ENABLED')
     if os.environ.get('TRIPOWERX_ADDRESS'):
         config['server']['address'] = os.environ.get('TRIPOWERX_ADDRESS')
+    if os.environ.get('TRIPOWERX_PROTOCOL'):
+        config['server']['protocol'] = os.environ.get('TRIPOWERX_PROTOCOL')
+    if os.environ.get('TRIPOWERX_VERIFYTLS'):
+        config['server']['verifyTls'] = os.environ.get('TRIPOWERX_VERIFYTLS')
     if os.environ.get('TRIPOWERX_USER'):
         config['server']['username'] = os.environ.get('TRIPOWERX_USER')
     if os.environ.get('TRIPOWERX_PASSWORD'):
         config['server']['password'] = os.environ.get('TRIPOWERX_PASSWORD')
     if os.environ.get('TRIPOWERX_UPDATEFREQ'):
-        config['server']['updatefreq'] = int(os.environ.get('TRIPOWERX_UPDATEFREQ'))
+        config['server']['updateFreq'] = int(os.environ.get('TRIPOWERX_UPDATEFREQ'))
     if os.environ.get('TRIPOWERX_PREFIX'):
         config['server']['sensorPrefix'] = os.environ.get('TRIPOWERX_PREFIX')
-    if os.environ.get('TRIPOWERX_PROTOCOL'):
-        config['server']['protocol'] = os.environ.get('TRIPOWERX_PROTOCOL')
-    if os.environ.get('TRIPOWERX_VERIFYTLS'):
-        config['server']['verifyTLS'] = os.environ.get('TRIPOWERX_VERIFYTLS')
 
 def execute(config, add_data, dostop):
     env_vars(config)
@@ -50,15 +50,14 @@ def execute(config, add_data, dostop):
                 'username': config.get('server', 'username'),
                 'password': config.get('server', 'password'),
                 }
-    verifyTLS = config.get('server', 'verifyTLS').lower() == 'true'
+    verify_tls = config.get('server', 'verifyTls').lower() == 'true'
 
-    if not verifyTLS:
+    if not verify_tls:
         requests.packages.urllib3.disable_warnings()
 
     # Login & Extract Access-Token
     try:
-        response = session.post(loginurl, data=postdata, timeout=5, verify=verifyTLS)
-#        response = requests.post(loginurl, data=postdata, timeout=5)
+        response = session.post(loginurl, data=postdata, timeout=5, verify=verify_tls)
     except requests.exceptions.ConnectTimeout as e:
         logging.fatal(f"Inverter not reachable via HTTP: {config.get('server', 'address')}")
         return
@@ -78,7 +77,7 @@ def execute(config, add_data, dostop):
 
     # Request Device Info
     url = f"{config.get('server','protocol')}://{config.get('server','address')}/api/v1/plants/Plant:1/devices/IGULD:SELF"
-    response = session.get(url, headers=headers, verify=verifyTLS)
+    response = session.get(url, headers=headers, verify=verify_tls)
     dev = response.json()
 
     DeviceInfo = {}
@@ -99,12 +98,12 @@ def execute(config, add_data, dostop):
 
         try:
             url = f"{config.get('server','protocol')}://{config.get('server', 'address')}/api/v1/measurements/live"
-            response = session.post(url, headers=headers, data='[{"componentId":"IGULD:SELF"}]', verify=verifyTLS)
+            response = session.post(url, headers=headers, data='[{"componentId":"IGULD:SELF"}]', verify=verify_tls)
 
             # Check if a new acccess token is neccesary (TODO use refresh token)
             if (response.status_code == 401):
                 logging.info(f"Got {response.status_code} - trying reauth")
-                response = requests.post(loginurl, data=postdata, verify=verifyTLS)
+                response = requests.post(loginurl, data=postdata, verify=verify_tls)
                 token = response.json()['access_token']
                 headers = {"Authorization": "Bearer " + token}
                 continue
@@ -141,7 +140,7 @@ def execute(config, add_data, dostop):
                     logging.debug(f"value of {name} is currently not availably (nighttime?)")
                     pass
 
-            time.sleep(int(config.get('server', 'updatefreq')))
+            time.sleep(int(config.get('server', 'updateFreq')))
 
         except TimeoutError:
             logging.warning(f"Got TimeoutError - retrying")

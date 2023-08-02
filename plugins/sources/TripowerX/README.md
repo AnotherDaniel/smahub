@@ -13,12 +13,14 @@ enabled = true
 [server]
 address = 192.168.0.2
 username = user
+protocol = https
+verifyTls = false
 password = pwd
-updatefreq = 2
+updateFreq = 2
 sensorPrefix = TriPowerX.
 ```
 
-To enable the TripowerX source plugin, set `enabled` to `true`. Update the `address`, `username`, and `password` fields to match the Tripower X inverter's IP address and credentials. Set the `updatefreq` to the desired update frequency (in seconds). Update the `sensorPrefix` to match the desired prefix for the sensors in the SMAHub.
+To enable the TripowerX source plugin, set `enabled` to `true`. Update the `address`, `username`, and `password` fields to match the Tripower X inverter's IP address and credentials. Set the `updateFreq` to the desired update frequency (in seconds). Update the `sensorPrefix` to match the desired prefix for the sensors in the SMAHub.
 
 ## Environment Variables
 
@@ -26,6 +28,8 @@ The TripowerX source plugin can also be configured using the following environme
 
 - `TRIPOWERX_ENABLED`: Set to `true` to enable the plugin.
 - `TRIPOWERX_ADDRESS`: The IP address of the Tripower X inverter.
+- `TRIPOWERX_PROTOCOL`: Communication protocol to use, must be either http or https.
+- `TRIPOWERX_VERIFYTLS`: Check validity of https (secure) connection, either `true` or `false`.
 - `TRIPOWERX_USER`: The username for the Tripower X inverter.
 - `TRIPOWERX_PASSWORD`: The password for the Tripower X inverter.
 - `TRIPOWERX_UPDATEFREQ`: The update frequency (in seconds).
