@@ -11,18 +11,18 @@ SMAHub is a Python-based daemon that runs plugins to collect data from SMA PV pr
 SMAHub works by periodically polling data from SMA PV products using various protocols and interfaces. The data is then processed and published to one or more output channels, such as an MQTT broker. The plugin-based architecture allows SMAHub to be easily extended with new data sources and sinks, making it a versatile solution for monitoring and managing SMA PV systems.
 
 ```ascii
-            +-------------+
-            |    SMAHub   |
-            +------+------+
-                  |
-      +-------------+--------------+
-      |                            |
-      v                            v
-   +--------+                +--------+
-   | Source |                |  Sink  |
-   +--------+                +--------+
-   | Plugin |                | Plugin |
-   +--------+                +--------+
+              +-------------+
+              |    SMAHub   |
+              +------+------+
+                     |
+       +-------------+--------------+
+       |                            |
+       v                            v
+   +--------+                  +--------+
+   | Source |                  |  Sink  |
+   +--------+                  +--------+
+   | Plugin |                  | Plugin |
+   +--------+                  +--------+
 ````
 
 This diagram shows the main SMAHub component at the top, which manages data collection and publishing. Below that, you can see the two plugin categories: source plugins on the left and sink plugins on the right. The arrows indicate the flow of data from the source plugins to the main SMAHub component, and then to the sink plugins for publishing.
@@ -163,4 +163,4 @@ SMAHub was inspired by and adapted from the following projects:
 - Sven (littleyoda) - [Home-Assistant-Tripower-X-MQTT](https://github.com/littleyoda/Home-Assistant-Tripower-X-MQTT)
 - Wenger Florian (datenschuft) - [SMA-EM](https://github.com/datenschuft/SMA-EM)
 
-I'd like to thank these contributors for their work and for sharing their code, which has been invaluable in the development of SMAHub.
+I'd like to thank these authors for their work and for sharing their code, which has been invaluable in the development of SMAHub. Contributors to the smahub codebase are listed in CONTRIBUTORS.md
