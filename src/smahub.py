@@ -185,8 +185,6 @@ async def main(args):
     '''
     env_vars(args)
 
-    logging.info(f'Starting %(prog)s v{version}')
-
     if args.verbose:
         logging.getLogger().setLevel(logging.INFO)
         logging.debug('Verbose output enabled')
@@ -242,4 +240,5 @@ if __name__ == '__main__':
     # Parse command-line arguments
     args = parser.parse_args()
 
+    print(f'Starting smahub v{version}')
     asyncio.run(main(args))

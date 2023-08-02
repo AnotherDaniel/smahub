@@ -4,14 +4,14 @@ requires = ["flit_core >=3.8.0,<4"]
 
 [project]
 name = "smahub"
-version = "1.2.2"
+version = "1.2.3"
 authors = [{ name = "Daniel Krippner", email = "dk.mailbox@gmx.net" }]
 description = "Little daemon that runs plugins for collecting data from SMA PV products, and publishes to eg MQTT via other plugins."
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
-    "Development Status :: 3 - Alpha",
-    "License :: OSI Approved :: Apache Software License 2.0 (Apache-2.0)",
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.8",
