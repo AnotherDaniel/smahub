@@ -184,8 +184,8 @@ async def main(args):
     Main function that loads plugins, starts source and sink threads and waits for them to complete.
     '''
     env_vars(args)
-    # SOURCES_DIR = args.source_dir
-    # SINKS_DIR = args.sink_dir
+
+    logging.info(f'Starting %(prog)s v{version}')
 
     if args.verbose:
         logging.getLogger().setLevel(logging.INFO)
@@ -199,8 +199,6 @@ async def main(args):
         # Allow other computers to attach to debugpy at this IP address and port.
         debugpy.listen(('0.0.0.0', args.debug_port))
         logging.info(f"Listening on debug port: {args.debug_port}")
-        # Pause the program until a remote debugger is attached
-        # debugpy.wait_for_client()  # Comment out or remove this line
 
     # Main business logic
     load_plugins(args.source_dir, sources)
