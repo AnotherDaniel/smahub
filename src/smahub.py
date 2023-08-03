@@ -39,6 +39,8 @@ def env_vars(args):
         args.debug = bool(os.environ.get('SMAHUB_DEBUG'))
     if os.environ.get('SMAHUB_DEBUG_PORT'):
         args.debug_port = int(os.environ.get('SMAHUB_DEBUG_PORT', 5678))
+    if os.environ.get('SMAHUB_DEBUG_HOLD'):
+        args.debug_hold = bool(os.environ.get('SMAHUB_DEBUG_HOLD'))
     if os.environ.get('SMAHUB_SOURCES_DIR'):
         args.source_dir = os.environ.get("SMAHUB_SOURCES_DIR", "plugins/sources")
     if os.environ.get('SMAHUB_SINKS_DIR'):
@@ -198,6 +200,11 @@ async def main(args):
         debugpy.listen(('0.0.0.0', args.debug_port))
         logging.info(f"Listening on debug port: {args.debug_port}")
 
+        if args.debug_hold:
+            logging.info(f"Holding startup, waiting for debug connection on port: {args.debug_port}")
+            debugpy.wait_for_client()
+
+
     # Main business logic
     load_plugins(args.source_dir, sources)
     load_plugins(args.sink_dir, sinks)
@@ -233,12 +240,14 @@ if __name__ == '__main__':
     parser.add_argument('-V', '--verboser', action='store_true', help='Enable even more verbose output')
     parser.add_argument('-d', '--debug', action='store_true', help='Enable debug server')
     parser.add_argument('-p', '--debug-port', action='store', help='Debug server port', default=5678)
+    parser.add_argument('-h', '--debug-hold', action='store_true', help='Hold startup to wait for debug connection; requires --debug')
     parser.add_argument('--version', action='version', version=f'%(prog)s {version}')
     parser.add_argument('--source-dir', type=str, default='plugins/sources', help='Path to the directory containing source plugins')
     parser.add_argument('--sink-dir', type=str, default='plugins/sinks', help='Path to the directory containing sink plugins')
 
     # Parse command-line arguments
     args = parser.parse_args()
+    if args.debug_hold is not None and args.debug is None:
+        parser.error("--debug-hold requires --debug")
 
-    print(f'Starting smahub v{version}')
     asyncio.run(main(args))
