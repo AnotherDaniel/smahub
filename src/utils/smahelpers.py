@@ -75,10 +75,43 @@ TRIPOWER_PARAM_DICT = {
     'Wl.ConnStt': ('System communication', 'Wi-Fi connection status', ''),
     'Wl.SigPwr': ('System communication', 'Signal strength of the selected network', '%'),
     'Setpoint.PlantControl.InOut.DigOut': ('Device', 'Digital output', ''),
-    'Setpoint.PlantControl.Inverter.WModCfg.WCtlComCfg.W': ('System and device control', 'Active power limitation by PV system control', 'W')
+    'Setpoint.PlantControl.Inverter.WModCfg.WCtlComCfg.W': ('System and device control', 'Active power limitation by PV system control', 'W'),
+    'SunSpecSig.SunSpecTx.1': ('DC Side', 'SunSpec life sign [1]', ''),
+    'Wl.AcqStt': ('System communication', 'Status of Wi-Fi scan', ''),
+    'Wl.SoftAcsConnStt': ('System communication', 'Soft Access Point status', ''),
 }
 
+# Lookup for various status texts used by TripowerX inverter parameters
+# Not complete by a long shot I guess, needs to be extended as I see more values in my system
+TRIPOWER_STATUS_DICT = {
+    302: "---",
+    937: "---",
+    973: "---",
+    303: "Off",
+    307: "Ok",
+    311: "Open",
+    3366: "No scan completed",
+    1130: "No",
+    1295: "Standby",
+    295: "MPP",
+    569: "Activated",
+    1779: "Separated",
+    1780: "Public electricity mains",
+    27: "Special setting",
+    51: "Closed",
+    884: "not active",
+    1440: "Grid mode",
+    1042: "Underexcited",
+    4570: "Wait for enable operation",
+    16777213: "Information not available",
+}
 
+def status_string(id): 
+    if id in TRIPOWER_STATUS_DICT:
+        return TRIPOWER_STATUS_DICT[id]
+    else:
+        return ""
+    
 def parameter_unit(name):
     if name in TRIPOWER_PARAM_DICT:
         return TRIPOWER_PARAM_DICT[name][2]

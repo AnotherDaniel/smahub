@@ -6,6 +6,7 @@ import ha_mqtt_discoverable
 from ha_mqtt_discoverable import Settings
 from ha_mqtt_discoverable.sensors import SensorInfo, Sensor, DeviceInfo
 from utils.smasensors import *
+from utils.smahelpers import *
 
 
 # store for all the ha_mqtt sensor objects
@@ -140,6 +141,11 @@ def publish(sensor, value):
     # get rid of unit, in case our value is a value/unit tuple
     if isinstance(value, tuple):
         publish_value = value[0]
+    
+    # if there's not unit, we should be able to look-up a string value for the parameter number
+    if not sensor._entity.unit_of_measurement and status_string(publish_value):
+        publish_value = status_string(publish_value)
+    
     sensor.set_state(publish_value)
 
 
