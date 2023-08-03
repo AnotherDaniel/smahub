@@ -121,19 +121,20 @@ services:
   smahub:
     image: ghcr.io/anotherdaniel/smahub:latest
     container_name: smahub
-    network_mode: "host"
+    network_mode: host
     restart: unless-stopped
 # useful if you manage the MQTT broker from this same docker-compose file
 #    depends_on:
 #      - mosquitto
     environment:
+      -  SMAHUB_VERBOSE=true
       -  TRIPOWERX_ENABLED=true
       -  TRIPOWERX_ADDRESS=192.168.0.1
       -  TRIPOWERX_USER=user
       -  TRIPOWERX_PASSWORD=password
-      -  TRIPOWERX_PROTOCOL=http
-      -  TRIPOWERX_VERIFYTLS=true
-      -  MQTT_ENABLED=true
+      -  TRIPOWERX_PROTOCOL=https
+      -  TRIPOWERX_VERIFYTLS=false
+      -  MQTT_ENABLED=false
       -  MQTT_ADDRESS=192.168.0.2
       -  MQTT_PORT=1883
       -  MQTT_USER=user
@@ -144,7 +145,7 @@ services:
       -  GENHASENSORS_FILEPREFIX=hasensors_
       -  GENHASENSORS_SHM2=mdi:camera-switch
       -  GENHASENSORS_TRIPOWERX=mdi:border-all
-      -  HA_MQTT_ENABLED=false
+      -  HA_MQTT_ENABLED=true
       -  HA_MQTT_ADDRESS=192.168.0.3
 ```
 
