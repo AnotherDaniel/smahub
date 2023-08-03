@@ -600,11 +600,23 @@ SENSORS_TRIPOWERX = [
         'suggested_display_precision': 2,
         'unit_of_measurement': "%",
     },
-        {
+    {
         'key': "Setpoint.PlantControl.Inverter.WModCfg.WCtlComCfg.WNom",
         'name': "Normalized active power limitation by PV system control",
         'suggested_display_precision': 2,
         'unit_of_measurement': "%",
+    },
+    {
+        'key': "SunSpecSig.SunSpecTx.1",
+        'name': "SunSpec life sign [1]",
+    },
+    {
+        'key': "Wl.AcqStt",
+        'name': "Status of Wi-Fi scan",
+    },
+    {
+        'key': "Wl.SoftAcsConnStt",
+        'name': "Soft Access Point status",
     },
 ]
 
