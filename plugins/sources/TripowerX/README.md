@@ -286,12 +286,12 @@ Important: You have to replace "<SERIAL>" with the serial number of the device y
   state_class: "total_increasing"
 - name: TriPowerX_<SERIAL>_Metering_TotWhOut
   state_topic: "TriPowerX/<SERIAL>/Metering/TotWhOut"
-  unit_of_measurement: "kWh"
+  unit_of_measurement: "Wh"
   device_class: "energy"
   state_class: "total_increasing"
 - name: TriPowerX_<SERIAL>_Metering_TotWhOut_Pv
   state_topic: "TriPowerX/<SERIAL>/Metering/TotWhOut/Pv"
-  unit_of_measurement: "kWh"
+  unit_of_measurement: "Wh"
   device_class: "energy"
   state_class: "total_increasing"
 - name: TriPowerX_<SERIAL>_Operation_BckStt
