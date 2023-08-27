@@ -240,7 +240,7 @@ if __name__ == '__main__':
     parser.add_argument('-V', '--verboser', action='store_true', help='Enable even more verbose output')
     parser.add_argument('-d', '--debug', action='store_true', help='Enable debug server')
     parser.add_argument('-p', '--debug-port', action='store', help='Debug server port', default=5678)
-    parser.add_argument('-h', '--debug-hold', action='store_true', help='Hold startup to wait for debug connection; requires --debug')
+    parser.add_argument('-D', '--debug-hold', action='store_true', help='Hold startup to wait for debug connection; requires --debug')
     parser.add_argument('--version', action='version', version=f'%(prog)s {version}')
     parser.add_argument('--source-dir', type=str, default='plugins/sources', help='Path to the directory containing source plugins')
     parser.add_argument('--sink-dir', type=str, default='plugins/sinks', help='Path to the directory containing sink plugins')
