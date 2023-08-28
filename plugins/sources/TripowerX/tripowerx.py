@@ -8,8 +8,8 @@ import time
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-from utils.smahelpers import parameter_unit, isfloat
-from utils.smasensors import register_sensor_dict
+from utils.smahelpers import isfloat
+from utils.smasensors import register_sensor_dict, get_parameter_unit
 
 
 def env_vars(config):
@@ -123,7 +123,7 @@ def execute(config, add_data, dostop):
                     v = d['values'][0]['value']
                     if isfloat(v):
                         v = round(v, 2)
-                    unit = parameter_unit(name)
+                    unit = get_parameter_unit('SENSORS_TRIPOWERX', name)
                     if unit:
                         add_data(dname, (v, unit))
                     else:
@@ -135,7 +135,7 @@ def execute(config, add_data, dostop):
                         if isfloat(v):
                             v = round(v, 2)
                         idxname = dname + "." + str(idx + 1)
-                        unit = parameter_unit(name)
+                        unit = get_parameter_unit('SENSORS_TRIPOWERX', name)
                         if unit:
                             add_data(idxname, (v, unit))
                         else:
