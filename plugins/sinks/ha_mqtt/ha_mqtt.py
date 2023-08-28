@@ -101,20 +101,15 @@ def get_sensor(name, device_info):
     sensor = sensors.get(name)
     if (sensor is None):
         # create sensor if not already in dict
-
-        # We use the list-of-dict definitions from smasensors.py to get metadata about device sensors
-        # that we need to create home assistant autodiscovery behavior:
-        #   - extract first part of name from name-path (should be device name like 'SHM2' or 'TRIPOWERX'
-        #   - check if there exists a list definition from the 'import *' above by name SENSORS_<name>
-        #   - if yes, this list is used below for accessing the metadata dicts for Sensor creation
-        # This might not be be most obvious or robust way to do this...
         sensors_dict = f"SENSORS_{name.split('.')[0]}".upper()
-        if not sensors_dict in globals() or not isinstance(globals()[sensors_dict], list):
+
+        if not get_sensor_dict(sensors_dict) or not isinstance(get_sensor_dict(sensors_dict), list):
             logging.error(f"HA-MQTT sensor definitions for {name.split('.')[0]} not found")
             return None
 
         key = ".".join(name.split(".")[2:])
-        result = get_item_by_key(globals()[sensors_dict], key)
+        result = get_item_by_key(get_sensor_dict(sensors_dict), key)
+
         if result is None:
             logging.error(f"HA-MQTT sensor definition for {key} not found")
             return None
