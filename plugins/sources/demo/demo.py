@@ -1,6 +1,7 @@
 import os
 import time
 import logging
+from utils.smasensors import register_sensor_dict
 
 
 def env_vars(config):
@@ -10,6 +11,9 @@ def env_vars(config):
 
 def execute(config, add_data, dostop):
     env_vars(config)
+
+    # register ha sensor definitions
+    register_sensor_dict('SENSORS_DEMO', SENSORS_DEMO)
 
     if config.get('plugin', 'enabled').lower() != 'true':
         logging.info("demo source plugin disabled")
@@ -25,3 +29,15 @@ def execute(config, add_data, dostop):
         time.sleep(5)
 
     logging.info("Stopping demo source")
+
+
+'''
+Home Assistant MQTT autodiscovery sensor definitions for Demo plugin
+'''
+SENSORS_DEMO = [
+    {
+        'key': "demoValue",
+        'name': "Demo value",
+        'entity_category': "diagnostic",
+    },
+]
