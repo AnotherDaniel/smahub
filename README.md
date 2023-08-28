@@ -57,7 +57,7 @@ sudo apt install git python3 python3-pip python3-venv
 Then, get the code from github:
 
 ```shell
-git clone git@github.com:AnotherDaniel/smahub.git
+git clone https://github.com/AnotherDaniel/smahub.git
 ```
 
 This will create a directory `smahub` an download the sources from github. Next, enter the project directory and install the project requirements using pip:
