@@ -5,6 +5,7 @@ Thank you littleyoda!
 
 # Lookup table, gathered by downloading TriPower X current values as CSV file and then doing conversions to a python dict
 # Contents: Channel: Group, Name Unit
+# DEPRECATED in favor of smasensors.py dynamic sensor data registry!
 TRIPOWER_PARAM_DICT = {
     'Coolsys.Inverter.TmpVal': ('Device', 'Inverter temperature [3]', '°C'),
     'DcMs.Amp': ('DC Side', 'DC current input [C]', 'A'),
@@ -111,28 +112,29 @@ def status_string(id):
         return TRIPOWER_STATUS_DICT[id]
     else:
         return ""
-    
+
+# DEPRECATED in favor of smasensors.py dynamic sensor data registry!    
 def parameter_unit(name):
     if name in TRIPOWER_PARAM_DICT:
         return TRIPOWER_PARAM_DICT[name][2]
     else:
         return ""
 
-
+# DEPRECATED in favor of smasensors.py dynamic sensor data registry!
 def parameter_description(name):
     if name in TRIPOWER_PARAM_DICT:
         return TRIPOWER_PARAM_DICT[name][1]
     else:
         return ""
 
-
+# DEPRECATED in favor of smasensors.py dynamic sensor data registry!
 def parameter_group(name):
     if name in TRIPOWER_PARAM_DICT:
         return TRIPOWER_PARAM_DICT[name][0]
     else:
         return ""
 
-
+# DEPRECATED in favor of smasensors.py dynamic sensor data registry!
 def unit_of_measurement(name):
     if name.endswith("TmpVal"):
         return "°C"
