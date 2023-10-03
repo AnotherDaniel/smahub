@@ -45,8 +45,14 @@ def execute(config, get_items, register_callback, do_stop):
     try:
         client.connect(config.get('server', 'address'), int(config.get('server', 'port')))
         logging.debug(f"MQTT sink connected to {config.get('server', 'address')}:{str(config.get('server', 'port'))}")
-    except ConnectionError:
+    except ValueError as exc:
+        logging.fatal(f"MQTT broker configuration error: {str(exc)}")
+        return
+    except ConnectionError as exc:
         logging.fatal(f"MQTT broker not reachable at address: {config.get('server', 'address')}: {str(config.get('server', 'port'))}")
+        return
+    except Exception as exc:
+        logging.fatal(f"MQTT broker unknown error: {str(exc)}")
         return
 
     # We only publish data on change

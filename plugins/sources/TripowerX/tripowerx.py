@@ -26,7 +26,7 @@ def env_vars(config):
     if os.environ.get('TRIPOWERX_PASSWORD'):
         config['server']['password'] = os.environ.get('TRIPOWERX_PASSWORD')
     if os.environ.get('TRIPOWERX_UPDATEFREQ'):
-        config['server']['updateFreq'] = int(os.environ.get('TRIPOWERX_UPDATEFREQ'))
+        config['server']['updateFreq'] = os.environ.get('TRIPOWERX_UPDATEFREQ')
     if os.environ.get('TRIPOWERX_PREFIX'):
         config['server']['sensorPrefix'] = os.environ.get('TRIPOWERX_PREFIX')
 
