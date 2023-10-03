@@ -6,3 +6,4 @@ These are the contributors to smahub:
 | --- | ---|
 | AnotherDaniel   | Daniel Krippner |
 | devfaz          | Fabian Zimmermann |
+| shadow1runner   | Helmut Wolf |
