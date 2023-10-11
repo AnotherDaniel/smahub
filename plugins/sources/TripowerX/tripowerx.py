@@ -392,6 +392,15 @@ SENSORS_TRIPOWERX = [
 
     # string-specific measurements
     {
+        'key': "Coolsys.Inverter.TmpVal",
+        'name': "Inverter temperature",
+        'state_class': "measurement",
+        'suggested_display_precision': 2,
+        'device_class': "temperature",
+        'unit_of_measurement': "°C",
+        'icon': "mdi:thermometer",
+    },
+    {
         'key': "Coolsys.Inverter.TmpVal.1",
         'enabled': "true",
         'name': "Inverter temperature string 1",
