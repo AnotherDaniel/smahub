@@ -760,7 +760,7 @@ SENSORS_TRIPOWERX = [
         'enabled': "false",
         'name': "Insulation resistance",
         'suggested_display_precision': 2,
-        'unit_of_measurement': "kOhm",
+        'unit_of_measurement': "Ohm",
         'icon': "mdi:omega",
     },
     {
