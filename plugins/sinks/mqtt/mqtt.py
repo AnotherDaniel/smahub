@@ -90,17 +90,17 @@ def execute(config, get_items, register_callback, do_stop):
 
         client.connect(host=config.get('server', 'address'), port=int(config.get('server', 'port')))
         client.loop_start()
-        logging.debug(f"MQTT sink connected to {config.get('server', 'address')}:{str(config.get('server', 'port'))}")
+        logging.info(f"MQTT sink connected to {config.get('server', 'address')}:{str(config.get('server', 'port'))}")
 
     except ValueError as exc:
-        logging.fatal(f"MQTT broker configuration error: {str(exc)}")
-        return
-    except ConnectionError:
+        logging.fatal(f"MQTT broker configuration error: {str(exc)}, rethrowing exception")
+        raise
+    except ConnectionError as exc:
         logging.fatal(f"MQTT broker not reachable at address: {config.get('server', 'address')}: {str(config.get('server', 'port'))}")
-        return
+        raise
     except Exception as exc:
-        logging.fatal(f"MQTT broker error: {str(exc)}")
-        return
+        logging.fatal(f"MQTT broker unknown error: {str(exc)}, rethrowing exception")
+        raise
 
     # We only publish data on change
     register_callback(my_callback)
