@@ -11,7 +11,7 @@ The configuration file for the Home Assistant MQTT Publisher plugin is located i
 enabled = false
 
 [server]
-address = 192.168.0.1
+address = 192.0.2.1
 username = ""
 password = ""
 
@@ -21,7 +21,7 @@ updatefreq = 60
 sensorprefix = homeassistant
 ```
 
-To enable the Home Assistant MQTT Publisher Plugin, set `enabled` to `true`. Under the `[server]` section, provide the MQTT server's `address`, `username`, and `password`. 
+To enable the Home Assistant MQTT Publisher Plugin, set `enabled` to `true`. Under the `[server]` section, provide the MQTT server's `address`, `username`, and `password`.
 
 The `updatefreq` under the `[behavior]` section determines the frequency (in seconds) at which the plugin republishes all collected data, even if there have been no updates. `sensorprefix` sets the prefix for all sensor topics published to the MQTT broker.
 

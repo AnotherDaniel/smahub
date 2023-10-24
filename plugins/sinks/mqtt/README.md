@@ -11,7 +11,7 @@ The configuration file for the MQTT sink plugin is located in the `config` direc
 enabled = true
 
 [server]
-address = 192.168.0.1
+address = 192.0.2.1
 port = 1883
 username = ""
 password = ""

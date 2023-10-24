@@ -129,13 +129,13 @@ services:
     environment:
       -  SMAHUB_VERBOSE=true
       -  TRIPOWERX_ENABLED=true
-      -  TRIPOWERX_ADDRESS=192.168.0.1
+      -  TRIPOWERX_ADDRESS=192.0.2.1
       -  TRIPOWERX_USER=user
       -  TRIPOWERX_PASSWORD=password
       -  TRIPOWERX_PROTOCOL=https
       -  TRIPOWERX_VERIFYTLS=false
       -  MQTT_ENABLED=false
-      -  MQTT_ADDRESS=192.168.0.2
+      -  MQTT_ADDRESS=192.0.2.2
       -  MQTT_PORT=1883
       -  MQTT_USER=user
       -  MQTT_PASSWORD=password
@@ -146,7 +146,7 @@ services:
       -  GENHASENSORS_SHM2=mdi:camera-switch
       -  GENHASENSORS_TRIPOWERX=mdi:border-all
       -  HA_MQTT_ENABLED=true
-      -  HA_MQTT_ADDRESS=192.168.0.3
+      -  HA_MQTT_ADDRESS=192.0.2.3
 ```
 
 ## Improvements

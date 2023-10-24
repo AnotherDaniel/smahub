@@ -11,7 +11,7 @@ The configuration file for the EV Charger source plugin is located in the `confi
 enabled = true
 
 [server]
-address = 192.168.0.2
+address = 192.0.2.1
 username = user
 protocol = https
 verifyTls = false
