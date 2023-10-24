@@ -25,7 +25,7 @@ def env_vars(config):
     if os.environ.get('HA_MQTT_PASSWORD'):
         config['server']['password'] = os.environ.get('HA_MQTT_PASSWORD')
     if os.environ.get('HA_MQTT_UPDATEFREQ'):
-        config['behavior']['updatefreq'] = int(os.environ.get('HA_MQTT_UPDATEFREQ'))
+        config['behavior']['updatefreq'] = os.environ.get('HA_MQTT_UPDATEFREQ')
     if os.environ.get('HA_MQTT_PREFIX'):
         config['behavior']['sensorprefix'] = os.environ.get('HA_MQTT_PREFIX')
 

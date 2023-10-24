@@ -25,9 +25,9 @@ def env_vars(config):
     if os.environ.get('EVCHARGER_PASSWORD'):
         config['server']['password'] = os.environ.get('EVCHARGER_PASSWORD')
     if os.environ.get('EVCHARGER_UPDATEFREQ'):
-        config['server']['updateFreq'] = int(os.environ.get('EVCHARGER_UPDATEFREQ'))
+        config['behavior']['updateFreq'] = os.environ.get('EVCHARGER_UPDATEFREQ')
     if os.environ.get('EVCHARGER_PREFIX'):
-        config['server']['sensorPrefix'] = os.environ.get('EVCHARGER_PREFIX')
+        config['behavior']['sensorPrefix'] = os.environ.get('EVCHARGER_PREFIX')
 
 def execute(config, add_data, dostop):
     env_vars(config)
@@ -92,7 +92,7 @@ def execute(config, add_data, dostop):
 
     while not dostop():
         for key, value in DeviceInfo.items():
-            dname = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.device_info.{key}"
+            dname = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.device_info.{key}"
             logging.debug(dname+': ' + value)
             add_data(dname, value)
 
@@ -114,7 +114,7 @@ def execute(config, add_data, dostop):
                 # name is the generic parameter/measurement name
                 name = f"{d['channelId'].replace('Measurement.','').replace('[]', '')}"
                 # dname is name, prefixed with device prefix and serial number
-                dname = f"{config.get('server', 'sensorPrefix')}{DeviceInfo['identifiers']}.{name}"
+                dname = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.{name}"
                 if "value" in d['values'][0]:
                     v = d['values'][0]['value']
                     if isfloat(v):
@@ -140,7 +140,7 @@ def execute(config, add_data, dostop):
                     logging.debug(f"value of {name} is currently not availably (nighttime?)")
                     pass
 
-            time.sleep(int(config.get('server', 'updateFreq')))
+            time.sleep(int(config.get('behavior', 'updateFreq')))
 
         except TimeoutError:
             logging.warning(f"Got TimeoutError - retrying")

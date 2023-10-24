@@ -22,7 +22,7 @@ def env_vars(config):
     if os.environ.get('MQTT_PASSWORD'):
         config['server']['password'] = os.environ.get('MQTT_PASSWORD')
     if os.environ.get('MQTT_UPDATEFREQ'):
-        config['behavior']['updatefreq'] = int(os.environ.get('MQTT_UPDATEFREQ'))
+        config['behavior']['updatefreq'] = os.environ.get('MQTT_UPDATEFREQ')
     if os.environ.get('MQTT_PUBLISHUNITS'):
         config['behavior']['publish_units'] = os.environ.get('MQTT_PUBLISHUNITS')
 
