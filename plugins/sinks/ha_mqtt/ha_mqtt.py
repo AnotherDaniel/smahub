@@ -93,7 +93,7 @@ def execute(config, get_items, register_callback, do_stop):
 
 
 def get_item_by_key(list_of_dicts, target_key):
-    return next((item for item in list_of_dicts if item['key'] == target_key), None)
+    return next((item for item in list_of_dicts if item['key'] == target_key and item['enabled'] == "true"), None)
 
 
 def get_sensor(name, device_info):
@@ -111,7 +111,7 @@ def get_sensor(name, device_info):
         result = get_item_by_key(get_sensor_dict(sensors_dict), key)
 
         if result is None:
-            logging.error(f"HA-MQTT sensor definition for {key} not found")
+            logging.debug(f"HA-MQTT sensor definition for {key} not found or disabled")
             return None
             
         sensor_info = SensorInfo(unique_id=name,
