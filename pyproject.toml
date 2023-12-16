@@ -4,7 +4,7 @@ requires = ["flit_core >=3.8.0,<4"]
 
 [project]
 name = "smahub"
-version = "1.5"
+version = "1.5.1"
 authors = [{ name = "Daniel Krippner", email = "dk.mailbox@gmx.net" }]
 description = "Little daemon that runs plugins for collecting data from SMA PV products, and publishes to eg MQTT via other plugins."
 readme = "README.md"
