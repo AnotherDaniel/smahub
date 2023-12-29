@@ -4,12 +4,20 @@ FROM alpine:3
 RUN apk update && apk upgrade && \
     apk add python3 py3-pip pipx git 
 
-# Install smahub
+# Set up smahub folder
 RUN mkdir -p /opt/smahub
 WORKDIR /opt/smahub
 
+# Clone smahub
 RUN git clone --depth=1 --branch=main https://github.com/AnotherDaniel/smahub . && rm -fr .git*
-RUN pipx install . --include-deps
+
+# Create the virtualenv
+ENV VIRTUAL_ENV=.venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# Install smahub deps
+RUN pip install .
 
 # Debug server port
 EXPOSE 5678
