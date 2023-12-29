@@ -1,4 +1,4 @@
 #!/bin/sh
 
 cd /opt/smahub
-exec /usr/bin/python3 ./src/smahub.py -v
+exec python3 ./src/smahub.py -v
