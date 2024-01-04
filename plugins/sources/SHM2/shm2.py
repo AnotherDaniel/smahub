@@ -36,7 +36,7 @@ def execute(config, add_data, dostop):
     register_sensor_dict('SENSORS_SHM2', SENSORS_SHM2)
 
     # set up listening socket for SHM2 data packets
-    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP) as sock:
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM | socket.SOCK_NONBLOCK, socket.IPPROTO_UDP) as sock:
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock.bind(("", MCAST_PORT))
         try:
@@ -53,7 +53,16 @@ def execute(config, add_data, dostop):
         DeviceInfo['manufacturer'] = "SMA"
 
         while not dostop():
-            emdata = decode_speedwire(sock.recv(608))
+            data = ''
+            while True:
+                try:
+                    chunk = sock.recv(608)
+                    if chunk:
+                        data = chunk
+                except BlockingIOError:
+                    break
+
+            emdata = decode_speedwire(data)
             if (emdata.get("protocol", 0) not in [0x6069] or emdata.get("serial") is None):
                 continue
 
