@@ -30,6 +30,7 @@ def env_vars(config):
     if os.environ.get('TRIPOWERX_PREFIX'):
         config['behavior']['sensorPrefix'] = os.environ.get('TRIPOWERX_PREFIX')
 
+
 def execute(config, add_data, dostop):
     env_vars(config)
 
@@ -49,7 +50,7 @@ def execute(config, add_data, dostop):
     session.mount('http://', adapter)
     session.mount('https://', adapter)
 
-    loginurl = f"{config.get('server','protocol')}://{config.get('server','address')}/api/v1/token"
+    loginurl = f"{config.get('server', 'protocol')}://{config.get('server', 'address')}/api/v1/token"
     postdata = {'grant_type': 'password',
                 'username': config.get('server', 'username'),
                 'password': config.get('server', 'password'),
@@ -62,7 +63,7 @@ def execute(config, add_data, dostop):
     # Login & Extract Access-Token
     try:
         response = session.post(loginurl, data=postdata, timeout=5, verify=verify_tls)
-    except requests.exceptions.ConnectTimeout as e:
+    except requests.exceptions.ConnectTimeout:
         logging.fatal(f"Inverter not reachable via HTTP: {config.get('server', 'address')}")
         return
     except requests.exceptions.ConnectionError as e:
@@ -80,13 +81,14 @@ def execute(config, add_data, dostop):
     headers = {"Authorization": "Bearer " + token}
 
     # Request Device Info
-    url = f"{config.get('server','protocol')}://{config.get('server','address')}/api/v1/plants/Plant:1/devices/IGULD:SELF"
+    url = f"{config.get('server', 'protocol')}://{config.get('server', 'address')
+                                                  }/api/v1/plants/Plant:1/devices/IGULD:SELF"
     response = session.get(url, headers=headers, verify=verify_tls)
     dev = response.json()
 
     DeviceInfo = {}
     DeviceInfo['name'] = dev['product']
-    DeviceInfo['configuration_url'] = f"{config.get('server','protocol')}://{config.get('server', 'address')}"
+    DeviceInfo['configuration_url'] = f"{config.get('server', 'protocol')}://{config.get('server', 'address')}"
     DeviceInfo['identifiers'] = dev['serial']
     DeviceInfo['model'] = f"{dev['vendor']}-{dev['product']}"
     DeviceInfo['manufacturer'] = dev['vendor']
@@ -101,7 +103,7 @@ def execute(config, add_data, dostop):
             add_data(dname, value)
 
         try:
-            url = f"{config.get('server','protocol')}://{config.get('server', 'address')}/api/v1/measurements/live"
+            url = f"{config.get('server', 'protocol')}://{config.get('server', 'address')}/api/v1/measurements/live"
             response = session.post(url, headers=headers, data='[{"componentId":"IGULD:SELF"}]', verify=verify_tls)
 
             # Check if a new acccess token is neccesary (TODO use refresh token)
@@ -116,7 +118,7 @@ def execute(config, add_data, dostop):
 
             for d in data:
                 # name is the generic parameter/measurement name
-                name = f"{d['channelId'].replace('Measurement.','').replace('[]', '')}"
+                name = f"{d['channelId'].replace('Measurement.', '').replace('[]', '')}"
                 # dname is name, prefixed with device prefix and serial number
                 dname = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.{name}"
                 if "value" in d['values'][0]:
@@ -147,7 +149,7 @@ def execute(config, add_data, dostop):
             time.sleep(int(config.get('behavior', 'updateFreq')))
 
         except TimeoutError:
-            logging.warning(f"Got TimeoutError - retrying")
+            logging.warning("Got TimeoutError - retrying")
             pass
 
         except Exception as e:
@@ -230,7 +232,7 @@ SENSORS_TRIPOWERX = [
         'name': "cos φ(V), status",
         'suggested_display_precision': 2,
     },
-        {
+    {
         'key': "Operation.BckStt",
         'enabled': "true",
         'name': "Backup mode status",

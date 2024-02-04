@@ -5,9 +5,8 @@ from collections import defaultdict
 import ha_mqtt_discoverable
 from ha_mqtt_discoverable import Settings
 from ha_mqtt_discoverable.sensors import SensorInfo, Sensor, DeviceInfo
-from utils.smasensors import *
-from utils.smahelpers import *
-
+from utils.smasensors import get_sensor_dict
+from utils.smahelpers import status_string
 
 # store for all the ha_mqtt sensor objects
 sensors = defaultdict(Sensor)
@@ -113,7 +112,7 @@ def get_sensor(name, device_info):
         if result is None:
             logging.debug(f"HA-MQTT sensor definition for {key} not found or disabled")
             return None
-            
+
         sensor_info = SensorInfo(unique_id=name,
                                  name=result.get('name'),
                                  unit_of_measurement=result.get('unit_of_measurement'),
@@ -131,16 +130,16 @@ def get_sensor(name, device_info):
 def publish(sensor, value):
     if sensor is None:
         return
-    
+
     publish_value = value
     # get rid of unit, in case our value is a value/unit tuple
     if isinstance(value, tuple):
         publish_value = value[0]
-    
+
     # if there's not unit, we should be able to look-up a string value for the parameter number
     if not sensor._entity.unit_of_measurement and status_string(publish_value):
         publish_value = status_string(publish_value)
-    
+
     sensor.set_state(publish_value)
 
 

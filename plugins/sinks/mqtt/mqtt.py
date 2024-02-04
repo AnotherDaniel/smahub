@@ -48,7 +48,7 @@ def execute(config, get_items, register_callback, do_stop):
     except ValueError as exc:
         logging.fatal(f"MQTT broker configuration error: {str(exc)}")
         return
-    except ConnectionError as exc:
+    except ConnectionError:
         logging.fatal(f"MQTT broker not reachable at address: {config.get(
             'server', 'address')}: {str(config.get('server', 'port'))}")
         return
@@ -108,7 +108,7 @@ def attempt_reconnect(client, delay=2, max_delay=300):
         logging.debug("Attempting to reconnect to MQTT Broker...")
         try:
             client.reconnect()
-        except:
+        except ConnectionError:
             logging.debug(
                 "Reconnecting to MQTT Broker failed. Waiting to retry...")
             time.sleep(delay)

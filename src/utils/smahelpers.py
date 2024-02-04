@@ -107,18 +107,22 @@ TRIPOWER_STATUS_DICT = {
     16777213: "Information not available",
 }
 
-def status_string(id): 
+
+def status_string(id):
     if id in TRIPOWER_STATUS_DICT:
         return TRIPOWER_STATUS_DICT[id]
     else:
         return ""
 
-# DEPRECATED in favor of smasensors.py dynamic sensor data registry!    
+# DEPRECATED in favor of smasensors.py dynamic sensor data registry!
+
+
 def parameter_unit(name):
     if name in TRIPOWER_PARAM_DICT:
         return TRIPOWER_PARAM_DICT[name][2]
     else:
         return ""
+
 
 # DEPRECATED in favor of smasensors.py dynamic sensor data registry!
 def parameter_description(name):
@@ -127,12 +131,14 @@ def parameter_description(name):
     else:
         return ""
 
+
 # DEPRECATED in favor of smasensors.py dynamic sensor data registry!
 def parameter_group(name):
     if name in TRIPOWER_PARAM_DICT:
         return TRIPOWER_PARAM_DICT[name][0]
     else:
         return ""
+
 
 # DEPRECATED in favor of smasensors.py dynamic sensor data registry!
 def unit_of_measurement(name):
