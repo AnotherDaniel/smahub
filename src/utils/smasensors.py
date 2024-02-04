@@ -4,6 +4,7 @@ Home Assistant MQTT autodiscovery sensor definition registry for SMA devices
 
 SENSOR_REGISTRY = {}
 
+
 def register_sensor_dict(device, sensor_info):
     """
     Register a sensor dictionary by associating its name with its corresponding attributes.
@@ -21,6 +22,7 @@ def register_sensor_dict(device, sensor_info):
     if device not in SENSOR_REGISTRY:
         SENSOR_REGISTRY[device] = sensor_info
 
+
 def get_sensor_dict(device):
     """
     Retrieve a dictionary of device sensor attributes.
@@ -36,6 +38,7 @@ def get_sensor_dict(device):
     {'key': 'value'}
     """
     return SENSOR_REGISTRY.get(device, None)
+
 
 def get_parameter_unit(device_name, target_key):
     """
