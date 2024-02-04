@@ -73,8 +73,7 @@ def execute(config, add_data, dostop):
             DeviceInfo['sw_version'] = emdata['speedwire-version']
 
             for key, value in DeviceInfo.items():
-                dname = f"{config.get('behavior', 'sensorPrefix')}{
-                    DeviceInfo['identifiers']}.device_info.{key}"
+                dname = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.device_info.{key}"
                 add_data(dname, value)
 
             for key, value in emdata.items():

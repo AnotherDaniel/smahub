@@ -77,8 +77,7 @@ def execute(config, add_data, dostop):
     headers = {"Authorization": "Bearer " + token}
 
     # Request Device Info
-    url = f"{config.get('server', 'protocol')}://{config.get('server', 'address')
-                                                  }/api/v1/plants/Plant:1/devices/IGULD:SELF"
+    url = f"{config.get('server', 'protocol')}://{config.get('server', 'address')}/api/v1/plants/Plant:1/devices/IGULD:SELF"
     response = session.get(url, headers=headers, verify=verify_tls)
     dev = response.json()
 

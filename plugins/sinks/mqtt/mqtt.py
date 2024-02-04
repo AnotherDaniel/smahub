@@ -49,8 +49,7 @@ def execute(config, get_items, register_callback, do_stop):
         logging.fatal(f"MQTT broker configuration error: {str(exc)}")
         return
     except ConnectionError:
-        logging.fatal(f"MQTT broker not reachable at address: {config.get(
-            'server', 'address')}: {str(config.get('server', 'port'))}")
+        logging.fatal(f"MQTT broker not reachable at address: {config.get('server', 'address')}: {str(config.get('server', 'port'))}")
         return
     except Exception as exc:
         logging.fatal(f"MQTT broker unknown error: {str(exc)}")
