@@ -4,9 +4,9 @@ import logging
 import paho.mqtt.client as mqtt
 
 client = mqtt.Client(client_id="smahub",
-                         transport='tcp',
-                         protocol=mqtt.MQTTv311,
-                         clean_session=False)
+                     transport='tcp',
+                     protocol=mqtt.MQTTv311,
+                     clean_session=False)
 pubunits = False
 
 
@@ -24,7 +24,8 @@ def env_vars(config):
     if os.environ.get('MQTT_UPDATEFREQ'):
         config['behavior']['updatefreq'] = os.environ.get('MQTT_UPDATEFREQ')
     if os.environ.get('MQTT_PUBLISHUNITS'):
-        config['behavior']['publish_units'] = os.environ.get('MQTT_PUBLISHUNITS')
+        config['behavior']['publish_units'] = os.environ.get(
+            'MQTT_PUBLISHUNITS')
 
 
 def execute(config, get_items, register_callback, do_stop):
@@ -41,15 +42,21 @@ def execute(config, get_items, register_callback, do_stop):
     # Create a MQTT client instance and connect to broker
     global client
     if config['server']['username']:
-        client.username_pw_set(config['server']['username'], config['server']['password'])
+        client.username_pw_set(
+            config['server']['username'], config['server']['password'])
     try:
-        client.connect(config.get('server', 'address'), int(config.get('server', 'port')))
-        logging.debug(f"MQTT sink connected to {config.get('server', 'address')}:{str(config.get('server', 'port'))}")
+        client.on_connect = on_connect
+        client.on_disconnect = on_disconnect
+        client.connect(config.get('server', 'address'),
+                       int(config.get('server', 'port')))
+        logging.debug(f"MQTT sink connected to {config.get('server', 'address')}:{
+                      str(config.get('server', 'port'))}")
     except ValueError as exc:
         logging.fatal(f"MQTT broker configuration error: {str(exc)}")
         return
     except ConnectionError as exc:
-        logging.fatal(f"MQTT broker not reachable at address: {config.get('server', 'address')}: {str(config.get('server', 'port'))}")
+        logging.fatal(f"MQTT broker not reachable at address: {config.get(
+            'server', 'address')}: {str(config.get('server', 'port'))}")
         return
     except Exception as exc:
         logging.fatal(f"MQTT broker unknown error: {str(exc)}")
@@ -87,3 +94,31 @@ def publish(topic, value):
 def my_callback(key, value):
     topic = str(key).replace(".", "/")
     publish(topic, value)
+
+
+def on_connect(client, userdata, flags, rc):
+    if rc == 0:
+        logging.debug("Connected to MQTT Broker!")
+    else:
+        logging.error("Failed to connect to MQTT Broker, return code %d\n", rc)
+
+
+def on_disconnect(client, userdata, rc):
+    logging.debug("Disconnected from MQTT Broker!")
+    attempt_reconnect(client)
+
+
+def attempt_reconnect(client, delay=2, max_delay=300):
+    """Attempt to reconnect to MQTT Broker with exponential backoff."""
+    while not client.is_connected():
+        logging.debug("Attempting to reconnect to MQTT Broker...")
+        try:
+            client.reconnect()
+        except:
+            logging.debug(
+                "Reconnecting to MQTT Broker failed. Waiting to retry...")
+            time.sleep(delay)
+            delay = min(delay * 2, max_delay)
+        else:
+            logging.debug("Reconnected to the MQTT broker.")
+            break
