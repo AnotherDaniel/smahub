@@ -3,10 +3,7 @@ import time
 import logging
 import paho.mqtt.client as mqtt
 
-client = mqtt.Client(client_id="smahub",
-                     transport='tcp',
-                     protocol=mqtt.MQTTv311,
-                     clean_session=False)
+client = mqtt.Client(client_id="smahub", transport='tcp', protocol=mqtt.MQTTv311, clean_session=False)
 pubunits = False
 
 
@@ -42,15 +39,12 @@ def execute(config, get_items, register_callback, do_stop):
     # Create a MQTT client instance and connect to broker
     global client
     if config['server']['username']:
-        client.username_pw_set(
-            config['server']['username'], config['server']['password'])
+        client.username_pw_set(config['server']['username'], config['server']['password'])
     try:
         client.on_connect = on_connect
         client.on_disconnect = on_disconnect
-        client.connect(config.get('server', 'address'),
-                       int(config.get('server', 'port')))
-        logging.debug(f"MQTT sink connected to {config.get('server', 'address')}:{
-                      str(config.get('server', 'port'))}")
+        client.connect(config.get('server', 'address'), int(config.get('server', 'port')))
+        logging.debug(f"MQTT sink connected to {config.get('server', 'address')}:{str(config.get('server', 'port'))}")
     except ValueError as exc:
         logging.fatal(f"MQTT broker configuration error: {str(exc)}")
         return
