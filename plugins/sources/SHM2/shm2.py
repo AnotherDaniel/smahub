@@ -4,6 +4,7 @@ Thank you littleyoda!
 '''
 import logging
 import os
+import fcntl
 import time
 import socket
 import struct
@@ -36,11 +37,13 @@ def execute(config, add_data, dostop):
     register_sensor_dict('SENSORS_SHM2', SENSORS_SHM2)
 
     # set up listening socket for SHM2 data packets
-    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM | socket.SOCK_NONBLOCK, socket.IPPROTO_UDP) as sock:
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP) as sock:
+        fcntl.fcntl(sock, fcntl.F_SETFL, os.O_NONBLOCK)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock.bind(("", MCAST_PORT))
         try:
-            mreq = struct.pack("4s4s", socket.inet_aton(MCAST_GRP), socket.inet_aton(IPBIND))
+            mreq = struct.pack("4s4s", socket.inet_aton(
+                MCAST_GRP), socket.inet_aton(IPBIND))
             sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 
         except BaseException:
@@ -70,7 +73,8 @@ def execute(config, add_data, dostop):
             DeviceInfo['sw_version'] = emdata['speedwire-version']
 
             for key, value in DeviceInfo.items():
-                dname = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.device_info.{key}"
+                dname = f"{config.get('behavior', 'sensorPrefix')}{
+                    DeviceInfo['identifiers']}.device_info.{key}"
                 add_data(dname, value)
 
             for key, value in emdata.items():
@@ -79,37 +83,53 @@ def execute(config, add_data, dostop):
 
                 # a bit elaborate, but stupid is easy to follow in this case - sort things into topic hierarchies
                 if "p1" in key:
-                    ename = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.p.1.{str(key)}"
+                    ename = f"{config.get('behavior', 'sensorPrefix')}{
+                        DeviceInfo['identifiers']}.p.1.{str(key)}"
                 elif "q1" in key:
-                    ename = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.q.1.{str(key)}"
+                    ename = f"{config.get('behavior', 'sensorPrefix')}{
+                        DeviceInfo['identifiers']}.q.1.{str(key)}"
                 elif "s1" in key:
-                    ename = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.s.1.{str(key)}"
+                    ename = f"{config.get('behavior', 'sensorPrefix')}{
+                        DeviceInfo['identifiers']}.s.1.{str(key)}"
                 elif "p2" in key:
-                    ename = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.p.2.{str(key)}"
+                    ename = f"{config.get('behavior', 'sensorPrefix')}{
+                        DeviceInfo['identifiers']}.p.2.{str(key)}"
                 elif "q2" in key:
-                    ename = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.q.2.{str(key)}"
+                    ename = f"{config.get('behavior', 'sensorPrefix')}{
+                        DeviceInfo['identifiers']}.q.2.{str(key)}"
                 elif "s2" in key:
-                    ename = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.s.2.{str(key)}"
+                    ename = f"{config.get('behavior', 'sensorPrefix')}{
+                        DeviceInfo['identifiers']}.s.2.{str(key)}"
                 elif "p3" in key:
-                    ename = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.p.3.{str(key)}"
+                    ename = f"{config.get('behavior', 'sensorPrefix')}{
+                        DeviceInfo['identifiers']}.p.3.{str(key)}"
                 elif "q3" in key:
-                    ename = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.q.3.{str(key)}"
+                    ename = f"{config.get('behavior', 'sensorPrefix')}{
+                        DeviceInfo['identifiers']}.q.3.{str(key)}"
                 elif "s3" in key:
-                    ename = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.s.3.{str(key)}"
+                    ename = f"{config.get('behavior', 'sensorPrefix')}{
+                        DeviceInfo['identifiers']}.s.3.{str(key)}"
                 elif key.startswith('p'):
-                    ename = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.p.{str(key)}"
+                    ename = f"{config.get('behavior', 'sensorPrefix')}{
+                        DeviceInfo['identifiers']}.p.{str(key)}"
                 elif key.startswith('q'):
-                    ename = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.q.{str(key)}"
+                    ename = f"{config.get('behavior', 'sensorPrefix')}{
+                        DeviceInfo['identifiers']}.q.{str(key)}"
                 elif key.startswith('s'):
-                    ename = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.s.{str(key)}"
+                    ename = f"{config.get('behavior', 'sensorPrefix')}{
+                        DeviceInfo['identifiers']}.s.{str(key)}"
                 elif "1" in key:
-                    ename = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.1.{str(key)}"
+                    ename = f"{config.get('behavior', 'sensorPrefix')}{
+                        DeviceInfo['identifiers']}.1.{str(key)}"
                 elif "2" in key:
-                    ename = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.2.{str(key)}"
+                    ename = f"{config.get('behavior', 'sensorPrefix')}{
+                        DeviceInfo['identifiers']}.2.{str(key)}"
                 elif "3" in key:
-                    ename = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.3.{str(key)}"
+                    ename = f"{config.get('behavior', 'sensorPrefix')}{
+                        DeviceInfo['identifiers']}.3.{str(key)}"
                 elif "cosphi" in key or "frequency" in key:
-                    ename = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.{str(key)}"
+                    ename = f"{config.get('behavior', 'sensorPrefix')}{
+                        DeviceInfo['identifiers']}.{str(key)}"
                 else:
                     logging.debug(key)
                     continue
