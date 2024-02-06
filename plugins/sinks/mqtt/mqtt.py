@@ -91,27 +91,27 @@ def my_callback(key, value):
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
-        logging.debug("Connected to MQTT Broker!")
+        logging.info("Connected to MQTT Broker")
     else:
         logging.error("Failed to connect to MQTT Broker, return code %d\n", rc)
 
 
 def on_disconnect(client, userdata, rc):
-    logging.debug("Disconnected from MQTT Broker!")
+    logging.warn("Disconnected from MQTT Broker")
     attempt_reconnect(client)
 
 
 def attempt_reconnect(client, delay=2, max_delay=300):
-    """Attempt to reconnect to MQTT Broker with exponential backoff."""
+    """Attempt to reconnect to MQTT Broker with exponential backoff"""
     while not client.is_connected():
-        logging.debug("Attempting to reconnect to MQTT Broker...")
+        logging.warn("Attempting to reconnect to MQTT Broker...")
         try:
             client.reconnect()
         except ConnectionError:
-            logging.debug(
+            logging.warn(
                 "Reconnecting to MQTT Broker failed. Waiting to retry...")
             time.sleep(delay)
             delay = min(delay * 2, max_delay)
         else:
-            logging.debug("Reconnected to the MQTT broker.")
+            logging.warn("Reconnected to the MQTT broker")
             break
