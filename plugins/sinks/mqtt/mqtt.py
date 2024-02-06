@@ -1,6 +1,7 @@
 import os
 import time
 import logging
+import ssl
 import paho.mqtt.client as mqtt
 
 client = mqtt.Client(client_id="smahub", transport='tcp', protocol=mqtt.MQTTv311, clean_session=False)
@@ -18,11 +19,20 @@ def env_vars(config):
         config['server']['username'] = os.environ.get('MQTT_USER')
     if os.environ.get('MQTT_PASSWORD'):
         config['server']['password'] = os.environ.get('MQTT_PASSWORD')
+    if os.environ.get('MQTT_TLS'):
+        config['server']['tls'] = os.environ.get('MQTT_TLS')
+    if os.environ.get('MQTT_TLS_INSECURE'):
+        config['server']['tls_insecure'] = os.environ.get('MQTT_TLS_INSECURE')
+    if os.environ.get('MQTT_SSL_CA'):
+        config['server']['ssl_ca'] = os.environ.get('MQTT_SSL_CA')
+    if os.environ.get('MQTT_SSL_CERT'):
+        config['server']['ssl_cert'] = os.environ.get('MQTT_SSL_CERT')
+    if os.environ.get('MQTT_SSL_KEY'):
+        config['server']['ssl_key'] = os.environ.get('MQTT_SSL_KEY')
     if os.environ.get('MQTT_UPDATEFREQ'):
         config['behavior']['updatefreq'] = os.environ.get('MQTT_UPDATEFREQ')
     if os.environ.get('MQTT_PUBLISHUNITS'):
-        config['behavior']['publish_units'] = os.environ.get(
-            'MQTT_PUBLISHUNITS')
+        config['behavior']['publish_units'] = os.environ.get('MQTT_PUBLISHUNITS')
 
 
 def execute(config, get_items, register_callback, do_stop):
@@ -40,11 +50,39 @@ def execute(config, get_items, register_callback, do_stop):
     global client
     if config['server']['username']:
         client.username_pw_set(config['server']['username'], config['server']['password'])
+
+    tls = None
+    if config['server']['tls'] == "1":
+        tls = ssl.PROTOCOL_TLSv1_1
+    elif config['server']['tls'] == "2":
+        tls = ssl.PROTOCOL_TLSv1_2
+
     try:
         client.on_connect = on_connect
         client.on_disconnect = on_disconnect
+
+        if tls:
+            ssl_cafile = config['server'].get('sslCa', None)
+            ssl_certfile = config['server'].get('sslCert', None)
+            ssl_keyfile = config['server'].get('sslKey', None)
+
+            if ssl_cafile is None:
+                logging.error("Missing CA certificate")
+
+            client.tls_set(ssl_cafile, certfile=ssl_certfile, keyfile=ssl_keyfile, tls_version=tls)
+            logging.info("TLS enabled")
+
+            tls_insecure = config['server'].get('tls_insecure', None)
+            if tls_insecure == 'true':
+                client.tls_insecure_set(True)
+                logging.info("CA verification disabled")
+        else:
+            logging.debug("TLS disabled")
+
         client.connect(config.get('server', 'address'), int(config.get('server', 'port')))
+        client.loop_start()
         logging.debug(f"MQTT sink connected to {config.get('server', 'address')}:{str(config.get('server', 'port'))}")
+
     except ValueError as exc:
         logging.fatal(f"MQTT broker configuration error: {str(exc)}")
         return
@@ -70,6 +108,7 @@ def execute(config, get_items, register_callback, do_stop):
         time.sleep(1)
 
     # Disconnect from the broker
+    client.loop_stop()
     client.disconnect()
     logging.info("Stopping MQTT sink")
 
