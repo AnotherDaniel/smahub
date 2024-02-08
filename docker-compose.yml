@@ -9,6 +9,7 @@ services:
     #    ports:
     #      - 5678:5678
     environment:
+      - TZ=Europe/London
       - TRIPOWERX_ENABLED=true
       - TRIPOWERX_ADDRESS=192.0.2.1
       - TRIPOWERX_USER=user
