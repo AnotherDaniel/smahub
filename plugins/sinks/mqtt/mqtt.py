@@ -66,10 +66,7 @@ def execute(config, get_items, register_callback, do_stop):
             ssl_certfile = config['server'].get('sslCert', None)
             ssl_keyfile = config['server'].get('sslKey', None)
 
-            if ssl_cafile is None:
-                logging.error("Missing CA certificate")
-
-            client.tls_set(ssl_cafile, certfile=ssl_certfile, keyfile=ssl_keyfile, tls_version=tls)
+            client.tls_set(ca_certs=ssl_cafile, certfile=ssl_certfile, keyfile=ssl_keyfile, tls_version=tls)
             logging.info("TLS enabled")
 
             tls_insecure = config['server'].get('tls_insecure', None)
