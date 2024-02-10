@@ -1,2 +1,3 @@
 requests
 paho-mqtt
+ha_mqtt_discoverable
