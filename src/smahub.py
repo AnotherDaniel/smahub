@@ -7,6 +7,7 @@ import os
 import signal
 import logging
 import debugpy
+
 from smadict import SMA_Dict
 
 # Configure logging to print warn-level messages to the console
@@ -203,6 +204,8 @@ async def main(args):
         if args.debug_hold:
             logging.info(f"Holding startup, waiting for debug connection on port: {args.debug_port}")
             debugpy.wait_for_client()
+
+    logging.info(f"Starting {package_name} {version}")
 
     # Main business logic
     load_plugins(args.source_dir, sources)
