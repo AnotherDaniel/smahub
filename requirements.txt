@@ -1,3 +1,5 @@
-requests
-paho-mqtt
+debugpy
 ha_mqtt_discoverable
+paho-mqtt
+requests
+urllib3
