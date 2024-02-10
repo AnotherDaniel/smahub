@@ -13,7 +13,6 @@
  *
  *  You should have received a copy of the GNU General Public License along with this program;
  *  if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- *
  */
 """
 
@@ -92,11 +91,7 @@ def decode_OBIS(obis):
         datatype = "version"
     else:
         datatype = "unknown"
-        logging.debug(
-            "unknown datatype: measurement {} datatype {} raw_type {}".format(
-                measurement, datatype, raw_type
-            )
-        )
+        logging.debug("speedwire - unknown datatype: measurement {}, datatype {}, raw_type {}".format(measurement, datatype, raw_type))
     return (measurement, datatype)
 
 
@@ -106,50 +101,45 @@ def decode_speedwire(datagram):
     if datagram[0:3] == b"SMA":
         # datagram length
         datalength = int.from_bytes(datagram[12:14], byteorder="big") + 16
-        # print('data length: {}'.format(datalength))
+        # logging.debug('speedwire datagram - data length: {}'.format(datalength))
+
         # serial number
         emID = int.from_bytes(datagram[20:24], byteorder="big")
-        # print('seral: {}'.format(emID))
         emparts["serial"] = emID
         emparts["protocol"] = int.from_bytes(datagram[16:18], byteorder="big")
+        # logging.debug('speedwire datagram - serial: {}'.format(emID))
+
         # timestamp
         # timestamp = int.from_bytes(datagram[24:28], byteorder="big")
-        # print('timestamp: {}'.format(timestamp))
+        # logging.debug('speedwire datagram - timestamp: {}'.format(timestamp))
+
         # decode OBIS data blocks
-        # start with header
         position = 28
         while position < datalength:
             # decode header
-            # print('pos: {}'.format(position))
+            # logging.debug('pos: {}'.format(position))
             (measurement, datatype) = decode_OBIS(datagram[position: position + 4])
-            # print('measurement {} datatype: {}'.format(measurement,datatype))
-            # decode values
-            # actual values
+            # logging.debug('speedwire datagram - measurement {}, datatype: {}'.format(measurement, datatype))
+
+            # decode actual values
             if datatype == "actual":
                 value = int.from_bytes(
                     datagram[position + 4: position + 8], byteorder="big"
                 )
                 position += 8
                 if measurement in sma_channels.keys():
-                    emparts[sma_channels[measurement][0]] = (
-                        value / sma_units[sma_channels[measurement][1]]
-                    )
-                    emparts[sma_channels[measurement][0] + "unit"] = sma_channels[
-                        measurement
-                    ][1]
+                    emparts[sma_channels[measurement][0]] = (value / sma_units[sma_channels[measurement][1]])
+                    emparts[sma_channels[measurement][0] + "unit"] = sma_channels[measurement][1]
+
             # counter values
             elif datatype == "counter":
-                value = int.from_bytes(
-                    datagram[position + 4: position + 12], byteorder="big"
-                )
+                value = int.from_bytes(datagram[position + 4: position + 12], byteorder="big")
                 position += 12
                 if measurement in sma_channels.keys():
-                    emparts[sma_channels[measurement][0] + "counter"] = (
-                        value / sma_units[sma_channels[measurement][2]]
-                    )
-                    emparts[
-                        sma_channels[measurement][0] + "counterunit"
-                    ] = sma_channels[measurement][2]
+                    emparts[sma_channels[measurement][0] + "counter"] = (value / sma_units[sma_channels[measurement][2]])
+                    emparts[sma_channels[measurement][0] + "counterunit"] = sma_channels[measurement][2]
+
+            # version
             elif datatype == "version":
                 value = datagram[position + 4: position + 8]
                 if measurement in sma_channels.keys():
@@ -162,26 +152,25 @@ def decode_speedwire(datagram):
                         + str(int(bversion[4:6], 16))
                     )
                     revision = str(chr(int(bversion[6:8])))
-                    # revision definitions
                     if revision == "1":
-                        # S – Spezial Version
+                        # S – Special Version
                         version = version + ".S"
                     elif revision == "2":
-                        # A – Alpha (noch kein Feature Complete, Version für Verifizierung und Validierung)
+                        # A – Alpha (not yet feature complete, verification and validation)
                         version = version + ".A"
                     elif revision == "3":
-                        # B – Beta (Feature Complete, Version für Verifizierung und Validierung)
+                        # B – Beta (feature complete, for verification and validation)
                         version = version + ".B"
                     elif revision == "4":
-                        # R – Release Candidate / Release (Version für Verifizierung, Validierung und Feldtest / öffentliche Version)
+                        # R – Release Candidate / Release (for public verification, validation and field test)
                         version = version + ".R"
                     elif revision == "5":
-                        # E – Experimental Version (dient zur lokalen Verifizierung)
+                        # E – Experimental Version (for local verification and testing)
                         version = version + ".E"
                     elif revision == "6":
-                        # N – Keine Revision
+                        # N – no revision
                         version = version + ".N"
-                    # adding versionnumber to compare versions
+                    # adding version number to compare versions
                     # version = (
                     #     version
                     #     + "|"
