@@ -53,21 +53,30 @@ def execute(config, get_items, register_callback, do_stop):
 
     tls = None
     if config['server']['tls'] == "1":
+        logging.info("Using TLSv1.1")
         tls = ssl.PROTOCOL_TLSv1_1
     elif config['server']['tls'] == "2":
+        logging.info("Using TLSv1.2")
         tls = ssl.PROTOCOL_TLSv1_2
 
     try:
-        client.on_connect = on_connect
-        client.on_disconnect = on_disconnect
-
         if tls:
-            ssl_cafile = config['server'].get('sslCa', None)
-            ssl_certfile = config['server'].get('sslCert', None)
-            ssl_keyfile = config['server'].get('sslKey', None)
+            # Python is driving me nuts. Even when I do a .get('ssl_ca', None) on this dictionary, it returns a value of '<path-to-file>' in
+            # case there is no actual set value. No idea where that is coming from, but it's entirely useless. So, check every entry and in
+            # case it is idiotic, manually set to None...
+            ssl_cafile = config['server']['ssl_ca']
+            if not os.path.exists(ssl_cafile):
+                ssl_cafile = None
+
+            ssl_certfile = config['server']['ssl_cert']
+            if not os.path.exists(ssl_certfile):
+                ssl_certfile = None
+
+            ssl_keyfile = config['server']['ssl_key']
+            if not os.path.exists(ssl_keyfile):
+                ssl_keyfile = None
 
             client.tls_set(ca_certs=ssl_cafile, certfile=ssl_certfile, keyfile=ssl_keyfile, tls_version=tls)
-            logging.info("TLS enabled")
 
             tls_insecure = config['server'].get('tls_insecure', None)
             if tls_insecure == 'true':
@@ -76,7 +85,10 @@ def execute(config, get_items, register_callback, do_stop):
         else:
             logging.debug("TLS disabled")
 
-        client.connect(config.get('server', 'address'), int(config.get('server', 'port')))
+        client.on_connect = on_connect
+        client.on_disconnect = on_disconnect
+
+        client.connect(host=config.get('server', 'address'), port=int(config.get('server', 'port')))
         client.loop_start()
         logging.debug(f"MQTT sink connected to {config.get('server', 'address')}:{str(config.get('server', 'port'))}")
 
@@ -87,7 +99,7 @@ def execute(config, get_items, register_callback, do_stop):
         logging.fatal(f"MQTT broker not reachable at address: {config.get('server', 'address')}: {str(config.get('server', 'port'))}")
         return
     except Exception as exc:
-        logging.fatal(f"MQTT broker unknown error: {str(exc)}")
+        logging.fatal(f"MQTT broker error: {str(exc)}")
         return
 
     # We only publish data on change
@@ -137,7 +149,7 @@ def on_disconnect(client, userdata, rc):
     attempt_reconnect(client)
 
 
-def attempt_reconnect(client, delay=2, max_delay=300):
+def attempt_reconnect(client, delay=2, max_delay=600):
     """Attempt to reconnect to MQTT Broker with exponential backoff"""
     while not client.is_connected():
         logging.warn("Attempting to reconnect to MQTT Broker...")
