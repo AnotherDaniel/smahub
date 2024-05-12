@@ -2,14 +2,15 @@ FROM alpine:3
 
 # Prepare base system
 RUN apk update && apk upgrade && \
-    apk add tzdata python3 py3-pip pipx git 
+    apk add tzdata python3 py3-pip pipx git
 
 # Set up smahub folder
 RUN mkdir -p /opt/smahub
 WORKDIR /opt/smahub
 
 # Clone smahub
-RUN git clone --depth=1 --branch=main https://github.com/AnotherDaniel/smahub . && rm -fr .git*
+# RUN git clone --depth=1 --branch=main https://github.com/AnotherDaniel/smahub . && rm -fr .git*
+COPY . /opt/smahub
 
 # Create the virtualenv
 ENV VIRTUAL_ENV=.venv
