@@ -218,9 +218,12 @@ async def main(args):
     for function, config in sinks:
         tasks.append(asyncio.to_thread(function, config, get_items, register_callback, do_stop, ))
 
-    await asyncio.gather(*tasks)
-    logging.info('Done')
-
+    try:
+        await asyncio.gather(*tasks)
+        logging.info('Done')
+    except Exception as e:
+        logging.error(f'An unhandled error occurred in a worker thread, the application will exit: {e}')
+        os.kill(os.getpid(), signal.SIGINT)
 
 if __name__ == '__main__':
     # We want to react gracefully to SIGINT
