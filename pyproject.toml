@@ -8,7 +8,7 @@ version = "1.6.1"
 authors = [{ name = "Daniel Krippner", email = "dk.mailbox@gmx.net" }]
 description = "Little daemon that runs plugins for collecting data from SMA PV products, and publishes to eg MQTT via other plugins."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 classifiers = [
     "Development Status :: 4 - Beta",
     "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
