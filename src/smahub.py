@@ -30,6 +30,13 @@ sources = []
 SINKS_DIR = os.environ.get("SMAHUB_SINKS_DIR", "plugins/sinks")
 sinks = []
 
+# Deal with ""/quoted strings in config files
+class CustomConfigParser(configparser.ConfigParser):
+    def get(self, section, option, **kwargs):
+        value = super().get(section, option, **kwargs)
+        if value.startswith('"') and value.endswith('"'):
+            return value[1:-1]  # Strip the surrounding quotes
+        return value
 
 def env_vars(args):
     if os.environ.get('SMAHUB_VERBOSE'):
@@ -70,7 +77,7 @@ def load_plugins(plugin_dir, plugins):
 
             # If the file has a .conf extension, store the config for later
             elif filename.endswith('.conf'):
-                config = configparser.ConfigParser()
+                config = CustomConfigParser()
                 config.read(os.path.join(plugin_dir, feature, filename))
                 configs[feature] = config
                 logging.debug(f"Found .conf file for {feature} plugin")
