@@ -74,7 +74,7 @@ def execute(config, get_items, register_callback, do_stop):
                     # remove the leading parts of each key, just leave the last part
                     di = {k.split(".")[-1]: v for k, v in device_items.items()}
                     device_info = DeviceInfo(name=di['name'],
-                                             identifiers=di['identifiers'],
+                                             identifiers=[str(di['identifiers']),],
                                              model=di['model'],
                                              manufacturer=di['manufacturer'],
                                              sw_version=di['sw_version'])
