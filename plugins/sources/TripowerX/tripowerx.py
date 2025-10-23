@@ -29,6 +29,8 @@ def env_vars(config):
         config['behavior']['updateFreq'] = os.environ.get('TRIPOWERX_UPDATEFREQ')
     if os.environ.get('TRIPOWERX_PREFIX'):
         config['behavior']['sensorPrefix'] = os.environ.get('TRIPOWERX_PREFIX')
+    if os.environ.get('IDENT_POSTFIX') is not None:
+        config['behavior']['identPostfix'] = os.environ.get('IDENT_POSTFIX')
 
 
 def execute(config, add_data, dostop):
@@ -86,7 +88,8 @@ def execute(config, add_data, dostop):
     dev = response.json()
 
     DeviceInfo = {}
-    DeviceInfo['name'] = dev['product']
+    ident_postfix = config.get('behavior', 'identPostfix', fallback='')
+    DeviceInfo['name'] = dev['product'] + ident_postfix
     DeviceInfo['configuration_url'] = f"{config.get('server', 'protocol')}://{config.get('server', 'address')}"
     DeviceInfo['identifiers'] = dev['serial']
     DeviceInfo['model'] = f"{dev['vendor']}-{dev['product']}"
@@ -122,8 +125,18 @@ def execute(config, add_data, dostop):
                 dname = f"{config.get('behavior', 'sensorPrefix')}{DeviceInfo['identifiers']}.{name}"
                 if "value" in d['values'][0]:
                     v = d['values'][0]['value']
+                    # Log all parameter values at INFO level
+                    logging.info(f"Parameter {name}: raw_value='{v}', type={type(v).__name__}")
                     if isfloat(v):
-                        v = round(v, 2)
+                        try:
+                            v_converted = round(float(v), 2)
+                            logging.info(f"Parameter {name}: converted_value={v_converted}")
+                            v = v_converted
+                        except Exception as e:
+                            logging.error(f"Error rounding value for parameter '{name}': value='{v}', type={type(v).__name__}, error: {e}")
+                            raise
+                    else:
+                        logging.info(f"Parameter {name}: non-numeric value, passing through as-is")
                     unit = get_parameter_unit('SENSORS_TRIPOWERX', name)
                     if unit:
                         add_data(dname, (v, unit))
@@ -133,8 +146,18 @@ def execute(config, add_data, dostop):
                 elif "values" in d['values'][0]:
                     for idx in range(0, len(d['values'][0]['values'])):
                         v = d['values'][0]['values'][idx]
+                        # Log all array parameter values at INFO level
+                        logging.info(f"Parameter {name}[{idx}]: raw_value='{v}', type={type(v).__name__}")
                         if isfloat(v):
-                            v = round(v, 2)
+                            try:
+                                v_converted = round(float(v), 2)
+                                logging.info(f"Parameter {name}[{idx}]: converted_value={v_converted}")
+                                v = v_converted
+                            except Exception as e:
+                                logging.error(f"Error rounding value for parameter '{name}[{idx}]': value='{v}', type={type(v).__name__}, error: {e}")
+                                raise
+                        else:
+                            logging.info(f"Parameter {name}[{idx}]: non-numeric value, passing through as-is")
                         idxname = dname + "." + str(idx + 1)
                         unit = get_parameter_unit('SENSORS_TRIPOWERX', name)
                         if unit:

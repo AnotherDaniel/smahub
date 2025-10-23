@@ -4,7 +4,9 @@ import logging
 import ssl
 import paho.mqtt.client as mqtt
 
-client = mqtt.Client(client_id="smahub", transport='tcp', protocol=mqtt.MQTTv311, clean_session=False)
+# Get client ID with optional postfix for multiple instances
+client_id_postfix = os.environ.get('IDENT_POSTFIX', '')
+client = mqtt.Client(client_id=f"smahub{client_id_postfix}", transport='tcp', protocol=mqtt.MQTTv311, clean_session=False)
 pubunits = False
 
 
