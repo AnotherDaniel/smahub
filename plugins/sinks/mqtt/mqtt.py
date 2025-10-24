@@ -3,9 +3,11 @@ import time
 import logging
 import ssl
 import paho.mqtt.client as mqtt
+from typing import Dict, Optional
 
-client = mqtt.Client(client_id="smahub", transport='tcp', protocol=mqtt.MQTTv311, clean_session=False)
-pubunits = False
+client: mqtt.Client = mqtt.Client(
+    client_id="smahub", transport='tcp', protocol=mqtt.MQTTv311, clean_session=False)
+pubunits: bool = False
 
 
 def env_vars(config):
@@ -32,12 +34,13 @@ def env_vars(config):
     if os.environ.get('MQTT_UPDATEFREQ'):
         config['behavior']['updatefreq'] = os.environ.get('MQTT_UPDATEFREQ')
     if os.environ.get('MQTT_PUBLISHUNITS'):
-        config['behavior']['publish_units'] = os.environ.get('MQTT_PUBLISHUNITS')
+        config['behavior']['publish_units'] = os.environ.get(
+            'MQTT_PUBLISHUNITS')
 
 
 def execute(config, get_items, register_callback, do_stop):
     env_vars(config)
-    global pubunits
+    # pubunits is mutated here, so keep the assignment (no other 'global' needed)
     pubunits = str(config['behavior']['publish_units']).lower() == "true"
 
     if config.get('plugin', 'enabled').lower() != 'true':
@@ -49,7 +52,8 @@ def execute(config, get_items, register_callback, do_stop):
     # Create a MQTT client instance and connect to broker
     global client
     if config['server']['username']:
-        client.username_pw_set(config['server']['username'], config['server']['password'])
+        client.username_pw_set(
+            config['server']['username'], config['server']['password'])
 
     tls = None
     if config['server']['tls'] == "1":
@@ -76,7 +80,8 @@ def execute(config, get_items, register_callback, do_stop):
             if not os.path.exists(ssl_keyfile):
                 ssl_keyfile = None
 
-            client.tls_set(ca_certs=ssl_cafile, certfile=ssl_certfile, keyfile=ssl_keyfile, tls_version=tls)
+            client.tls_set(ca_certs=ssl_cafile, certfile=ssl_certfile,
+                           keyfile=ssl_keyfile, tls_version=tls)
 
             tls_insecure = config['server'].get('tls_insecure', None)
             if tls_insecure == 'true':
@@ -88,18 +93,23 @@ def execute(config, get_items, register_callback, do_stop):
         client.on_connect = on_connect
         client.on_disconnect = on_disconnect
 
-        client.connect(host=config.get('server', 'address'), port=int(config.get('server', 'port')))
+        client.connect(host=config.get('server', 'address'),
+                       port=int(config.get('server', 'port')))
         client.loop_start()
-        logging.info(f"MQTT sink connected to {config.get('server', 'address')}:{str(config.get('server', 'port'))}")
+        logging.info(
+            f"MQTT sink connected to {config.get('server', 'address')}:{str(config.get('server', 'port'))}")
 
     except ValueError as exc:
-        logging.fatal(f"MQTT broker configuration error: {str(exc)}, rethrowing exception")
+        logging.fatal(
+            f"MQTT broker configuration error: {str(exc)}, rethrowing exception")
         raise
     except ConnectionError as exc:
-        logging.fatal(f"MQTT broker not reachable at address: {config.get('server', 'address')}: {str(config.get('server', 'port'))}")
+        logging.fatal(
+            f"MQTT broker not reachable at address: {config.get('server', 'address')}: {str(config.get('server', 'port'))}")
         raise
     except Exception as exc:
-        logging.fatal(f"MQTT broker unknown error: {str(exc)}, rethrowing exception")
+        logging.fatal(
+            f"MQTT broker unknown error: {str(exc)}, rethrowing exception")
         raise
 
     # We only publish data on change
@@ -123,7 +133,7 @@ def execute(config, get_items, register_callback, do_stop):
 
 
 def publish(topic, value):
-    global client, pubunits
+    # read module-level client and pubunits (no rebinding), no global statement required
     # only publish units if they are there and we really want to
     publish_value = value
     if isinstance(value, tuple):
