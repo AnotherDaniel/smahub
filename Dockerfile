@@ -17,6 +17,9 @@ ENV VIRTUAL_ENV=.venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
+# Install Rust toolchain for some Python deps
+RUN apk add --no-cache rust cargo
+
 # Install smahub deps
 RUN pip install .
 
