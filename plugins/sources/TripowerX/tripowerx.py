@@ -127,7 +127,7 @@ def execute(config, add_data, dostop):
                     v = d['values'][0]['value']
                     if isfloat(v):
                         try:
-                            v = v_converted = round(float(v), 2)
+                            v = round(float(v), 2)
                         except Exception as e:
                             logging.error(f"Error rounding value for parameter '{name}': value='{v}', type={type(v).__name__}, error: {e}")
                             raise
