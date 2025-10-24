@@ -5,6 +5,7 @@ import ssl
 import paho.mqtt.client as mqtt
 from typing import Dict, Optional
 
+# Module-level client with type annotation
 client: mqtt.Client = mqtt.Client(
     client_id="smahub", transport='tcp', protocol=mqtt.MQTTv311, clean_session=False)
 pubunits: bool = False
@@ -40,7 +41,6 @@ def env_vars(config):
 
 def execute(config, get_items, register_callback, do_stop):
     env_vars(config)
-    # pubunits is mutated here, so keep the assignment (no other 'global' needed)
     pubunits = str(config['behavior']['publish_units']).lower() == "true"
 
     if config.get('plugin', 'enabled').lower() != 'true':
@@ -49,8 +49,7 @@ def execute(config, get_items, register_callback, do_stop):
 
     logging.info("Starting MQTT sink")
 
-    # Create a MQTT client instance and connect to broker
-    global client
+    # No need for global - we're only using the module-level client, not rebinding it
     if config['server']['username']:
         client.username_pw_set(
             config['server']['username'], config['server']['password'])
