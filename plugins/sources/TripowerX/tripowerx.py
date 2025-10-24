@@ -141,7 +141,6 @@ def execute(config, add_data, dostop):
                 elif "values" in d['values'][0]:
                     for idx in range(0, len(d['values'][0]['values'])):
                         v = d['values'][0]['values'][idx]
-                        # Log all array parameter values at DEBUG level
                         if isfloat(v):
                             try:
                                 v = round(float(v), 2)
