@@ -6,6 +6,7 @@ import logging
 import os
 import time
 import requests
+import urllib3
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from utils.smahelpers import isfloat
@@ -26,7 +27,8 @@ def env_vars(config):
     if os.environ.get('TRIPOWERX_PASSWORD'):
         config['server']['password'] = os.environ.get('TRIPOWERX_PASSWORD')
     if os.environ.get('TRIPOWERX_UPDATEFREQ'):
-        config['behavior']['updateFreq'] = os.environ.get('TRIPOWERX_UPDATEFREQ')
+        config['behavior']['updateFreq'] = os.environ.get(
+            'TRIPOWERX_UPDATEFREQ')
     if os.environ.get('TRIPOWERX_PREFIX'):
         config['behavior']['sensorPrefix'] = os.environ.get('TRIPOWERX_PREFIX')
 
@@ -55,16 +57,18 @@ def execute(config, add_data, dostop):
                 'username': config.get('server', 'username'),
                 'password': config.get('server', 'password'),
                 }
-    verify_tls = config.get('server', 'verifyTls').lower() == 'true'
 
+    verify_tls = config.get('server', 'verifyTls').lower() == 'true'
     if not verify_tls:
-        requests.packages.urllib3.disable_warnings()
+        urllib3.disable_warnings()  # Use the direct import instead of requests.packages path
 
     # Login & Extract Access-Token
     try:
-        response = session.post(loginurl, data=postdata, timeout=5, verify=verify_tls)
+        response = session.post(loginurl, data=postdata,
+                                timeout=5, verify=verify_tls)
     except requests.exceptions.ConnectTimeout:
-        logging.fatal(f"Inverter not reachable via HTTP: {config.get('server', 'address')}")
+        logging.fatal(
+            f"Inverter not reachable via HTTP: {config.get('server', 'address')}")
         return
     except requests.exceptions.ConnectionError as e:
         logging.fatal(f"Inverter connection error: {e.args[0]}")
@@ -74,7 +78,8 @@ def execute(config, add_data, dostop):
         logging.fatal("Username or Password wrong")
         return
     if (404 == response.status_code):
-        logging.fatal(f"HTTP connection to {config.get('server', 'address')} refused (status 404)")
+        logging.fatal(
+            f"HTTP connection to {config.get('server', 'address')} refused (status 404)")
         return
 
     token = response.json()["access_token"]
@@ -103,12 +108,14 @@ def execute(config, add_data, dostop):
 
         try:
             url = f"{config.get('server', 'protocol')}://{config.get('server', 'address')}/api/v1/measurements/live"
-            response = session.post(url, headers=headers, data='[{"componentId":"IGULD:SELF"}]', verify=verify_tls)
+            response = session.post(
+                url, headers=headers, data='[{"componentId":"IGULD:SELF"}]', verify=verify_tls)
 
             # Check if a new acccess token is neccesary (TODO use refresh token)
             if (response.status_code == 401):
                 logging.info(f"Got {response.status_code} - trying reauth")
-                response = requests.post(loginurl, data=postdata, verify=verify_tls)
+                response = requests.post(
+                    loginurl, data=postdata, verify=verify_tls)
                 token = response.json()['access_token']
                 headers = {"Authorization": "Bearer " + token}
                 continue
@@ -142,7 +149,8 @@ def execute(config, add_data, dostop):
                         else:
                             add_data(idxname, v)
                 else:
-                    logging.debug(f"value of {name} is currently not availably (nighttime?)")
+                    logging.debug(
+                        f"value of {name} is currently not availably (nighttime?)")
                     pass
 
             time.sleep(int(config.get('behavior', 'updateFreq')))
