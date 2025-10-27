@@ -1,5 +1,6 @@
 import importlib
 import importlib.metadata
+import importlib.util
 import argparse
 import configparser
 import asyncio
@@ -9,6 +10,7 @@ import logging
 import debugpy
 
 from smadict import SMA_Dict
+from typing import List
 
 # Configure logging to print warn-level messages to the console
 logging.basicConfig(
@@ -17,18 +19,22 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S')
 
 # Signal to stop gracefully
-_do_stop = False
+_do_stop: bool = False
 
 # Create a shared dictionary object to be filled by sources and processed by sinks
-sma_dict = SMA_Dict()
+sma_dict: SMA_Dict = SMA_Dict()
 
 # Define the directory containing the data-source plugins
-SOURCES_DIR = os.environ.get("SMAHUB_SOURCES_DIR", "plugins/sources")
-sources = []
+SOURCES_DIR: str = os.environ.get("SMAHUB_SOURCES_DIR", "plugins/sources")
+sources: List = []
 
 # Define the directory containing the data-sink plugins
-SINKS_DIR = os.environ.get("SMAHUB_SINKS_DIR", "plugins/sinks")
-sinks = []
+SINKS_DIR: str = os.environ.get("SMAHUB_SINKS_DIR", "plugins/sinks")
+sinks: List = []
+
+# provide defaults up-front so linters don't complain about name-used-before-assignment
+package_name: str = "smahub"
+version: str = "unknown"
 
 
 def env_vars(args):
@@ -43,7 +49,8 @@ def env_vars(args):
     if os.environ.get('SMAHUB_DEBUG_HOLD'):
         args.debug_hold = bool(os.environ.get('SMAHUB_DEBUG_HOLD'))
     if os.environ.get('SMAHUB_SOURCES_DIR'):
-        args.source_dir = os.environ.get("SMAHUB_SOURCES_DIR", "plugins/sources")
+        args.source_dir = os.environ.get(
+            "SMAHUB_SOURCES_DIR", "plugins/sources")
     if os.environ.get('SMAHUB_SINKS_DIR'):
         args.sink_dir = os.environ.get("SMAHUB_SINKS_DIR", "plugins/sinks")
 
@@ -79,14 +86,24 @@ def load_plugins(plugin_dir, plugins):
     for module_name, module_path in modules.items():
         startlen = len(plugins)
         try:
-            # Use the importlib module to load the module
-            spec = importlib.util.spec_from_file_location(module_name, module_path)
+            # Use the importlib module to load the module (guard Optionals for the type checker)
+            spec = importlib.util.spec_from_file_location(
+                module_name, module_path)
+            if spec is None:
+                logging.error(
+                    f"Could not create module spec for {module_name} at {module_path}")
+                continue
             module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(module)
+            loader = spec.loader
+            if loader is None:
+                logging.error(f"No loader available for module {module_name}")
+                continue
+            loader.exec_module(module)
 
             # Get the "execute" function from the module and add it to the plugins list
             if configs.get(module_name):
-                plugins.append((getattr(module, "execute"), configs[module_name]))
+                plugins.append(
+                    (getattr(module, "execute"), configs[module_name]))
             else:
                 plugins.append((getattr(module, "execute"), {}))
 
@@ -94,11 +111,13 @@ def load_plugins(plugin_dir, plugins):
             logging.error(f"Could not import module {module_name}: {e}")
 
         except AttributeError:
-            logging.warn(f"Script {module_path} does not have the method execute()")
+            logging.warn(
+                f"Script {module_path} does not have the method execute()")
 
         # If plugins array still contains the same number of entries as above, nothing was added (and so nothing can be executed)
         if len(plugins) == startlen:
-            logging.error(f"Module {module_name} does not have any script with method execute()")
+            logging.error(
+                f"Module {module_name} does not have any script with method execute()")
 
 
 def source_runner(function, config, add_data, dostop):
@@ -178,7 +197,7 @@ def do_stop():
     Returns:
         bool: True if the source threads should stop, False otherwise.
     '''
-    global _do_stop
+    # reading module-level _do_stop only; no global statement required
     return _do_stop
 
 
@@ -202,7 +221,8 @@ async def main(args):
         logging.info(f"Listening on debug port: {args.debug_port}")
 
         if args.debug_hold:
-            logging.info(f"Holding startup, waiting for debug connection on port: {args.debug_port}")
+            logging.info(
+                f"Holding startup, waiting for debug connection on port: {args.debug_port}")
             debugpy.wait_for_client()
 
     logging.info(f"Starting {package_name} {version}")
@@ -216,13 +236,15 @@ async def main(args):
         tasks.append(asyncio.to_thread(function, config, add_item, do_stop, ))
 
     for function, config in sinks:
-        tasks.append(asyncio.to_thread(function, config, get_items, register_callback, do_stop, ))
+        tasks.append(asyncio.to_thread(function, config,
+                     get_items, register_callback, do_stop, ))
 
     try:
         await asyncio.gather(*tasks)
         logging.info('Done')
     except Exception as e:
-        logging.error(f'An unhandled error occurred in a worker thread, the application will exit: {e}')
+        logging.error(
+            f'An unhandled error occurred in a worker thread, the application will exit: {e}')
         os.kill(os.getpid(), signal.SIGINT)
 
 if __name__ == '__main__':
@@ -241,13 +263,18 @@ if __name__ == '__main__':
 
     # Set up argument parser
     parser = argparse.ArgumentParser(prog=package_name, description=summary)
-    parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose output')
-    parser.add_argument('-V', '--verboser', action='store_true', help='Enable even more verbose output')
-    parser.add_argument('-d', '--debug', action='store_true', help='Enable debug server')
-    parser.add_argument('-p', '--debug-port', action='store', help='Debug server port', default=5678)
+    parser.add_argument('-v', '--verbose', action='store_true',
+                        help='Enable verbose output')
+    parser.add_argument('-V', '--verboser', action='store_true',
+                        help='Enable even more verbose output')
+    parser.add_argument('-d', '--debug', action='store_true',
+                        help='Enable debug server')
+    parser.add_argument('-p', '--debug-port', action='store',
+                        help='Debug server port', default=5678)
     parser.add_argument('-D', '--debug-hold', action='store_true',
                         help='Hold startup to wait for debug connection; requires --debug')
-    parser.add_argument('--version', action='version', version=f'%(prog)s {version}')
+    parser.add_argument('--version', action='version',
+                        version=f'%(prog)s {version}')
     parser.add_argument('--source-dir', type=str, default='plugins/sources',
                         help='Path to the directory containing source plugins')
     parser.add_argument('--sink-dir', type=str, default='plugins/sinks',
