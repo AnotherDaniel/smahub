@@ -7,11 +7,12 @@ from ha_mqtt_discoverable import Settings
 from ha_mqtt_discoverable.sensors import SensorInfo, Sensor, DeviceInfo
 from utils.smasensors import get_sensor_dict
 from utils.smahelpers import status_string
+from typing import Dict, Any, Optional, List
 
 # store for all the ha_mqtt sensor objects
-sensors = defaultdict(Sensor)
-device_infos = {}
-mqtt_settings = {}
+sensors: Dict[str, Sensor] = {}
+device_infos: Dict[str, DeviceInfo] = {}
+mqtt_settings: Optional[Settings.MQTT] = None
 
 
 def env_vars(config):
@@ -64,23 +65,27 @@ def execute(config, get_items, register_callback, do_stop):
 
             for part in unique_parts:
                 # retrieve sub-set of sma_items that contains keys beginning with 'part' (current device)
-                filtered_items = {k: v for k, v in sma_items.items() if k.split('.')[0] == part}
+                filtered_items = {k: v for k, v in sma_items.items() if k.split('.')[
+                    0] == part}
 
                 # create device_info objects
                 device_info = device_infos.get(part)
                 if device_info is None:
                     # create device info if not already in dict
-                    device_items = {k: v for k, v in filtered_items.items() if k.split('.')[2] == 'device_info'}
+                    device_items = {k: v for k, v in filtered_items.items() if k.split('.')[
+                        2] == 'device_info'}
                     # remove the leading parts of each key, just leave the last part
                     di = {k.split(".")[-1]: v for k, v in device_items.items()}
                     device_info = DeviceInfo(name=di['name'],
-                                             identifiers=[str(di['identifiers']),],
+                                             identifiers=[
+                                                 str(di['identifiers']),],
                                              model=di['model'],
                                              manufacturer=di['manufacturer'],
                                              sw_version=di['sw_version'])
                     device_infos[part] = device_info
 
-                sensor_items = {k: v for k, v in filtered_items.items() if k.split('.')[2] != 'device_info'}
+                sensor_items = {k: v for k, v in filtered_items.items() if k.split('.')[
+                    2] != 'device_info'}
                 for key, value in sensor_items.items():
                     sensor = get_sensor(key, device_info)
                     publish(sensor, value)
@@ -91,37 +96,48 @@ def execute(config, get_items, register_callback, do_stop):
     logging.info("Stopping HA-MQTT sink")
 
 
-def get_item_by_key(list_of_dicts, target_key):
-    return next((item for item in list_of_dicts if item['key'] == target_key and item['enabled'] == "true"), None)
+def get_item_by_key(list_of_dicts: List[Dict[str, Any]], target_key: str) -> Optional[Dict[str, Any]]:
+    return next(
+        (item for item in list_of_dicts if item.get('key') ==
+         target_key and str(item.get('enabled')).lower() == "true"),
+        None,
+    )
 
 
-def get_sensor(name, device_info):
-    global sensors
+def get_sensor(name: str, device_info: DeviceInfo) -> Optional[Sensor]:
+    # ensure mqtt_settings was initialised by execute()
+    if mqtt_settings is None:
+        logging.error(
+            "HA-MQTT: mqtt_settings not initialized (call to get_sensor too early)")
+        return None
+
     sensor = sensors.get(name)
     if (sensor is None):
         # create sensor if not already in dict
         sensors_dict = f"SENSORS_{name.split('.')[0]}".upper()
 
-        if not get_sensor_dict(sensors_dict) or not isinstance(get_sensor_dict(sensors_dict), list):
-            logging.error(f"HA-MQTT sensor definitions for {name.split('.')[0]} not found")
+        sensor_defs = get_sensor_dict(sensors_dict)
+        if not sensor_defs or not isinstance(sensor_defs, list):
+            logging.error(
+                f"HA-MQTT sensor definitions for {name.split('.')[0]} not found")
             return None
 
         key = ".".join(name.split(".")[2:])
-        result = get_item_by_key(get_sensor_dict(sensors_dict), key)
+        result = get_item_by_key(sensor_defs, key)
 
         if result is None:
-            logging.debug(f"HA-MQTT sensor definition for {key} not found or disabled")
-            return None
+            logging.debug(
+                f"HA-MQTT sensor definition for {key} not found or disabled")
+            return
 
         sensor_info = SensorInfo(unique_id=name,
-                                 name=result.get('name'),
-                                 unit_of_measurement=result.get('unit_of_measurement'),
+                                 name=result.get('name') or name,
+                                 unit_of_measurement=result.get(
+                                     'unit_of_measurement'),
                                  device_class=result.get('device_class'),
                                  state_class=result.get('state_class'),
-                                 entity_category=result.get('entity_category'),
-                                 suggested_display_precision=result.get('suggested_display_precision'),
-                                 icon=result.get('icon'),
-                                 device=device_info)
+                                 entity_category=result.get('entity_category'))
+        # mqtt_settings is guarded above, so cast is safe for the type checker
         sensor = Sensor(Settings(mqtt=mqtt_settings, entity=sensor_info))
         sensors[name] = sensor
     return sensor
