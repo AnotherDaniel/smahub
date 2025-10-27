@@ -31,6 +31,8 @@ def env_vars(config):
             'TRIPOWERX_UPDATEFREQ')
     if os.environ.get('TRIPOWERX_PREFIX'):
         config['behavior']['sensorPrefix'] = os.environ.get('TRIPOWERX_PREFIX')
+    if os.environ.get('IDENT_POSTFIX') is not None:
+        config['behavior']['identPostfix'] = os.environ.get('IDENT_POSTFIX')
 
 
 def execute(config, add_data, dostop):
@@ -91,7 +93,8 @@ def execute(config, add_data, dostop):
     dev = response.json()
 
     DeviceInfo = {}
-    DeviceInfo['name'] = dev['product']
+    ident_postfix = config.get('behavior', 'identPostfix', fallback='')
+    DeviceInfo['name'] = dev['product'] + ident_postfix
     DeviceInfo['configuration_url'] = f"{config.get('server', 'protocol')}://{config.get('server', 'address')}"
     DeviceInfo['identifiers'] = dev['serial']
     DeviceInfo['model'] = f"{dev['vendor']}-{dev['product']}"
@@ -130,7 +133,12 @@ def execute(config, add_data, dostop):
                 if "value" in d['values'][0]:
                     v = d['values'][0]['value']
                     if isfloat(v):
-                        v = round(v, 2)
+                        try:
+                            v = round(float(v), 2)
+                        except Exception as e:
+                            logging.error(f"Error rounding value for parameter '{name}': value='{v}', type={type(v).__name__}, error: {e}")
+                            raise
+
                     unit = get_parameter_unit('SENSORS_TRIPOWERX', name)
                     if unit:
                         add_data(dname, (v, unit))
@@ -141,7 +149,12 @@ def execute(config, add_data, dostop):
                     for idx in range(0, len(d['values'][0]['values'])):
                         v = d['values'][0]['values'][idx]
                         if isfloat(v):
-                            v = round(v, 2)
+                            try:
+                                v = round(float(v), 2)
+                            except Exception as e:
+                                logging.error(f"Error rounding value for parameter '{name}[{idx}]': value='{v}', type={type(v).__name__}, error: {e}")
+                                raise
+                        
                         idxname = dname + "." + str(idx + 1)
                         unit = get_parameter_unit('SENSORS_TRIPOWERX', name)
                         if unit:

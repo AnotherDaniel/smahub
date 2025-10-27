@@ -5,10 +5,11 @@ import ssl
 import paho.mqtt.client as mqtt
 from typing import Dict, Optional
 
-# Module-level client with type annotation
-client: mqtt.Client = mqtt.Client(
-    client_id="smahub", transport='tcp', protocol=mqtt.MQTTv311, clean_session=False)
-pubunits: bool = False
+# Get client ID with optional postfix for multiple instances
+client_id_postfix = os.environ.get('IDENT_POSTFIX', '')
+client = mqtt.Client(
+    client_id=f"smahub{client_id_postfix}", transport='tcp', protocol=mqtt.MQTTv311, clean_session=False)
+pubunits = False
 
 
 def env_vars(config):

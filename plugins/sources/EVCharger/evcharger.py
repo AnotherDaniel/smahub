@@ -123,7 +123,11 @@ def execute(config, add_data, dostop):
                 if "value" in d['values'][0]:
                     v = d['values'][0]['value']
                     if isfloat(v):
-                        v = round(v, 2)
+                        try:
+                            v = round(float(v), 2)
+                        except Exception as e:
+                            logging.error(f"Error rounding value for parameter '{name}': value='{v}', type={type(v).__name__}, error: {e}")
+                            raise
                     unit = get_parameter_unit('SENSORS_EVCHARGER', name)
                     if unit:
                         add_data(dname, (v, unit))
@@ -134,7 +138,11 @@ def execute(config, add_data, dostop):
                     for idx in range(0, len(d['values'][0]['values'])):
                         v = d['values'][0]['values'][idx]
                         if isfloat(v):
-                            v = round(v, 2)
+                            try:
+                                v = round(float(v), 2)
+                            except Exception as e:
+                                logging.error(f"Error rounding value for parameter '{name}[{idx}]': value='{v}', type={type(v).__name__}, error: {e}")
+                                raise
                         idxname = dname + "." + str(idx + 1)
                         unit = get_parameter_unit('SENSORS_EVCHARGER', name)
                         if unit:

@@ -149,6 +149,26 @@ services:
       -  HA_MQTT_ADDRESS=192.0.2.3
 ```
 
+### Multiple Instances
+
+If you are running multiple SMAHub instances (e.g., for multiple inverters), you can use the `IDENT_POSTFIX` environment variable to differentiate between them. This postfix will be appended to:
+- Device names in TripowerX plugin (e.g., "TRIPOWER X-2")
+- MQTT client IDs (e.g., "smahub-2")
+
+This ensures that each instance has unique identifiers and won't conflict with other instances. If not set, the postfix defaults to an empty string.
+
+Example for the first inverter:
+```yaml
+environment:
+  -  IDENT_POSTFIX=-1
+```
+
+Example for the second inverter:
+```yaml
+environment:
+  -  IDENT_POSTFIX=-2
+```
+
 ## Improvements
 
 There are several areas where SMAHub can be improved:
