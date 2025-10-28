@@ -3,13 +3,11 @@ import time
 import logging
 import ssl
 import paho.mqtt.client as mqtt
-from typing import Dict, Optional
 
 # Get client ID with optional postfix for multiple instances
 client_id_postfix = os.environ.get('IDENT_POSTFIX', '')
 client = mqtt.Client(
     client_id=f"smahub{client_id_postfix}", transport='tcp', protocol=mqtt.MQTTv311, clean_session=False)
-pubunits = False
 
 
 def env_vars(config):
@@ -49,6 +47,19 @@ def execute(config, get_items, register_callback, do_stop):
         return
 
     logging.info("Starting MQTT sink")
+
+    # Define publish and callback functions here to capture pubunits in closure
+    def publish(topic, value):
+        # only publish units if they are there and we really want to
+        publish_value = value
+        if isinstance(value, tuple):
+            if not pubunits:
+                publish_value = value[0]
+        client.publish(topic, str(publish_value))
+
+    def my_callback(key, value):
+        topic = str(key).replace(".", "/")
+        publish(topic, value)
 
     # No need for global - we're only using the module-level client, not rebinding it
     if config['server']['username']:
@@ -103,7 +114,7 @@ def execute(config, get_items, register_callback, do_stop):
         logging.fatal(
             f"MQTT broker configuration error: {str(exc)}, rethrowing exception")
         raise
-    except ConnectionError as exc:
+    except ConnectionError:
         logging.fatal(
             f"MQTT broker not reachable at address: {config.get('server', 'address')}: {str(config.get('server', 'port'))}")
         raise
@@ -112,7 +123,7 @@ def execute(config, get_items, register_callback, do_stop):
             f"MQTT broker unknown error: {str(exc)}, rethrowing exception")
         raise
 
-    # We only publish data on change
+    # We only publish data on change (use closure-captured my_callback)
     register_callback(my_callback)
 
     i = 0
@@ -130,21 +141,6 @@ def execute(config, get_items, register_callback, do_stop):
     client.loop_stop()
     client.disconnect()
     logging.info("Stopping MQTT sink")
-
-
-def publish(topic, value):
-    # read module-level client and pubunits (no rebinding), no global statement required
-    # only publish units if they are there and we really want to
-    publish_value = value
-    if isinstance(value, tuple):
-        if not pubunits:
-            publish_value = value[0]
-    client.publish(topic, str(publish_value))
-
-
-def my_callback(key, value):
-    topic = str(key).replace(".", "/")
-    publish(topic, value)
 
 
 def on_connect(client, userdata, flags, rc):

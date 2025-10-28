@@ -136,7 +136,10 @@ def execute(config, add_data, dostop):
                         try:
                             v = round(float(v), 2)
                         except Exception as e:
-                            logging.error(f"Error rounding value for parameter '{name}': value='{v}', type={type(v).__name__}, error: {e}")
+                            logging.error(
+                                f"Error rounding value for parameter "
+                                f"'{name}': value='{v}', "
+                                f"type={type(v).__name__}, error: {e}")
                             raise
 
                     unit = get_parameter_unit('SENSORS_TRIPOWERX', name)
@@ -152,9 +155,12 @@ def execute(config, add_data, dostop):
                             try:
                                 v = round(float(v), 2)
                             except Exception as e:
-                                logging.error(f"Error rounding value for parameter '{name}[{idx}]': value='{v}', type={type(v).__name__}, error: {e}")
+                                logging.error(
+                                    f"Error rounding value for parameter "
+                                    f"'{name}[{idx}]': value='{v}', "
+                                    f"type={type(v).__name__}, error: {e}")
                                 raise
-                        
+
                         idxname = dname + "." + str(idx + 1)
                         unit = get_parameter_unit('SENSORS_TRIPOWERX', name)
                         if unit:
