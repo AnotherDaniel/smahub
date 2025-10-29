@@ -1,7 +1,6 @@
 import os
 import time
 import logging
-from collections import defaultdict
 import ha_mqtt_discoverable
 from ha_mqtt_discoverable import Settings
 from ha_mqtt_discoverable.sensors import SensorInfo, Sensor, DeviceInfo
@@ -136,7 +135,10 @@ def get_sensor(name: str, device_info: DeviceInfo) -> Optional[Sensor]:
                                      'unit_of_measurement'),
                                  device_class=result.get('device_class'),
                                  state_class=result.get('state_class'),
-                                 entity_category=result.get('entity_category'))
+                                 entity_category=result.get('entity_category'),
+                                 suggested_display_precision=result.get('suggested_display_precision'),
+                                 icon=result.get('icon'),
+                                 device=device_info)
         # mqtt_settings is guarded above, so cast is safe for the type checker
         sensor = Sensor(Settings(mqtt=mqtt_settings, entity=sensor_info))
         sensors[name] = sensor
