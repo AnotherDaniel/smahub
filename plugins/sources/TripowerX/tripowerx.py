@@ -238,7 +238,6 @@ SENSORS_TRIPOWERX = [
         'key': "GridMs.TotPFExt",
         'enabled': "true",
         'name': "Excitation type of cos φ",
-        'suggested_display_precision': 2,
     },
     {
         'key': "GridMs.TotPFPrc",
@@ -373,19 +372,16 @@ SENSORS_TRIPOWERX = [
         'key': "Upd.Stt",
         'enabled': "true",
         'name': "Status of the firmware update",
-        'suggested_display_precision': 2,
     },
     {
         'key': "WebConn.Stt",
         'enabled': "true",
         'name': "Status of the Webconnect functionality",
-        'suggested_display_precision': 2,
     },
     {
         'key': "Wl.ConnStt",
         'enabled': "true",
         'name': "Wi-Fi connection status",
-        'suggested_display_precision': 2,
     },
     {
         'key': "Wl.SigPwr",
