@@ -215,7 +215,7 @@ async def main(args):
         logging.getLogger().setLevel(logging.DEBUG)
         logging.debug('Verbose output enabled')
 
-    if args.debug:
+    if args.debug == 'true':
         # Allow other computers to attach to debugpy at this IP address and port.
         debugpy.listen(('0.0.0.0', args.debug_port))
         logging.info(f"Listening on debug port: {args.debug_port}")
