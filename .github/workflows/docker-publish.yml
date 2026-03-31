@@ -1,11 +1,17 @@
+# This workflow will build and publish Docker images of smahub for each push of a tag starting with "v"
+
+---
+# .github/workflows/docker-publish.yml
 name: Build and publish Docker image
 
 on:
   push:
-    branches: [ "main" ]
-    tags: [ 'v*.*.*' ]
-  pull_request:
-    branches: [ "main" ]
+    tags:
+      - v*
+
+concurrency:
+  group: "publish-${{ github.head_ref || github.ref }}"
+  cancel-in-progress: true
 
 env:
   REGISTRY: ghcr.io
