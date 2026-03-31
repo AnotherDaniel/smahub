@@ -26,7 +26,8 @@ def env_vars(config):
     if os.environ.get('EVCHARGER_PASSWORD'):
         config['server']['password'] = os.environ.get('EVCHARGER_PASSWORD')
     if os.environ.get('EVCHARGER_UPDATEFREQ'):
-        config['behavior']['updateFreq'] = os.environ.get('EVCHARGER_UPDATEFREQ')
+        config['behavior']['updateFreq'] = os.environ.get(
+            'EVCHARGER_UPDATEFREQ')
     if os.environ.get('EVCHARGER_PREFIX'):
         config['behavior']['sensorPrefix'] = os.environ.get('EVCHARGER_PREFIX')
 
@@ -62,9 +63,11 @@ def execute(config, add_data, dostop):
 
     # Login & Extract Access-Token
     try:
-        response = session.post(loginurl, data=postdata, timeout=5, verify=verify_tls)
+        response = session.post(loginurl, data=postdata,
+                                timeout=5, verify=verify_tls)
     except requests.exceptions.ConnectTimeout:
-        logging.fatal(f"Charger not reachable via HTTP: {config.get('server', 'address')}")
+        logging.fatal(
+            f"Charger not reachable via HTTP: {config.get('server', 'address')}")
         return
     except requests.exceptions.ConnectionError as e:
         logging.fatal(f"Charger connection error: {e.args[0]}")
@@ -74,7 +77,8 @@ def execute(config, add_data, dostop):
         logging.fatal("Username or Password wrong")
         return
     if (404 == response.status_code):
-        logging.fatal(f"HTTP connection to {config.get('server', 'address')} refused (status 404)")
+        logging.fatal(
+            f"HTTP connection to {config.get('server', 'address')} refused (status 404)")
         return
 
     token = response.json()["access_token"]
@@ -103,12 +107,14 @@ def execute(config, add_data, dostop):
 
         try:
             url = f"{config.get('server', 'protocol')}://{config.get('server', 'address')}/api/v1/measurements/live"
-            response = session.post(url, headers=headers, data='[{"componentId":"IGULD:SELF"}]', verify=verify_tls)
+            response = session.post(
+                url, headers=headers, data='[{"componentId":"IGULD:SELF"}]', verify=verify_tls)
 
             # Check if a new acccess token is neccesary (TODO use refresh token)
             if (response.status_code == 401):
                 logging.info(f"Got {response.status_code} - trying reauth")
-                response = requests.post(loginurl, data=postdata, verify=verify_tls)
+                response = requests.post(
+                    loginurl, data=postdata, verify=verify_tls)
                 token = response.json()['access_token']
                 headers = {"Authorization": "Bearer " + token}
                 continue
@@ -126,7 +132,8 @@ def execute(config, add_data, dostop):
                         try:
                             v = round(float(v), 2)
                         except Exception as e:
-                            logging.error(f"Error rounding value for parameter '{name}': value='{v}', type={type(v).__name__}, error: {e}")
+                            logging.error(
+                                f"Error rounding value for parameter '{name}': value='{v}', type={type(v).__name__}, error: {e}")
                             raise
                     unit = get_parameter_unit('SENSORS_EVCHARGER', name)
                     if unit:
@@ -141,7 +148,8 @@ def execute(config, add_data, dostop):
                             try:
                                 v = round(float(v), 2)
                             except Exception as e:
-                                logging.error(f"Error rounding value for parameter '{name}[{idx}]': value='{v}', type={type(v).__name__}, error: {e}")
+                                logging.error(
+                                    f"Error rounding value for parameter '{name}[{idx}]': value='{v}', type={type(v).__name__}, error: {e}")
                                 raise
                         idxname = dname + "." + str(idx + 1)
                         unit = get_parameter_unit('SENSORS_EVCHARGER', name)
@@ -150,7 +158,8 @@ def execute(config, add_data, dostop):
                         else:
                             add_data(idxname, v)
                 else:
-                    logging.debug(f"value of {name} is currently not availably (nighttime?)")
+                    logging.debug(
+                        f"value of {name} is currently not availably (nighttime?)")
                     pass
 
             time.sleep(int(config.get('behavior', 'updateFreq')))
@@ -309,7 +318,7 @@ SENSORS_EVCHARGER = [
         'name': "Reactive power",
         'device_class': "reactive_power",
         'icon': "mdi:home-lightning-bolt-outline",
-        'unit_of_measurement': "VAR",
+        'unit_of_measurement': "var",
         'state_class': "measurement",
         'suggested_display_precision': 2,
     },
