@@ -4,7 +4,7 @@ requires = ["flit_core >=3.8.0,<4"]
 
 [project]
 name = "smahub"
-version = "1.7.4"
+version = "1.7.5"
 authors = [{ name = "Daniel Krippner", email = "dk.mailbox@gmx.net" }]
 description = "Little daemon that runs plugins for collecting data from SMA PV products, and publishes to eg MQTT via other plugins."
 readme = "README.md"
@@ -14,7 +14,7 @@ classifiers = [
     "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
     "Natural Language :: English",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.10",
 ]
 dependencies = [
     "debugpy ~=1.8",
