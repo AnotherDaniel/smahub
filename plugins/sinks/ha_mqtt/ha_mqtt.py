@@ -2,8 +2,8 @@ import os
 import time
 import logging
 import ha_mqtt_discoverable
-from ha_mqtt_discoverable import Settings
-from ha_mqtt_discoverable.sensors import SensorInfo, Sensor, DeviceInfo
+from ha_mqtt_discoverable import Settings, DeviceInfo
+from ha_mqtt_discoverable.sensors import SensorInfo, Sensor
 from utils.smasensors import get_sensor_dict
 from utils.smahelpers import status_string
 from typing import Dict, Any, Optional, List
@@ -136,7 +136,8 @@ def get_sensor(name: str, device_info: DeviceInfo) -> Optional[Sensor]:
                                  device_class=result.get('device_class'),
                                  state_class=result.get('state_class'),
                                  entity_category=result.get('entity_category'),
-                                 suggested_display_precision=result.get('suggested_display_precision'),
+                                 suggested_display_precision=result.get(
+                                     'suggested_display_precision'),
                                  icon=result.get('icon'),
                                  device=device_info)
         # mqtt_settings is guarded above, so cast is safe for the type checker
